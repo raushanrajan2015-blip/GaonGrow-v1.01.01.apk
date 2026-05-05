@@ -11,6 +11,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install npm dependencies
+        run: npm install --legacy-peer-deps
+        working-directory: Desktop/GaonGrow
+
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
@@ -18,9 +26,9 @@ jobs:
 
       - name: Build APK
         run: |
-          cd Desktop/GaonGrow/android
           chmod +x gradlew
           ./gradlew assembleDebug --no-daemon
+        working-directory: Desktop/GaonGrow/android
 
       - uses: actions/upload-artifact@v4
         with:
