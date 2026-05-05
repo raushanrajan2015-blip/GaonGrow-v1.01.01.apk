@@ -2,15 +2,19 @@ apply plugin: 'com.android.library'
 apply from: 'cordova.variables.gradle'
 
 android {
-    compileSdk project.ext.compileSdkVersion
+    compileSdk 35
     defaultConfig {
-        minSdkVersion project.ext.minSdkVersion
-        targetSdkVersion project.ext.targetSdkVersion
+        minSdkVersion 22
+        targetSdkVersion 35
     }
     buildTypes {
         release {
             minifyEnabled false
         }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
 }
 
