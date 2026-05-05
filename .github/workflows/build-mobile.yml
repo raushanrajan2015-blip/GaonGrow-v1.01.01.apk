@@ -16,7 +16,10 @@ jobs:
           node-version: '20'
 
       - name: Install npm dependencies
-            - name: Copy web assets to Android
+        run: npm install --legacy-peer-deps
+        working-directory: Desktop/GaonGrow
+
+      - name: Copy web assets to Android
         run: |
           mkdir -p Desktop/GaonGrow/android/app/src/main/assets/public
           cp Desktop/GaonGrow/index.html Desktop/GaonGrow/android/app/src/main/assets/public/ 2>/dev/null || true
@@ -26,8 +29,6 @@ jobs:
             [ -d "Desktop/GaonGrow/$dir" ] && cp -r "Desktop/GaonGrow/$dir" "Desktop/GaonGrow/android/app/src/main/assets/public/" || true
           done
           echo '[]' > Desktop/GaonGrow/android/app/src/main/assets/capacitor.plugins.json
-        run: npm install --legacy-peer-deps
-        working-directory: Desktop/GaonGrow
 
       - uses: actions/setup-java@v4
         with:
