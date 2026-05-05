@@ -19,16 +19,35 @@ jobs:
         run: npm install --legacy-peer-deps
         working-directory: Desktop/GaonGrow
 
-      - name: Copy web assets to Android
+      - name: Prepare Android assets
         run: |
-          mkdir -p Desktop/GaonGrow/android/app/src/main/assets/public
-          cp Desktop/GaonGrow/index.html Desktop/GaonGrow/android/app/src/main/assets/public/ 2>/dev/null || true
-          cp Desktop/GaonGrow/manifest.json Desktop/GaonGrow/android/app/src/main/assets/public/ 2>/dev/null || true
-          cp Desktop/GaonGrow/sw.js Desktop/GaonGrow/android/app/src/main/assets/public/ 2>/dev/null || true
-          for dir in screens assets services components; do
-            [ -d "Desktop/GaonGrow/$dir" ] && cp -r "Desktop/GaonGrow/$dir" "Desktop/GaonGrow/android/app/src/main/assets/public/" || true
-          done
+          ASSETS=Desktop/GaonGrow/android/app/src/main/assets/public
+          mkdir -p $ASSETS
+          # Copy all web files
+          cp -r Desktop/GaonGrow/screens $ASSETS/
+          cp -r Desktop/GaonGrow/assets $ASSETS/ 2>/dev/null || true
+          cp -r Desktop/GaonGrow/services $ASSETS/ 2>/dev/null || true
+          cp -r Desktop/GaonGrow/components $ASSETS/ 2>/dev/null || true
+          cp Desktop/GaonGrow/manifest.json $ASSETS/ 2>/dev/null || true
+          cp Desktop/GaonGrow/sw.js $ASSETS/ 2>/dev/null || true
+          # App starts from login screen (not marketing website)
+          echo '<meta http-equiv="refresh" content="0; url=screens/login.html">' > $ASSETS/index.html
           echo '[]' > Desktop/GaonGrow/android/app/src/main/assets/capacitor.plugins.json
+          # Generate app icon from logo
+          sudo apt-get install -y imagemagick
+          LOGO=Desktop/GaonGrow/assets/gaongrow_tractor_logo.png
+          RES=Desktop/GaonGrow/android/app/src/main/res
+          for size in 48 72 96 144 192; do
+            case $size in
+              48) dir=mipmap-mdpi ;;
+              72) dir=mipmap-hdpi ;;
+              96) dir=mipmap-xhdpi ;;
+              144) dir=mipmap-xxhdpi ;;
+              192) dir=mipmap-xxxhdpi ;;
+            esac
+            convert $LOGO -resize ${size}x${size} $RES/$dir/ic_launcher.png 2>/dev/null || true
+            convert $LOGO -resize ${size}x${size} $RES/$dir/ic_launcher_round.png 2>/dev/null || true
+          done
 
       - uses: actions/setup-java@v4
         with:
