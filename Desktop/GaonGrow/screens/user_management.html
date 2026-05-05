@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Management - GaonGrow Control Panel</title>
+    <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700" rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#6B8E23',
+                        secondary: '#C5A028',
+                        navy: '#0f172a',
+                        sidebar: '#012d1d'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .nav-link.active { background: rgba(255, 255, 255, 0.1); border-left: 4px solid #C5A028; }
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+    </style>
+</head>
+<body class="font-['Public_Sans'] text-navy bg-slate-50 min-h-screen flex overflow-hidden">
+
+<!-- SIDEBAR (Same as Dashboard) -->
+<!-- SIDEBAR -->
+<!-- SIDEBAR -->
+<!-- SIDEBAR -->
+<!-- SIDEBAR -->
+<!-- SIDEBAR -->
+<!-- SIDEBAR -->
+<!-- SIDEBAR -->
+<!-- PREMIUM SIDEBAR TEMPLATE -->
+<div id="sidebar_backdrop" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[90] hidden lg:hidden" onclick="toggleSidebar()"></div>
+<aside id="main_sidebar" class="fixed inset-y-0 left-0 z-[100] w-80 bg-[#011a14] text-slate-400 flex flex-col shrink-0 overflow-hidden shadow-2xl border-r border-white/5 font-['Public_Sans'] transform -translate-x-full lg:translate-x-0 lg:static transition-transform duration-300 ease-in-out">
+    <!-- Header Section: Premium Branding -->
+    <div class="p-8 border-b border-white/5 flex items-center gap-5 bg-gradient-to-b from-[#012d1d] to-transparent">
+        <div class="w-14 h-14 bg-white rounded-[1.25rem] flex items-center justify-center p-2 shadow-2xl shadow-white/10 overflow-hidden shrink-0 border border-slate-200/50 group-hover:scale-110 transition-transform duration-500">
+            <img src="../assets/gaongrow_tractor_logo.png" class="w-full h-full object-contain filter drop-shadow-md" onerror="this.src='https://cdn-icons-png.flaticon.com/512/2554/2554904.png'" />
+        </div>
+        <div>
+            <h1 class="text-[17px] font-black tracking-tighter text-white uppercase leading-none mb-1.5">GaonGrow <span class="text-secondary">Finance</span></h1>
+            <p class="text-[9px] font-extrabold text-slate-500 uppercase tracking-[0.25em] opacity-80">Core Banking System</p>
+        </div>
+    </div>
+
+    <!-- User Profile: Dynamic & Premium -->
+    <div class="px-8 py-6 border-b border-white/5 bg-white/5 group">
+        <div class="flex items-center gap-4">
+            <div class="relative">
+                <div id="user_initials_circle" class="w-11 h-11 bg-gradient-to-tr from-secondary to-yellow-600 rounded-2xl flex items-center justify-center text-navy font-black text-xs shadow-xl group-hover:rotate-12 transition-all duration-500">
+                    --
+                </div>
+                <span class="absolute -bottom-1 -right-1 w-4 h-4 bg-primary border-2 border-[#011a14] rounded-full"></span>
+            </div>
+            <div>
+                <div class="flex items-center gap-2">
+                    <p id="user_display_role" class="text-[12px] font-black text-white uppercase tracking-tight">Loading...</p>
+                    <span id="user_display_id" class="text-[8px] bg-white/10 px-1.5 py-0.5 rounded-md text-slate-400 font-bold">---</span>
+                </div>
+                <p id="user_full_name" class="text-[9px] font-bold text-slate-500 uppercase tracking-widest mt-0.5 flex items-center gap-1">
+                    <span class="w-1 h-1 bg-primary rounded-full animate-pulse"></span>
+                    Live Session
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dynamic Navigation List -->
+    <nav id="dynamicMenuContainer" class="flex-1 overflow-y-auto custom-scrollbar px-4 py-6 space-y-2">
+        <!-- Menu items will be injected here via menuService.js -->
+        {{DYNAMIC_MENU}}
+    </nav>
+
+
+    <!-- Logout Area -->
+    <div class="p-6 border-t border-white/5 bg-white/5">
+        <button onclick="logoutAdmin()" class="w-full flex items-center justify-center gap-3 px-4 py-4 rounded-2xl bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white transition-all duration-300 group shadow-xl">
+            <span class="material-symbols-outlined text-[22px] group-hover:rotate-180 transition-transform duration-500">logout</span>
+            <span class="text-[11px] font-black uppercase tracking-widest">Exit System</span>
+        </button>
+    </div>
+
+    <!-- Dynamic Menu Loader -->
+    <script type="module">
+        import { getMenuForRole, renderMenuHTML } from '../services/menuService.js';
+        
+        // Global Helpers
+        window.toggleSidebar = () => {
+            const sidebar = document.getElementById('main_sidebar');
+            const backdrop = document.getElementById('sidebar_backdrop');
+            if (sidebar) {
+                const isOpen = sidebar.classList.contains('translate-x-0');
+                if (isOpen) {
+                    sidebar.classList.replace('translate-x-0', '-translate-x-full');
+                    if (backdrop) backdrop.classList.add('hidden');
+                } else {
+                    sidebar.classList.replace('-translate-x-full', 'translate-x-0');
+                    if (backdrop) backdrop.classList.remove('hidden');
+                }
+            }
+        };
+
+        window.toggleSubmenu = (id) => {
+            const menu = document.getElementById(id);
+            const arrow = document.querySelector(`#${id} + button #arrow_${id}`) || document.querySelector(`[onclick="toggleSubmenu('${id}')"] .transition-transform`);
+            if (menu) {
+                menu.classList.toggle('hidden');
+                if (arrow) {
+                    const isHidden = menu.classList.contains('hidden');
+                    arrow.style.transform = isHidden ? 'rotate(0deg)' : 'rotate(90deg)';
+                }
+            }
+        };
+
+        window.logoutAdmin = () => {
+            localStorage.removeItem('gaongrow_admin_session');
+            localStorage.removeItem('gaongrow_session');
+            window.location.href = 'login.html';
+        };
+
+        // Role Detection
+        const sessionStr = localStorage.getItem('gaongrow_admin_session') || localStorage.getItem('gaongrow_session');
+        const session = sessionStr ? JSON.parse(sessionStr) : null;
+        
+        const roleMap = {
+            1: 'SUPER_ADMIN',
+            2: 'HO_USER',
+            3: 'BRANCH_MANAGER',
+            4: 'CRO',
+            5: 'AUDITOR'
+        };
+
+        let role = 'HO_USER';
+        if (session && session.user) {
+            const r = session.user.role || session.user.role_id;
+            role = typeof r === 'string' ? r.toUpperCase() : (roleMap[r] || 'HO_USER');
+        }
+
+        // Render Menu
+        const menuItems = getMenuForRole(role);
+        const container = document.getElementById('dynamicMenuContainer');
+        if (container) {
+            container.innerHTML = renderMenuHTML(menuItems);
+        }
+
+        // CRO Visibility Hardening: Hide sidebar and toggles for CROs (Mobile Focused)
+        if (role === 'CRO') {
+            const sidebar = document.getElementById('main_sidebar');
+            const backdrop = document.getElementById('sidebar_backdrop');
+            if (sidebar) sidebar.style.setProperty('display', 'none', 'important');
+            if (backdrop) backdrop.style.setProperty('display', 'none', 'important');
+            
+            // Hide all hamburger/sidebar toggle buttons
+            document.querySelectorAll('[onclick="toggleSidebar()"]').forEach(btn => {
+                btn.style.setProperty('display', 'none', 'important');
+            });
+        }
+
+        // Populate User Info
+        if (session && session.user) {
+            const user = session.user;
+            const name = user.employee_name || user.full_name || user.name || 'User';
+            const roleName = typeof user.role === 'string' ? user.role : (roleMap[user.role] || user.role_name || 'Staff');
+            const empId = user.employee_id || user.id || '---';
+
+            if (document.getElementById('user_display_role')) document.getElementById('user_display_role').textContent = roleName;
+            if (document.getElementById('user_display_id')) document.getElementById('user_display_id').textContent = empId;
+            if (document.getElementById('user_full_name')) {
+                document.getElementById('user_full_name').innerHTML = `
+                    <span class="w-1 h-1 bg-primary rounded-full animate-pulse"></span>
+                    ${name}
+                `;
+            }
+            
+            // Initials
+            const initials = name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+            if (document.getElementById('user_initials_circle')) document.getElementById('user_initials_circle').textContent = initials;
+        }
+    </script>
+</aside>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<main class="flex-1 flex flex-col h-screen overflow-hidden">
+    <header class="h-20 bg-white border-b border-slate-100 flex items-center justify-between px-10 shrink-0">
+        <div>
+            <h2 class="text-xl font-black uppercase tracking-tight">Staff & User Management</h2>
+            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Create, assign roles and monitor user activity</p>
+        </div>
+        <button onclick="openAddUserModal()" class="h-12 bg-navy text-white px-8 rounded-xl text-xs font-black uppercase tracking-widest flex items-center gap-3 hover:bg-primary transition-all">
+            <span class="material-symbols-outlined text-lg">person_add</span>
+            Add New Staff
+        </button>
+    </header>
+
+    <div class="flex-1 overflow-y-auto p-10 custom-scrollbar">
+        <!-- Users Table -->
+        <div class="bg-white rounded-[2.5rem] shadow-sm border border-slate-100 overflow-hidden">
+            <div class="p-8 border-b border-slate-50 flex justify-between items-center bg-slate-50/30">
+                <div class="relative w-96">
+                    <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-300">search</span>
+                    <input type="text" id="search_user" onkeyup="filterUsers()" class="w-full h-12 pl-12 pr-4 bg-white rounded-xl border border-slate-100 text-xs font-bold focus:border-primary outline-none" placeholder="Search by name, ID or mobile...">
+                </div>
+                <div class="flex gap-4">
+                    <select id="filter_role" onchange="loadUsers()" class="h-12 px-6 bg-white border border-slate-100 rounded-xl text-xs font-black uppercase">
+                        <option value="">All Roles</option>
+                    </select>
+                    <select id="filter_status" onchange="loadUsers()" class="h-12 px-6 bg-white border border-slate-100 rounded-xl text-xs font-black uppercase">
+                        <option value="active">Active</option>
+                        <option value="inactive">Inactive</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="w-full">
+                    <thead class="bg-slate-50/50">
+                        <tr class="text-left">
+                            <th class="px-8 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Admin User</th>
+                            <th class="px-8 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Role</th>
+                            <th class="px-8 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Branch Access</th>
+                            <th class="px-8 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Status</th>
+                            <th class="px-8 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Last Login</th>
+                            <th class="px-8 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest text-right">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="users_tbody" class="divide-y divide-slate-50">
+                        <!-- Users will be loaded here -->
+                        <tr>
+                            <td colspan="6" class="p-20 text-center">
+                                <span class="material-symbols-outlined animate-spin text-4xl text-primary">refresh</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- ADD USER MODAL -->
+<div id="add_user_modal" class="fixed inset-0 bg-navy/60 backdrop-blur-sm z-[1000] hidden flex items-center justify-center p-6">
+    <div class="bg-white w-full max-w-2xl rounded-[3rem] shadow-2xl overflow-hidden animate-slide-up">
+        <div class="p-10 border-b border-slate-50 flex justify-between items-center bg-slate-50/50">
+            <div>
+                <h3 class="text-2xl font-black uppercase tracking-tight">Onboard New Staff</h3>
+                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">System will auto-generate GMPL ID</p>
+            </div>
+            <button onclick="closeAddUserModal()" class="w-12 h-12 rounded-full bg-white flex items-center justify-center text-slate-300 hover:text-red-500 shadow-sm border border-slate-100">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+        </div>
+
+        <form id="add_user_form" onsubmit="handleAddUser(event)" class="p-10 grid grid-cols-2 gap-8">
+            <!-- Basic Info -->
+            <div class="space-y-2">
+                <label class="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-1">Full Name</label>
+                <input required name="name" type="text" class="w-full h-14 px-5 rounded-2xl border border-slate-100 bg-slate-50 focus:bg-white focus:border-primary outline-none transition-all font-bold text-sm" placeholder="John Doe">
+            </div>
+            <div class="space-y-2">
+                <label class="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-1">Mobile Number</label>
+                <input required name="mobile" type="tel" class="w-full h-14 px-5 rounded-2xl border border-slate-100 bg-slate-50 focus:bg-white focus:border-primary outline-none transition-all font-bold text-sm" placeholder="9876543210">
+            </div>
+
+            <div class="space-y-2">
+                <label class="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-1">Primary Email</label>
+                <input required name="email" type="email" class="w-full h-14 px-5 rounded-2xl border border-slate-100 bg-slate-50 focus:bg-white focus:border-primary outline-none transition-all font-bold text-sm" placeholder="john@gaongrow.com">
+            </div>
+
+            <!-- Role & Branch -->
+            <div class="space-y-2">
+                <label class="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-1">Assigned Role</label>
+                <select required name="role_id" class="w-full h-14 px-5 rounded-2xl border border-slate-100 bg-slate-50 focus:bg-white focus:border-primary outline-none transition-all font-bold text-sm">
+                    <option value="">Select Role</option>
+                </select>
+            </div>
+
+            <div class="col-span-2 space-y-4 pt-4 border-t border-slate-50">
+                <label class="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-1">Branch Mapping (Select Multiple)</label>
+                <div id="branch_checkboxes" class="grid grid-cols-3 gap-3">
+                    <!-- Branches will load here -->
+                </div>
+            </div>
+
+            <div class="col-span-2 pt-6">
+                <button type="submit" id="btn_submit_user" class="w-full h-16 bg-navy text-white rounded-2xl font-black uppercase text-sm tracking-widest shadow-xl shadow-navy/20 hover:bg-primary transition-all flex items-center justify-center gap-3">
+                    Initialize Staff Record
+                    <span class="material-symbols-outlined">send</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div id="toast" class="fixed top-12 left-1/2 -translate-x-1/2 px-6 py-3 bg-navy text-white rounded-full text-[10px] font-black uppercase tracking-widest shadow-2xl hidden z-[2000]"></div>
+
+<script type="module">
+    import supabase from '../services/supabase.js'
+
+    let adminSession = null;
+    let roles = [];
+    let branches = [];
+    let allUsers = [];
+
+    async function init() {
+        const sessionStr = localStorage.getItem("gaongrow_admin_session");
+        if (!sessionStr) { window.location.href = "admin_login.html"; return; }
+        adminSession = JSON.parse(sessionStr).admin;
+
+        await loadMeta();
+        await loadUsers();
+    }
+
+    async function loadMeta() {
+        // Load Roles
+        const { data: rData } = await supabase.from('roles').select('*').order('role_name');
+        roles = rData || [];
+        const roleSelects = document.querySelectorAll('select[name="role_id"], #filter_role');
+        roleSelects.forEach(sel => {
+            roles.forEach(r => {
+                const opt = document.createElement('option');
+                opt.value = r.role_id;
+                opt.innerText = r.role_name;
+                sel.appendChild(opt);
+            });
+        });
+
+        // Load Branches
+        const { data: bData } = await supabase.from('branches').select('*').order('branch_name');
+        branches = bData || [];
+        const branchContainer = document.getElementById('branch_checkboxes');
+        branches.forEach(b => {
+            branchContainer.innerHTML += `
+                <label class="flex items-center gap-3 p-4 bg-slate-50 rounded-xl border border-slate-100 cursor-pointer hover:bg-white transition-all">
+                    <input type="checkbox" name="branch_codes" value="${b.branch_code}" class="w-4 h-4 accent-primary">
+                    <span class="text-[10px] font-black uppercase tracking-widest">${b.branch_name}</span>
+                </label>
+            `;
+        });
+    }
+
+    async function loadUsers() {
+        const status = document.getElementById('filter_status').value;
+        const role = document.getElementById('filter_role').value;
+        
+        let query = supabase.from('admin_users').select('*, roles(role_name)');
+        if (status) query = query.eq('status', status);
+        if (role) query = query.eq('role_id', role);
+
+        const { data, error } = await query.order('created_at', { ascending: false });
+        allUsers = data || [];
+        renderUsers(allUsers);
+    }
+
+    function renderUsers(users) {
+        const tbody = document.getElementById('users_tbody');
+        tbody.innerHTML = '';
+        
+        if (users.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="6" class="p-10 text-center font-bold text-slate-400 uppercase tracking-widest">No staff records found</td></tr>';
+            return;
+        }
+
+        users.forEach(u => {
+            const tr = document.createElement('tr');
+            tr.className = "hover:bg-slate-50/50 transition-all group";
+            
+            const branchesText = u.branch_codes && u.branch_codes.length > 0 
+                ? u.branch_codes.map(code => branches.find(b => b.branch_code === code)?.branch_name || code).join(', ')
+                : 'GLOBAL ACCESS';
+
+            tr.innerHTML = `
+                <td class="px-8 py-5">
+                    <div class="flex items-center gap-4">
+                        <div class="w-10 h-10 bg-slate-100 rounded-xl flex items-center justify-center font-black text-navy text-xs">${u.name[0]}</div>
+                        <div>
+                            <p class="text-sm font-black uppercase tracking-tight">${u.name}</p>
+                            <p class="text-[9px] font-bold text-primary uppercase tracking-widest">${u.user_id}</p>
+                        </div>
+                    </div>
+                </td>
+                <td class="px-8 py-5 text-[10px] font-black uppercase tracking-widest text-slate-500">${u.roles?.role_name || u.role_id}</td>
+                <td class="px-8 py-5">
+                    <p class="text-[10px] font-bold uppercase tracking-wider text-slate-400 max-w-xs truncate" title="${branchesText}">${branchesText}</p>
+                </td>
+                <td class="px-8 py-5">
+                    <span class="px-3 py-1 rounded-full text-[8px] font-black uppercase tracking-widest ${u.status === 'active' ? 'bg-green-50 text-green-600' : 'bg-red-50 text-red-600'}">
+                        ${u.status}
+                    </span>
+                </td>
+                <td class="px-8 py-5 text-[10px] font-bold text-slate-400">${u.last_login ? new Date(u.last_login).toLocaleString() : 'NEVER'}</td>
+                <td class="px-8 py-5 text-right">
+                    <div class="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-all">
+                        <button onclick="toggleUserStatus('${u.id}', '${u.status}')" class="w-9 h-9 rounded-lg bg-slate-50 flex items-center justify-center text-slate-400 hover:text-red-500 hover:bg-red-50">
+                            <span class="material-symbols-outlined text-lg">${u.status === 'active' ? 'person_off' : 'person_check'}</span>
+                        </button>
+                        <button class="w-9 h-9 rounded-lg bg-slate-50 flex items-center justify-center text-slate-400 hover:text-primary hover:bg-primary/5">
+                            <span class="material-symbols-outlined text-lg">edit</span>
+                        </button>
+                    </div>
+                </td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+
+    window.filterUsers = function() {
+        const term = document.getElementById('search_user').value.toLowerCase();
+        const filtered = allUsers.filter(u => 
+            u.name.toLowerCase().includes(term) || 
+            u.user_id.toLowerCase().includes(term) ||
+            (u.mobile && u.mobile.includes(term))
+        );
+        renderUsers(filtered);
+    }
+
+    window.handleAddUser = async function(e) {
+        e.preventDefault();
+        const btn = document.getElementById('btn_submit_user');
+        const formData = new FormData(e.target);
+        const userData = Object.fromEntries(formData.entries());
+        const selectedBranches = Array.from(formData.getAll('branch_codes'));
+        
+        btn.disabled = true;
+        btn.innerHTML = `<span class="material-symbols-outlined animate-spin">refresh</span> Processing...`;
+
+        try {
+            // 1. Get Next GMPL ID
+            const { data: nextId, error: idError } = await supabase.rpc('get_next_gmpl_id');
+            if (idError) throw idError;
+
+            // 2. Insert User
+            const { error } = await supabase.from('admin_users').insert({
+                user_id: nextId,
+                name: userData.name,
+                email: userData.email,
+                mobile: userData.mobile,
+                password: 'Initial@123', // Static initial password
+                role_id: userData.role_id,
+                branch_codes: selectedBranches,
+                must_change_password: true
+            });
+
+            if (error) throw error;
+
+            showToast(`User Created: ${nextId}`);
+            closeAddUserModal();
+            loadUsers();
+        } catch (e) {
+            showToast("Error creating user: " + e.message);
+        } finally {
+            btn.disabled = false;
+            btn.innerHTML = `Initialize Staff Record <span class="material-symbols-outlined">send</span>`;
+        }
+    }
+
+    window.toggleUserStatus = async function(id, currentStatus) {
+        const newStatus = currentStatus === 'active' ? 'inactive' : 'active';
+        const { error } = await supabase.from('admin_users').update({ status: newStatus }).eq('id', id);
+        if (!error) {
+            showToast(`User marked as ${newStatus}`);
+            loadUsers();
+        }
+    };
+
+    window.openAddUserModal = () => document.getElementById('add_user_modal').classList.remove('hidden');
+    window.closeAddUserModal = () => document.getElementById('add_user_modal').classList.add('hidden');
+
+    function showToast(msg) {
+        const t = document.getElementById('toast');
+        t.innerText = msg;
+        t.classList.remove('hidden');
+        setTimeout(() => t.classList.add('hidden'), 3000);
+    }
+
+    init();
+</script>
+
+</body>
+</html>

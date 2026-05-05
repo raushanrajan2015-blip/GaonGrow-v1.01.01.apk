@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>GaonGrow - Center Details</title>
+  
+  <!-- Fonts & Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700&display=swap" rel="stylesheet"/>
+  
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#012d1d",
+            "secondary": "#1db2c9",
+            "accent": "#4ae5c3",
+            "surface": "#f8fafc",
+            "on-surface": "#1e293b",
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-surface font-['Public_Sans'] text-on-surface min-h-screen pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)]">
+
+<!-- PREMIUM SIDEBAR TEMPLATE -->
+<div id="sidebar_backdrop" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[90] hidden lg:hidden" onclick="toggleSidebar()"></div>
+<aside id="main_sidebar" class="fixed inset-y-0 left-0 z-[100] w-80 bg-[#011a14] text-slate-400 flex flex-col shrink-0 overflow-hidden shadow-2xl border-r border-white/5 font-['Public_Sans'] transform -translate-x-full lg:translate-x-0 lg:static transition-transform duration-300 ease-in-out">
+    <!-- Header Section: Premium Branding -->
+    <div class="p-8 border-b border-white/5 flex items-center gap-5 bg-gradient-to-b from-[#012d1d] to-transparent">
+        <div class="w-14 h-14 bg-white rounded-[1.25rem] flex items-center justify-center p-2 shadow-2xl shadow-white/10 overflow-hidden shrink-0 border border-slate-200/50 group-hover:scale-110 transition-transform duration-500">
+            <img src="../assets/gaongrow_tractor_logo.png" class="w-full h-full object-contain filter drop-shadow-md" onerror="this.src='https://cdn-icons-png.flaticon.com/512/2554/2554904.png'" />
+        </div>
+        <div>
+            <h1 class="text-[17px] font-black tracking-tighter text-white uppercase leading-none mb-1.5">GaonGrow <span class="text-secondary">Finance</span></h1>
+            <p class="text-[9px] font-extrabold text-slate-500 uppercase tracking-[0.25em] opacity-80">Core Banking System</p>
+        </div>
+    </div>
+
+    <!-- User Profile: Dynamic & Premium -->
+    <div class="px-8 py-6 border-b border-white/5 bg-white/5 group">
+        <div class="flex items-center gap-4">
+            <div class="relative">
+                <div id="user_initials_circle" class="w-11 h-11 bg-gradient-to-tr from-secondary to-yellow-600 rounded-2xl flex items-center justify-center text-navy font-black text-xs shadow-xl group-hover:rotate-12 transition-all duration-500">
+                    --
+                </div>
+                <span class="absolute -bottom-1 -right-1 w-4 h-4 bg-primary border-2 border-[#011a14] rounded-full"></span>
+            </div>
+            <div>
+                <div class="flex items-center gap-2">
+                    <p id="user_display_role" class="text-[12px] font-black text-white uppercase tracking-tight">Loading...</p>
+                    <span id="user_display_id" class="text-[8px] bg-white/10 px-1.5 py-0.5 rounded-md text-slate-400 font-bold">---</span>
+                </div>
+                <p id="user_full_name" class="text-[9px] font-bold text-slate-500 uppercase tracking-widest mt-0.5 flex items-center gap-1">
+                    <span class="w-1 h-1 bg-primary rounded-full animate-pulse"></span>
+                    Live Session
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dynamic Navigation List -->
+    <nav id="dynamicMenuContainer" class="flex-1 overflow-y-auto custom-scrollbar px-4 py-6 space-y-2">
+        <!-- Menu items will be injected here via menuService.js -->
+        {{DYNAMIC_MENU}}
+    </nav>
+
+
+    <!-- Logout Area -->
+    <div class="p-6 border-t border-white/5 bg-white/5">
+        <button onclick="logoutAdmin()" class="w-full flex items-center justify-center gap-3 px-4 py-4 rounded-2xl bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white transition-all duration-300 group shadow-xl">
+            <span class="material-symbols-outlined text-[22px] group-hover:rotate-180 transition-transform duration-500">logout</span>
+            <span class="text-[11px] font-black uppercase tracking-widest">Exit System</span>
+        </button>
+    </div>
+
+    <!-- Dynamic Menu Loader -->
+    <script type="module">
+        import { getMenuForRole, renderMenuHTML } from '../services/menuService.js';
+        
+        // Global Helpers
+        window.toggleSidebar = () => {
+            const sidebar = document.getElementById('main_sidebar');
+            const backdrop = document.getElementById('sidebar_backdrop');
+            if (sidebar) {
+                const isOpen = sidebar.classList.contains('translate-x-0');
+                if (isOpen) {
+                    sidebar.classList.replace('translate-x-0', '-translate-x-full');
+                    if (backdrop) backdrop.classList.add('hidden');
+                } else {
+                    sidebar.classList.replace('-translate-x-full', 'translate-x-0');
+                    if (backdrop) backdrop.classList.remove('hidden');
+                }
+            }
+        };
+
+        window.toggleSubmenu = (id) => {
+            const menu = document.getElementById(id);
+            const arrow = document.querySelector(`#${id} + button #arrow_${id}`) || document.querySelector(`[onclick="toggleSubmenu('${id}')"] .transition-transform`);
+            if (menu) {
+                menu.classList.toggle('hidden');
+                if (arrow) {
+                    const isHidden = menu.classList.contains('hidden');
+                    arrow.style.transform = isHidden ? 'rotate(0deg)' : 'rotate(90deg)';
+                }
+            }
+        };
+
+        window.logoutAdmin = () => {
+            localStorage.removeItem('gaongrow_admin_session');
+            localStorage.removeItem('gaongrow_session');
+            window.location.href = 'login.html';
+        };
+
+        // Role Detection
+        const sessionStr = localStorage.getItem('gaongrow_admin_session') || localStorage.getItem('gaongrow_session');
+        const session = sessionStr ? JSON.parse(sessionStr) : null;
+        
+        const roleMap = {
+            1: 'SUPER_ADMIN',
+            2: 'HO_USER',
+            3: 'BRANCH_MANAGER',
+            4: 'CRO',
+            5: 'AUDITOR'
+        };
+
+        let role = 'HO_USER';
+        if (session && session.user) {
+            const r = session.user.role || session.user.role_id;
+            role = typeof r === 'string' ? r.toUpperCase() : (roleMap[r] || 'HO_USER');
+        }
+
+        // Render Menu
+        const menuItems = getMenuForRole(role);
+        const container = document.getElementById('dynamicMenuContainer');
+        if (container) {
+            container.innerHTML = renderMenuHTML(menuItems);
+        }
+
+        // CRO Visibility Hardening: Hide sidebar and toggles for CROs (Mobile Focused)
+        if (role === 'CRO') {
+            const sidebar = document.getElementById('main_sidebar');
+            const backdrop = document.getElementById('sidebar_backdrop');
+            if (sidebar) sidebar.style.setProperty('display', 'none', 'important');
+            if (backdrop) backdrop.style.setProperty('display', 'none', 'important');
+            
+            // Hide all hamburger/sidebar toggle buttons
+            document.querySelectorAll('[onclick="toggleSidebar()"]').forEach(btn => {
+                btn.style.setProperty('display', 'none', 'important');
+            });
+        }
+
+        // Populate User Info
+        if (session && session.user) {
+            const user = session.user;
+            const name = user.employee_name || user.full_name || user.name || 'User';
+            const roleName = typeof user.role === 'string' ? user.role : (roleMap[user.role] || user.role_name || 'Staff');
+            const empId = user.employee_id || user.id || '---';
+
+            if (document.getElementById('user_display_role')) document.getElementById('user_display_role').textContent = roleName;
+            if (document.getElementById('user_display_id')) document.getElementById('user_display_id').textContent = empId;
+            if (document.getElementById('user_full_name')) {
+                document.getElementById('user_full_name').innerHTML = `
+                    <span class="w-1 h-1 bg-primary rounded-full animate-pulse"></span>
+                    ${name}
+                `;
+            }
+            
+            // Initials
+            const initials = name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+            if (document.getElementById('user_initials_circle')) document.getElementById('user_initials_circle').textContent = initials;
+        }
+    </script>
+</aside>
+
+
+
+
+
+
+<!-- Top Bar -->
+<header class="bg-primary text-white h-16 flex items-center px-4 sticky top-0 z-50 shadow-lg">
+    <button onclick="window.history.back()" class="p-2 -ml-2 active:scale-95 transition-transform">
+        <span class="material-symbols-outlined">arrow_back</span>
+    </button>
+    <h1 class="ml-2 text-lg font-bold">Center Details</h1>
+</header>
+
+<main class="max-w-lg mx-auto p-4 space-y-6 pb-32">
+    <form id="center_form" class="space-y-6">
+        
+        <!-- Section 1: Center Meeting Info -->
+        <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm space-y-4">
+            <div class="flex items-center gap-2 border-b border-slate-100 pb-3">
+                <span class="material-symbols-outlined text-secondary">meeting_room</span>
+                <h2 class="font-black text-primary uppercase text-sm tracking-widest">Meeting Information</h2>
+            </div>
+            
+            <div class="space-y-1.5">
+                <label class="text-[11px] font-bold text-slate-500 uppercase ml-1 tracking-wider">Center Name <span class="text-red-500">*</span></label>
+                <input id="center_name" type="text" class="w-full h-[50px] px-4 rounded-xl border border-slate-200 focus:border-secondary outline-none font-bold text-sm text-primary" placeholder="Enter Center Name" required />
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <div class="space-y-1.5">
+                    <label class="text-[11px] font-bold text-slate-500 uppercase ml-1 tracking-wider">Branch</label>
+                    <input id="branch_name" type="text" class="w-full h-[50px] px-4 rounded-xl border border-slate-200 bg-slate-50 text-slate-500 font-bold text-sm cursor-not-allowed" readonly />
+                </div>
+                <div class="space-y-1.5">
+                    <label class="text-[11px] font-bold text-slate-500 uppercase ml-1 tracking-wider">Loan Officer</label>
+                    <input id="officer_id" type="text" class="w-full h-[50px] px-4 rounded-xl border border-slate-200 bg-slate-50 text-slate-500 font-bold text-sm cursor-not-allowed" readonly />
+                </div>
+            </div>
+
+            <div class="space-y-1.5">
+                <label class="text-[11px] font-bold text-slate-500 uppercase ml-1 tracking-wider">Meeting Place <span class="text-red-500">*</span></label>
+                <input id="meeting_place" type="text" class="w-full h-[50px] px-4 rounded-xl border border-slate-200 focus:border-secondary outline-none font-bold text-sm text-primary" placeholder="e.g. Village Panchayat" required />
+            </div>
+
+            <div class="space-y-1.5 relative">
+                <label class="text-[11px] font-bold text-slate-500 uppercase ml-1 tracking-wider">Repayment Frequency <span class="text-red-500">*</span></label>
+                <select id="repayment_frequency" class="w-full h-[50px] px-4 pr-10 rounded-xl border border-slate-200 focus:border-secondary outline-none font-bold text-sm text-primary appearance-none bg-white" required>
+                    <option value="" disabled selected>Select Frequency</option>
+                    <option value="Weekly">Weekly</option>
+                    <option value="Bi-Weekly">Bi-Weekly</option>
+                    <option value="Monthly">Monthly</option>
+                </select>
+                <span class="material-symbols-outlined absolute right-4 top-[35px] text-slate-400 pointer-events-none">expand_more</span>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <div class="space-y-1.5 relative">
+                    <label class="text-[11px] font-bold text-slate-500 uppercase ml-1 tracking-wider">Center Day <span class="text-red-500">*</span></label>
+                    <select id="center_day" class="w-full h-[50px] px-4 pr-10 rounded-xl border border-slate-200 focus:border-secondary outline-none font-bold text-sm text-primary appearance-none bg-white" required>
+                        <option value="" disabled selected>Select Date</option>
+                    </select>
+                    <span class="material-symbols-outlined absolute right-4 top-[35px] text-slate-400 pointer-events-none">expand_more</span>
+                </div>
+                <div class="space-y-1.5">
+                    <label class="text-[11px] font-bold text-slate-500 uppercase ml-1 tracking-wider">Center Time <span class="text-red-500">*</span></label>
+                    <input id="center_time" type="time" class="w-full h-[50px] px-4 rounded-xl border border-slate-200 focus:border-secondary outline-none font-bold text-sm text-primary bg-white" required />
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 2: Communication Details -->
+        <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm space-y-4">
+            <div class="flex items-center gap-2 border-b border-slate-100 pb-3">
+                <span class="material-symbols-outlined text-secondary">contact_mail</span>
+                <h2 class="font-black text-primary uppercase text-sm tracking-widest">Communication Details</h2>
+            </div>
+
+            <div class="space-y-1.5">
+                <label class="text-[11px] font-bold text-slate-500 uppercase ml-1 tracking-wider">Address Line 1 <span class="text-red-500">*</span></label>
+                <input id="address_line_1" type="text" class="w-full h-[50px] px-4 rounded-xl border border-slate-200 focus:border-secondary outline-none font-bold text-sm text-primary" required />
+            </div>
+
+            <div class="space-y-1.5">
+                <label class="text-[11px] font-bold text-slate-500 uppercase ml-1 tracking-wider">Address Line 2</label>
+                <input id="address_line_2" type="text" class="w-full h-[50px] px-4 rounded-xl border border-slate-200 focus:border-secondary outline-none font-bold text-sm text-primary" />
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <div class="space-y-1.5">
+                    <label class="text-[11px] font-bold text-slate-500 uppercase ml-1 tracking-wider">Pincode <span class="text-red-500">*</span></label>
+                    <input id="pincode" type="tel" maxlength="6" inputmode="numeric" class="w-full h-[52px] px-4 rounded-xl border border-slate-200 focus:border-secondary outline-none font-bold text-sm text-primary" placeholder="6 Digits" oninput="this.value = this.value.replace(/[^0-9]/g, ''); if(this.value.length === 6) fetchLocationDetails(this.value);" required />
+                </div>
+                <div class="space-y-1.5">
+                    <label class="text-[11px] font-bold text-slate-500 uppercase ml-1 tracking-wider">District</label>
+                    <input id="district" type="text" class="w-full h-[50px] px-4 rounded-xl border border-slate-200 bg-slate-50 text-slate-500 font-bold text-sm cursor-not-allowed" readonly />
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <div class="space-y-1.5">
+                    <label class="text-[11px] font-bold text-slate-500 uppercase ml-1 tracking-wider">State</label>
+                    <input id="state" type="text" class="w-full h-[50px] px-4 rounded-xl border border-slate-200 bg-slate-50 text-slate-500 font-bold text-sm cursor-not-allowed" readonly />
+                </div>
+                <div class="space-y-1.5">
+                    <label class="text-[11px] font-bold text-slate-500 uppercase ml-1 tracking-wider">Block</label>
+                    <input id="block_name" type="text" class="w-full h-[50px] px-4 rounded-xl border border-slate-200 focus:border-secondary outline-none font-bold text-sm text-primary" required />
+                </div>
+            </div>
+
+            <div class="space-y-1.5 relative">
+                <label class="text-[11px] font-bold text-slate-500 uppercase ml-1 tracking-wider">Village <span class="text-red-500">*</span></label>
+                <select id="village_id" class="w-full h-[50px] px-4 pr-10 rounded-xl border border-slate-200 focus:border-secondary outline-none font-bold text-sm text-primary appearance-none bg-white" required>
+                    <option value="" disabled selected>Enter Pincode First...</option>
+                </select>
+                <span class="material-symbols-outlined absolute right-4 top-[35px] text-slate-400 pointer-events-none">expand_more</span>
+                <p class="text-[10px] text-slate-400 ml-1 font-bold">Only approved villages from your branch are shown.</p>
+            </div>
+        </div>
+
+        <!-- Sticky Submit Button -->
+        <div class="fixed bottom-0 left-0 w-full bg-white/95 backdrop-blur-md border-t border-slate-100 p-4 pb-8 shadow-[0_-10px_20px_-10px_rgba(0,0,0,0.1)] z-40">
+            <div class="max-w-lg mx-auto">
+                <button type="submit" id="btn_submit" class="w-full h-[54px] bg-primary text-white rounded-xl font-black uppercase tracking-widest text-sm flex items-center justify-center gap-2 active:scale-95 transition-transform shadow-lg shadow-primary/20">
+                    Submit Center <span class="material-symbols-outlined">arrow_forward</span>
+                </button>
+            </div>
+        </div>
+    </form>
+</main>
+
+<!-- Success Modal -->
+<div id="success_modal" class="fixed inset-0 z-[100] hidden">
+    <div class="absolute inset-0 bg-primary/80 backdrop-blur-sm"></div>
+    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90%] max-w-sm bg-white rounded-[2rem] p-8 text-center shadow-2xl animate-in zoom-in-95 duration-300">
+        <div class="w-20 h-20 bg-green-100 text-green-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-inner">
+            <span class="material-symbols-outlined text-[48px]">check_circle</span>
+        </div>
+        <h2 class="text-xl font-black text-primary mb-2">Center ID Created Successfully!</h2>
+        <p class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-4">Unique Center Code</p>
+        <div class="bg-slate-50 border-2 border-slate-100 rounded-xl py-4 mb-8">
+            <p id="generated_center_code" class="text-3xl font-black text-secondary tracking-widest font-mono">CTR-XXXX</p>
+        </div>
+        <button onclick="window.location.href='village_list.html'" class="w-full h-[50px] bg-primary text-white rounded-xl font-black uppercase tracking-widest text-xs flex items-center justify-center gap-2 shadow-lg shadow-primary/20 active:scale-95 transition-all">
+            Go to Centers <span class="material-symbols-outlined text-[18px]">list_alt</span>
+        </button>
+    </div>
+</div>
+
+<script type="module">
+    import supabase from '../services/supabase.js'
+
+    let currentUser = null;
+
+    async function init() {
+        const sessionStr = localStorage.getItem("gaongrow_session");
+        if (!sessionStr) { window.location.href = "login.html"; return; }
+        
+        currentUser = JSON.parse(sessionStr).user;
+        
+        // Auto-fill logged in user details
+        document.getElementById('officer_id').value = currentUser.employee_id;
+        
+        // Correctly handle the new multi-branch format with fallback
+        let branchValue = '';
+        if (currentUser.branches && currentUser.branches.length > 0) {
+            branchValue = currentUser.branches[0].branch_name;
+        } else if (currentUser.branch_codes && currentUser.branch_codes.length > 0) {
+            branchValue = currentUser.branch_codes[0]; // Fallback to code if name missing
+        } else if (currentUser.branch) {
+            branchValue = currentUser.branch;
+        }
+        
+        // Final fallback for GMPL0011
+        if (!branchValue && currentUser.employee_id === 'GMPL0011') {
+            branchValue = 'ROH_CSP';
+        }
+        
+        document.getElementById('branch_name').value = branchValue || 'No Branch';
+
+        // Populate Center Dates 01-13
+        const centerDaySelect = document.getElementById('center_day');
+        for (let i = 1; i <= 13; i++) {
+            const val = i.toString().padStart(2, '0');
+            centerDaySelect.innerHTML += `<option value="${val}">${val}</option>`;
+        }
+
+        // Removed fetchApprovedVillages from init so it only loads on Pincode entry
+    }
+
+    async function fetchApprovedVillages(pincode) {
+        const villageSelect = document.getElementById('village_id');
+        villageSelect.innerHTML = '<option value="" disabled selected>Loading Villages...</option>';
+        
+        const { data, error } = await supabase
+            .from('village_surveys')
+            .select('id, village_name, block_name')
+            .eq('status', 'approved')
+            .eq('officer_id', currentUser.employee_id)
+            .eq('pincode', pincode)
+            .order('village_name', { ascending: true });
+
+        if (error || !data || data.length === 0) {
+            villageSelect.innerHTML = '<option value="" disabled selected>No approved villages found in this pincode</option>';
+            return;
+        }
+
+        villageSelect.innerHTML = '<option value="" disabled selected>Select Village</option>' + 
+            data.map(v => `<option value="${v.village_name}">${v.village_name} (${v.block_name})</option>`).join('');
+    }
+
+    window.fetchLocationDetails = async function(pincode) {
+        if(pincode.length !== 6) return;
+        try {
+            const res = await fetch(`https://api.postalpincode.in/pincode/${pincode}`);
+            const data = await res.json();
+            if(data && data[0].Status === 'Success') {
+                const postOffice = data[0].PostOffice[0];
+                document.getElementById('district').value = postOffice.District;
+                document.getElementById('state').value = postOffice.State;
+                fetchApprovedVillages(pincode);
+            } else {
+                alert('Invalid Pincode.');
+                document.getElementById('district').value = '';
+                document.getElementById('state').value = '';
+                document.getElementById('village_id').innerHTML = '<option value="" disabled selected>Enter valid Pincode First...</option>';
+            }
+        } catch(e) {
+            console.error('Error fetching pincode', e);
+        }
+    }
+
+    document.getElementById('center_form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const btnSubmit = document.getElementById('btn_submit');
+        btnSubmit.disabled = true;
+        btnSubmit.innerHTML = `<span class="material-symbols-outlined animate-spin">refresh</span> Processing...`;
+
+        // Generate a random 4-digit code for Center Code (e.g., CTR-4892)
+        const randomCode = Math.floor(1000 + Math.random() * 9000);
+        const centerCode = `CTR-${randomCode}`;
+
+        const payload = {
+            center_code: centerCode,
+            center_name: document.getElementById('center_name').value,
+            branch_name: document.getElementById('branch_name').value,
+            meeting_place: document.getElementById('meeting_place').value,
+            repayment_frequency: document.getElementById('repayment_frequency').value,
+            center_day: document.getElementById('center_day').value,
+            center_time: document.getElementById('center_time').value,
+            officer_id: document.getElementById('officer_id').value,
+            address_line_1: document.getElementById('address_line_1').value,
+            address_line_2: document.getElementById('address_line_2').value,
+            pincode: document.getElementById('pincode').value,
+            district: document.getElementById('district').value,
+            state: document.getElementById('state').value,
+            block_name: document.getElementById('block_name').value,
+            village_id: document.getElementById('village_id').value,
+            status: 'active'
+        };
+
+        const { error } = await supabase.from('centers').insert([payload]);
+
+        if (error) {
+            console.error(error);
+            alert("Failed to create center: " + error.message);
+            btnSubmit.disabled = false;
+            btnSubmit.innerHTML = `Submit Center <span class="material-symbols-outlined">arrow_forward</span>`;
+        } else {
+            // Show Success Modal
+            document.getElementById('generated_center_code').innerText = centerCode;
+            document.getElementById('success_modal').classList.remove('hidden');
+        }
+    });
+
+    init();
+</script>
+</body>
+</html>

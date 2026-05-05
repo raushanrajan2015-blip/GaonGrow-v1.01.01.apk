@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>GaonGrow - Village Survey Form</title>
+  
+  <!-- Fonts & Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700&display=swap" rel="stylesheet"/>
+  
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#012d1d",
+            "secondary": "#1db2c9",
+            "surface": "#f8fafc",
+            "on-surface": "#1e293b",
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-surface font-['Public_Sans'] text-on-surface min-h-screen pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)]">
+
+<!-- Top Bar -->
+<header class="bg-primary text-white h-16 flex items-center px-4 sticky top-0 z-50 shadow-lg">
+    <button onclick="window.location.href='village_survey.html'" class="p-2 -ml-2 active:scale-95 transition-transform">
+        <span class="material-symbols-outlined">arrow_back</span>
+    </button>
+    <h1 class="ml-2 text-lg font-bold">New Village Survey</h1>
+    <div class="ml-auto text-[10px] font-black bg-white/20 px-3 py-1 rounded-full border border-white/10 shadow-inner uppercase tracking-widest">
+        Step <span id="step_indicator">1</span> of 3
+    </div>
+</header>
+
+<main class="p-4 max-w-lg mx-auto space-y-6 pb-24 overflow-x-hidden">
+    
+    <!-- Progress Bar -->
+    <div class="w-full bg-slate-200 rounded-full h-1.5 mb-2">
+        <div id="progress_bar" class="bg-secondary h-1.5 rounded-full transition-all duration-300 shadow-[0_0_8px_#1db2c9]" style="width: 33%"></div>
+    </div>
+
+    <form id="survey_form">
+        <!-- STEP 1: Location & Master Details -->
+        <div id="step_1" class="space-y-4 animate-in fade-in slide-in-from-right-4 duration-300">
+            <div class="mb-6">
+                <h2 class="text-xl font-black text-primary">Location Details</h2>
+                <p class="text-[11px] text-slate-500 font-bold uppercase tracking-widest">Basic geographic master data</p>
+            </div>
+            
+            <div class="space-y-1.5">
+                <div class="flex justify-between items-end">
+                    <label class="text-[11px] font-bold text-slate-500 uppercase ml-1 tracking-wider">Village Name <span class="text-red-500">*</span></label>
+                    <button type="button" id="btn_edit_village" class="text-[10px] text-secondary font-black uppercase hidden" onclick="toggleManualInput('village')">Edit Manually</button>
+                </div>
+                <div class="relative" id="village_input_container">
+                    <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-[20px]">apartment</span>
+                    <input id="village_name" type="text" class="w-full h-[54px] pl-12 pr-4 rounded-xl border border-slate-200 bg-white focus:border-secondary focus:ring-4 focus:ring-secondary/10 outline-none transition-all font-bold text-sm text-primary" placeholder="Enter Village Name" required />
+                </div>
+                <div class="relative hidden" id="village_dropdown_container">
+                    <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-[20px] z-10">apartment</span>
+                    <select id="village_dropdown" class="w-full h-[54px] pl-12 pr-10 rounded-xl border border-slate-200 bg-white focus:border-secondary focus:ring-4 focus:ring-secondary/10 outline-none transition-all font-bold text-sm text-primary appearance-none cursor-pointer" onchange="document.getElementById('village_name').value = this.value; document.getElementById('village_name').classList.remove('border-red-500', 'bg-red-50');">
+                        <option value="" disabled selected>Select Village</option>
+                    </select>
+                    <span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none">expand_more</span>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <div class="space-y-1.5 col-span-2">
+                    <label class="text-[11px] font-bold text-slate-500 uppercase ml-1 tracking-wider">Pincode <span class="text-red-500">*</span></label>
+                    <input id="pincode" type="number" class="w-full h-[54px] px-4 rounded-xl border border-slate-200 bg-white focus:border-secondary focus:ring-4 focus:ring-secondary/10 outline-none transition-all font-bold text-sm text-primary" placeholder="6-digit PIN" required maxlength="6" oninput="if(this.value.length > 6) this.value = this.value.slice(0,6); if(this.value.length === 6) fetchLocationDetails(this.value);" />
+                </div>
+                <div class="space-y-1.5">
+                    <label class="text-[11px] font-bold text-slate-500 uppercase ml-1 tracking-wider">District</label>
+                    <input id="district" type="text" class="w-full h-[54px] px-4 rounded-xl border border-slate-200 bg-slate-50 cursor-not-allowed font-bold text-sm text-slate-600" placeholder="Auto-filled" readonly required />
+                </div>
+                <div class="space-y-1.5">
+                    <label class="text-[11px] font-bold text-slate-500 uppercase ml-1 tracking-wider">State</label>
+                    <input id="state" type="text" class="w-full h-[54px] px-4 rounded-xl border border-slate-200 bg-slate-50 cursor-not-allowed font-bold text-sm text-slate-600" placeholder="Auto-filled" readonly required />
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <div class="space-y-1.5">
+                    <div class="flex justify-between items-end">
+                        <label class="text-[11px] font-bold text-slate-500 uppercase ml-1 tracking-wider">Block <span class="text-red-500">*</span></label>
+                        <button type="button" id="btn_edit_block" class="text-[10px] text-secondary font-black uppercase hidden" onclick="toggleManualInput('block')">Edit</button>
+                    </div>
+                    <div class="relative" id="block_input_container">
+                        <input id="block_name" type="text" class="w-full h-[54px] px-4 rounded-xl border border-slate-200 bg-white focus:border-secondary focus:ring-4 focus:ring-secondary/10 outline-none transition-all font-bold text-sm text-primary" placeholder="Enter Block" required />
+                    </div>
+                    <div class="relative hidden" id="block_dropdown_container">
+                        <select id="block_dropdown" class="w-full h-[54px] pl-4 pr-10 rounded-xl border border-slate-200 bg-white focus:border-secondary focus:ring-4 focus:ring-secondary/10 outline-none transition-all font-bold text-sm text-primary appearance-none cursor-pointer" onchange="document.getElementById('block_name').value = this.value; document.getElementById('block_name').classList.remove('border-red-500', 'bg-red-50');">
+                            <option value="" disabled selected>Select Block</option>
+                        </select>
+                        <span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none">expand_more</span>
+                    </div>
+                </div>
+                <div class="space-y-1.5">
+                    <label class="text-[11px] font-bold text-slate-500 uppercase ml-1 tracking-wider mt-5">Branch</label>
+                    <input id="branch_name" type="text" class="w-full h-[54px] px-4 rounded-xl border border-slate-200 bg-slate-50 cursor-not-allowed font-black text-sm text-secondary" placeholder="Branch" readonly />
+                </div>
+            </div>
+
+            <div class="space-y-1.5">
+                <label class="text-[11px] font-bold text-slate-500 uppercase ml-1 tracking-wider">Mauja Name <span class="text-red-500">*</span></label>
+                <input id="mauja_name" type="text" class="w-full h-[54px] px-4 rounded-xl border border-slate-200 bg-white focus:border-secondary focus:ring-4 focus:ring-secondary/10 outline-none transition-all font-bold text-sm text-primary" placeholder="Enter Mauja Name" required oninput="this.value = this.value.replace(/[^a-zA-Z\s]/g, '');" />
+            </div>
+
+            <button type="button" onclick="nextStep(2)" class="w-full h-[60px] bg-primary text-white font-black rounded-2xl shadow-xl shadow-primary/20 active:scale-[0.98] transition-all flex items-center justify-center gap-2 uppercase tracking-widest mt-8">
+                Next Step
+                <span class="material-symbols-outlined">arrow_forward</span>
+            </button>
+        </div>
+
+        <!-- STEP 2: Distances & Demographics -->
+        <div id="step_2" class="hidden space-y-4 animate-in fade-in slide-in-from-right-4 duration-300">
+            <div class="mb-6">
+                <h2 class="text-xl font-black text-primary">Demographics & Infrastructure</h2>
+                <p class="text-[11px] text-slate-500 font-bold uppercase tracking-widest">Population and distances</p>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <div class="space-y-1.5 col-span-2">
+                    <label class="text-[11px] font-bold text-slate-500 uppercase ml-1 tracking-wider">Total Population <span class="text-red-500">*</span></label>
+                    <input id="total_population" type="number" class="w-full h-[54px] px-4 rounded-xl border border-slate-200 bg-white focus:border-secondary focus:ring-4 focus:ring-secondary/10 outline-none transition-all font-bold text-sm text-primary" placeholder="0" required />
+                </div>
+                <div class="space-y-1.5">
+                    <label class="text-[11px] font-bold text-slate-500 uppercase ml-1 tracking-wider">Households <span class="text-red-500">*</span></label>
+                    <input id="house_count" type="number" class="w-full h-[54px] px-4 rounded-xl border border-slate-200 bg-white focus:border-secondary focus:ring-4 focus:ring-secondary/10 outline-none transition-all font-bold text-sm text-primary" placeholder="0" required />
+                </div>
+                <div class="space-y-1.5">
+                    <label class="text-[11px] font-bold text-slate-500 uppercase ml-1 tracking-wider">Potential <span class="text-red-500">*</span></label>
+                    <input id="potential_count" type="number" class="w-full h-[54px] px-4 rounded-xl border border-slate-200 bg-white focus:border-secondary focus:ring-4 focus:ring-secondary/10 outline-none transition-all font-bold text-sm text-primary" placeholder="0" required />
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4 border-t border-slate-200 pt-5 mt-2">
+                <div class="space-y-1.5">
+                    <label class="text-[10px] font-bold text-slate-500 uppercase ml-1 tracking-wider leading-tight">Dist. from Branch (km) <span class="text-red-500">*</span></label>
+                    <input id="distance_from_branch" type="number" step="0.1" class="w-full h-[54px] px-4 rounded-xl border border-slate-200 bg-white focus:border-secondary outline-none font-bold text-sm text-primary" required />
+                </div>
+                <div class="space-y-1.5">
+                    <label class="text-[10px] font-bold text-slate-500 uppercase ml-1 tracking-wider leading-tight">Nearest Bank (km) <span class="text-red-500">*</span></label>
+                    <input id="nearest_bank_distance" type="number" step="0.1" class="w-full h-[54px] px-4 rounded-xl border border-slate-200 bg-white focus:border-secondary outline-none font-bold text-sm text-primary" required />
+                </div>
+                <div class="space-y-1.5 col-span-2">
+                    <label class="text-[11px] font-bold text-slate-500 uppercase ml-1 tracking-wider">Police Station Distance (km) <span class="text-red-500">*</span></label>
+                    <input id="police_station_distance" type="number" step="0.1" class="w-full h-[54px] px-4 rounded-xl border border-slate-200 bg-white focus:border-secondary outline-none font-bold text-sm text-primary" required />
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4 border-t border-slate-200 pt-5 mt-2">
+                <div class="space-y-1.5">
+                    <label class="text-[11px] font-bold text-slate-500 uppercase ml-1 tracking-wider">Road Type <span class="text-red-500">*</span></label>
+                    <select id="road_type" class="w-full h-[54px] px-4 rounded-xl border border-slate-200 bg-white focus:border-secondary outline-none font-bold text-sm text-primary" required>
+                        <option value="" disabled selected>Select</option>
+                        <option value="Kacha">Kacha</option>
+                        <option value="Pakka">Pakka</option>
+                        <option value="Semi-Pakka">Semi-Pakka</option>
+                        <option value="CC Road">CC Road</option>
+                        <option value="WBM">WBM</option>
+                    </select>
+                </div>
+                <div class="space-y-1.5">
+                    <label class="text-[11px] font-bold text-slate-500 uppercase ml-1 tracking-wider">Flood Affected <span class="text-red-500">*</span></label>
+                    <select id="flood_affected" class="w-full h-[54px] px-4 rounded-xl border border-slate-200 bg-white focus:border-secondary outline-none font-bold text-sm text-primary" required>
+                        <option value="" disabled selected>Select</option>
+                        <option value="Yes">Yes</option>
+                        <option value="No">No</option>
+                    </select>
+                </div>
+                <div class="space-y-1.5">
+                    <label class="text-[11px] font-bold text-slate-500 uppercase ml-1 tracking-wider">Migration <span class="text-red-500">*</span></label>
+                    <select id="migration" class="w-full h-[54px] px-4 rounded-xl border border-slate-200 bg-white focus:border-secondary outline-none font-bold text-sm text-primary" required>
+                        <option value="" disabled selected>Select</option>
+                        <option value="Low">Low</option>
+                        <option value="Medium">Medium</option>
+                        <option value="High">High</option>
+                    </select>
+                </div>
+                <div class="space-y-1.5">
+                    <label class="text-[11px] font-bold text-slate-500 uppercase ml-1 tracking-wider">Area Type <span class="text-red-500">*</span></label>
+                    <select id="rural_flag" class="w-full h-[54px] px-4 rounded-xl border border-slate-200 bg-white focus:border-secondary outline-none font-bold text-sm text-primary" required>
+                        <option value="" disabled selected>Select</option>
+                        <option value="Rural">Rural</option>
+                        <option value="Urban">Urban</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="flex gap-3 pt-6">
+                <button type="button" onclick="nextStep(1)" class="w-1/3 h-[60px] bg-slate-200 text-slate-600 font-bold rounded-2xl active:scale-[0.98] transition-all flex items-center justify-center">
+                    <span class="material-symbols-outlined">arrow_back</span> Back
+                </button>
+                <button type="button" onclick="nextStep(3)" class="w-2/3 h-[60px] bg-primary text-white font-black rounded-2xl shadow-xl shadow-primary/20 active:scale-[0.98] transition-all flex items-center justify-center gap-2 uppercase tracking-widest">
+                    Next Step <span class="material-symbols-outlined">arrow_forward</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- STEP 3: Verification & Capture -->
+        <div id="step_3" class="hidden space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
+            <div class="mb-6">
+                <h2 class="text-xl font-black text-primary">Verification</h2>
+                <p class="text-[11px] text-slate-500 font-bold uppercase tracking-widest">Photo capture & GPS lock</p>
+            </div>
+
+            <!-- GPS Location -->
+            <div class="bg-white p-4 rounded-2xl flex items-center justify-between border border-slate-200 shadow-sm">
+                <div class="flex items-center gap-3">
+                    <span class="material-symbols-outlined text-primary text-[28px]">my_location</span>
+                    <div>
+                        <p class="text-[13px] font-black uppercase tracking-wide text-primary">GPS Location</p>
+                        <p id="location_status" class="text-[11px] text-amber-600 font-bold">Auto-capturing...</p>
+                    </div>
+                </div>
+                <div id="location_indicator" class="w-3 h-3 rounded-full bg-amber-500 animate-pulse border-2 border-white shadow-sm"></div>
+            </div>
+
+            <!-- Mandatory Live Photo -->
+            <div class="space-y-3">
+                <div class="flex justify-between items-end">
+                    <label class="text-[11px] font-bold text-slate-500 uppercase ml-1 tracking-wider">Village Verification Photo <span class="text-red-500">*</span></label>
+                </div>
+                
+                <div class="bg-slate-100 rounded-2xl border-2 border-dashed border-slate-300 p-2 flex flex-col items-center justify-center min-h-[250px] relative overflow-hidden">
+                    <!-- Video Element for Camera Feed -->
+                    <video id="camera_feed" class="w-full h-full object-cover rounded-xl bg-black absolute inset-0 hidden" autoplay playsinline></video>
+                    
+                    <!-- Canvas for Captured Image -->
+                    <canvas id="photo_canvas" class="hidden w-full h-full object-cover rounded-xl absolute inset-0"></canvas>
+                    
+                    <!-- Initial State -->
+                    <div id="camera_prompt" class="text-center space-y-3 p-4 z-10">
+                        <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center mx-auto shadow-sm">
+                            <span class="material-symbols-outlined text-secondary text-[32px]">photo_camera</span>
+                        </div>
+                        <p class="text-[11px] font-bold text-slate-500 uppercase tracking-wide">Live Capture Required</p>
+                    </div>
+
+                    <button type="button" id="btn_start_camera" class="absolute bottom-4 z-10 bg-secondary text-primary px-5 py-2.5 rounded-full font-black text-sm uppercase tracking-widest shadow-xl shadow-secondary/30 flex items-center gap-2 active:scale-95 transition-all">
+                        <span class="material-symbols-outlined text-[18px]">videocam</span>
+                        Start Camera
+                    </button>
+
+                    <button type="button" id="btn_capture" class="hidden absolute bottom-4 z-10 bg-white text-primary px-5 py-2.5 rounded-full font-black text-sm uppercase tracking-widest shadow-xl shadow-black/20 flex items-center gap-2 active:scale-95 transition-all border-2 border-white">
+                        <div class="w-4 h-4 rounded-full bg-red-500 animate-pulse"></div>
+                        Capture Photo
+                    </button>
+                    
+                    <button type="button" id="btn_retake" class="hidden absolute bottom-4 z-10 bg-white text-slate-700 px-5 py-2.5 rounded-full font-black text-sm uppercase tracking-widest shadow-xl shadow-black/10 flex items-center gap-2 active:scale-95 transition-all">
+                        <span class="material-symbols-outlined">replay</span>
+                        Retake
+                    </button>
+                </div>
+                <p class="text-[10px] text-slate-400 font-bold italic ml-1">* Capture a photo of a school, panchayat, or identifiable landmark in the village. Gallery uploads are restricted.</p>
+                <input type="hidden" id="photo_data" required />
+            </div>
+
+            <div class="flex gap-3 pt-6 border-t border-slate-200">
+                <button type="button" onclick="nextStep(2)" class="w-1/3 h-[60px] bg-slate-200 text-slate-600 font-bold rounded-2xl active:scale-[0.98] transition-all flex items-center justify-center">
+                    <span class="material-symbols-outlined">arrow_back</span> Back
+                </button>
+                <button id="btn_submit" type="submit" class="w-2/3 h-[60px] bg-primary text-white font-black rounded-2xl shadow-xl shadow-primary/20 active:scale-[0.98] transition-all flex items-center justify-center gap-2 uppercase tracking-widest opacity-50 cursor-not-allowed" disabled>
+                    Submit <span class="material-symbols-outlined">check_circle</span>
+                </button>
+            </div>
+        </div>
+
+    </form>
+</main>
+
+<script type="module">
+    import supabase from '../services/supabase.js'
+
+    const form = document.getElementById('survey_form');
+    const btnSubmit = document.getElementById('btn_submit');
+    const urlParams = new URLSearchParams(window.location.search);
+    const surveyId = urlParams.get('id');
+    
+    let coords = null;
+    let cameraStream = null;
+
+    // Camera Elements
+    const video = document.getElementById('camera_feed');
+    const canvas = document.getElementById('photo_canvas');
+    const btnStartCamera = document.getElementById('btn_start_camera');
+    const btnCapture = document.getElementById('btn_capture');
+    const btnRetake = document.getElementById('btn_retake');
+    const photoData = document.getElementById('photo_data');
+    const cameraPrompt = document.getElementById('camera_prompt');
+
+    // Multi-page logic
+    window.nextStep = function(step) {
+        // Validate Step 1
+        if (step === 2) {
+            const required1 = ['village_name', 'pincode', 'block_name', 'mauja_name'];
+            let isValid = true;
+            required1.forEach(id => {
+                if(!document.getElementById(id).value) {
+                    document.getElementById(id).classList.add('border-red-500', 'bg-red-50');
+                    isValid = false;
+                } else {
+                    document.getElementById(id).classList.remove('border-red-500', 'bg-red-50');
+                }
+            });
+            if(!isValid) return alert("Please fill all required fields in Location Details.");
+        }
+        
+        // Validate Step 2
+        if (step === 3) {
+            const required2 = ['total_population', 'house_count', 'potential_count', 'distance_from_branch', 'nearest_bank_distance', 'police_station_distance', 'road_type', 'flood_affected', 'migration', 'rural_flag'];
+            let isValid = true;
+            required2.forEach(id => {
+                if(!document.getElementById(id).value) {
+                    document.getElementById(id).classList.add('border-red-500', 'bg-red-50');
+                    isValid = false;
+                } else {
+                    document.getElementById(id).classList.remove('border-red-500', 'bg-red-50');
+                }
+            });
+            if(!isValid) return alert("Please fill all required fields in Demographics.");
+        }
+
+        // Transitions
+        document.getElementById('step_1').classList.add('hidden');
+        document.getElementById('step_2').classList.add('hidden');
+        document.getElementById('step_3').classList.add('hidden');
+        
+        document.getElementById(`step_${step}`).classList.remove('hidden');
+        document.getElementById('step_indicator').innerText = step;
+
+        const progress = step === 1 ? '33%' : step === 2 ? '66%' : '100%';
+        document.getElementById('progress_bar').style.width = progress;
+    }
+
+    window.toggleManualInput = function(field) {
+        document.getElementById(`${field}_dropdown_container`).classList.add('hidden');
+        document.getElementById(`${field}_input_container`).classList.remove('hidden');
+        document.getElementById(`btn_edit_${field}`).classList.add('hidden');
+        document.getElementById(`${field}_name`).value = '';
+        document.getElementById(`${field}_name`).focus();
+    }
+
+    // Pincode API
+    window.fetchLocationDetails = async function(pincode) {
+        if(pincode.length !== 6) return;
+        try {
+            const res = await fetch(`https://api.postalpincode.in/pincode/${pincode}`);
+            const data = await res.json();
+            if(data && data[0].Status === 'Success') {
+                const postOffices = data[0].PostOffice;
+                document.getElementById('district').value = postOffices[0].District;
+                document.getElementById('state').value = postOffices[0].State;
+                
+                // Extract unique villages & blocks
+                const villages = [...new Set(postOffices.map(po => po.Name))].sort();
+                const blocks = [...new Set(postOffices.map(po => po.Block).filter(b => b && b !== "NA"))].sort();
+                
+                // Populate Village Dropdown
+                const vSelect = document.getElementById('village_dropdown');
+                vSelect.innerHTML = '<option value="" disabled selected>Select Village</option>' + 
+                    villages.map(v => `<option value="${v}">${v}</option>`).join('');
+                    
+                // Populate Block Dropdown
+                const bSelect = document.getElementById('block_dropdown');
+                bSelect.innerHTML = '<option value="" disabled selected>Select Block</option>' + 
+                    blocks.map(b => `<option value="${b}">${b}</option>`).join('');
+                    
+                // Show Dropdowns
+                document.getElementById('village_dropdown_container').classList.remove('hidden');
+                document.getElementById('village_input_container').classList.add('hidden');
+                document.getElementById('btn_edit_village').classList.remove('hidden');
+                
+                if(blocks.length > 0) {
+                    document.getElementById('block_dropdown_container').classList.remove('hidden');
+                    document.getElementById('block_input_container').classList.add('hidden');
+                    document.getElementById('btn_edit_block').classList.remove('hidden');
+                }
+                
+                // Clear inputs until selection
+                document.getElementById('village_name').value = '';
+                document.getElementById('block_name').value = '';
+            } else {
+                alert('Invalid Pincode.');
+                document.getElementById('district').value = '';
+                document.getElementById('state').value = '';
+            }
+        } catch(e) {
+            console.error('Error fetching pincode', e);
+        }
+    }
+
+    async function init() {
+        const sessionStr = localStorage.getItem("gaongrow_session");
+        if (!sessionStr) { window.location.href = "login.html"; return; }
+        const session = JSON.parse(sessionStr);
+
+        // Correctly handle the new multi-branch format for auto-fill
+        if (session.user.branches && session.user.branches.length > 0) {
+            document.getElementById('branch_name').value = session.user.branches[0].branch_name;
+        } else if (session.user.branch) {
+            document.getElementById('branch_name').value = session.user.branch;
+        }
+
+        // GPS Capture
+        if ("geolocation" in navigator) {
+            navigator.geolocation.getCurrentPosition((pos) => {
+                coords = `${pos.coords.latitude}, ${pos.coords.longitude}`;
+                document.getElementById('location_status').innerText = "Location Captured ✅";
+                document.getElementById('location_status').classList.replace('text-amber-600', 'text-green-600');
+                document.getElementById('location_indicator').classList.replace('bg-amber-500', 'bg-green-500');
+                document.getElementById('location_indicator').classList.remove('animate-pulse');
+                checkSubmitStatus();
+            }, (err) => {
+                document.getElementById('location_status').innerText = "Location Failed ❌";
+                document.getElementById('location_status').classList.replace('text-amber-600', 'text-red-600');
+                document.getElementById('location_indicator').classList.replace('bg-amber-500', 'bg-red-500');
+                document.getElementById('location_indicator').classList.remove('animate-pulse');
+            });
+        }
+    }
+
+    // Camera Logic
+    btnStartCamera.addEventListener('click', async () => {
+        try {
+            cameraStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' }, audio: false });
+            video.srcObject = cameraStream;
+            video.classList.remove('hidden');
+            cameraPrompt.classList.add('hidden');
+            btnStartCamera.classList.add('hidden');
+            btnCapture.classList.remove('hidden');
+            canvas.classList.add('hidden');
+        } catch (err) {
+            console.error("Camera error:", err);
+            alert("Camera access is required to capture the village photo. Please enable permissions.");
+        }
+    });
+
+    btnCapture.addEventListener('click', () => {
+        // Draw video frame to canvas
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+        
+        // Stop video and show image
+        if (cameraStream) {
+            cameraStream.getTracks().forEach(track => track.stop());
+            cameraStream = null;
+        }
+        video.classList.add('hidden');
+        canvas.classList.remove('hidden');
+        
+        // Store base64 data
+        photoData.value = canvas.toDataURL('image/jpeg', 0.8);
+        
+        // UI Updates
+        btnCapture.classList.add('hidden');
+        btnRetake.classList.remove('hidden');
+        
+        checkSubmitStatus();
+    });
+
+    btnRetake.addEventListener('click', () => {
+        photoData.value = '';
+        btnRetake.classList.add('hidden');
+        btnStartCamera.click();
+        checkSubmitStatus();
+    });
+
+    function checkSubmitStatus() {
+        if (photoData.value && coords) {
+            btnSubmit.disabled = false;
+            btnSubmit.classList.remove('opacity-50', 'cursor-not-allowed');
+        } else {
+            btnSubmit.disabled = true;
+            btnSubmit.classList.add('opacity-50', 'cursor-not-allowed');
+        }
+    }
+
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        if (!photoData.value) {
+            alert("Mandatory village photo is missing.");
+            return;
+        }
+        if (!coords) {
+            alert("GPS location is missing. Please ensure location services are enabled.");
+            return;
+        }
+
+        btnSubmit.disabled = true;
+        btnSubmit.innerHTML = `SAVING... <span class="material-symbols-outlined animate-spin">sync</span>`;
+
+        const session = JSON.parse(localStorage.getItem("gaongrow_session"));
+        
+        const surveyData = {
+            officer_id: session.user.employee_id,
+            officer_name: session.user.name,
+            village_name: document.getElementById('village_name').value,
+            block_name: document.getElementById('block_name').value,
+            district: document.getElementById('district').value,
+            house_count: parseInt(document.getElementById('house_count').value),
+            potential_members: parseInt(document.getElementById('potential_count').value),
+            location: coords,
+            status: 'pending',
+            created_at: new Date()
+        };
+
+        // Extra fields mapping (requires DB schema matching these columns or JSON support)
+        Object.assign(surveyData, {
+            pincode: document.getElementById('pincode').value,
+            state: document.getElementById('state').value,
+            branch_name: document.getElementById('branch_name').value,
+            mauja_name: document.getElementById('mauja_name').value,
+            total_population: parseInt(document.getElementById('total_population').value),
+            distance_from_branch: parseFloat(document.getElementById('distance_from_branch').value),
+            nearest_bank_distance: parseFloat(document.getElementById('nearest_bank_distance').value),
+            police_station_distance: parseFloat(document.getElementById('police_station_distance').value),
+            road_type: document.getElementById('road_type').value,
+            flood_affected: document.getElementById('flood_affected').value,
+            migration: document.getElementById('migration').value,
+            rural_flag: document.getElementById('rural_flag').value,
+            village_photo: photoData.value
+        });
+
+        let result;
+        if (surveyId) {
+            result = await supabase.from('village_surveys').update(surveyData).eq('id', surveyId);
+        } else {
+            result = await supabase.from('village_surveys').insert([surveyData]);
+        }
+
+        if (result.error) {
+            console.error(result.error);
+            if(result.error.code === 'PGRST204' || result.error.message.includes('column')) {
+                alert("Database schema mismatch. Backend columns for the new fields are missing.");
+            } else {
+                alert("Error: " + result.error.message);
+            }
+            btnSubmit.disabled = false;
+            btnSubmit.innerHTML = `Submit <span class="material-symbols-outlined">check_circle</span>`;
+        } else {
+            alert("Survey submitted successfully!");
+            window.location.href = "village_survey.html";
+        }
+    });
+
+    init();
+</script>
+</body>
+</html>

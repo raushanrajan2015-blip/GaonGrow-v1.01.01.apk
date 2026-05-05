@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>GaonGrow - Select Center</title>
+    <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700" rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#6B8E23',
+                        secondary: '#C5A028',
+                        accent: '#C5A028',
+                        surface: '#f8fafc',
+                        'on-surface': '#1e293b',
+                        navy: '#0f172a',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-slate-50 font-['Public_Sans'] text-on-surface min-h-screen">
+
+<!-- PREMIUM SIDEBAR TEMPLATE -->
+<div id="sidebar_backdrop" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[90] hidden lg:hidden" onclick="toggleSidebar()"></div>
+<aside id="main_sidebar" class="fixed inset-y-0 left-0 z-[100] w-80 bg-[#011a14] text-slate-400 flex flex-col shrink-0 overflow-hidden shadow-2xl border-r border-white/5 font-['Public_Sans'] transform -translate-x-full lg:translate-x-0 lg:static transition-transform duration-300 ease-in-out">
+    <!-- Header Section: Premium Branding -->
+    <div class="p-8 border-b border-white/5 flex items-center gap-5 bg-gradient-to-b from-[#012d1d] to-transparent">
+        <div class="w-14 h-14 bg-white rounded-[1.25rem] flex items-center justify-center p-2 shadow-2xl shadow-white/10 overflow-hidden shrink-0 border border-slate-200/50 group-hover:scale-110 transition-transform duration-500">
+            <img src="../assets/gaongrow_tractor_logo.png" class="w-full h-full object-contain filter drop-shadow-md" onerror="this.src='https://cdn-icons-png.flaticon.com/512/2554/2554904.png'" />
+        </div>
+        <div>
+            <h1 class="text-[17px] font-black tracking-tighter text-white uppercase leading-none mb-1.5">GaonGrow <span class="text-secondary">Finance</span></h1>
+            <p class="text-[9px] font-extrabold text-slate-500 uppercase tracking-[0.25em] opacity-80">Core Banking System</p>
+        </div>
+    </div>
+
+    <!-- User Profile: Dynamic & Premium -->
+    <div class="px-8 py-6 border-b border-white/5 bg-white/5 group">
+        <div class="flex items-center gap-4">
+            <div class="relative">
+                <div id="user_initials_circle" class="w-11 h-11 bg-gradient-to-tr from-secondary to-yellow-600 rounded-2xl flex items-center justify-center text-navy font-black text-xs shadow-xl group-hover:rotate-12 transition-all duration-500">
+                    --
+                </div>
+                <span class="absolute -bottom-1 -right-1 w-4 h-4 bg-primary border-2 border-[#011a14] rounded-full"></span>
+            </div>
+            <div>
+                <div class="flex items-center gap-2">
+                    <p id="user_display_role" class="text-[12px] font-black text-white uppercase tracking-tight">Loading...</p>
+                    <span id="user_display_id" class="text-[8px] bg-white/10 px-1.5 py-0.5 rounded-md text-slate-400 font-bold">---</span>
+                </div>
+                <p id="user_full_name" class="text-[9px] font-bold text-slate-500 uppercase tracking-widest mt-0.5 flex items-center gap-1">
+                    <span class="w-1 h-1 bg-primary rounded-full animate-pulse"></span>
+                    Live Session
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dynamic Navigation List -->
+    <nav id="dynamicMenuContainer" class="flex-1 overflow-y-auto custom-scrollbar px-4 py-6 space-y-2">
+        <!-- Menu items will be injected here via menuService.js -->
+        {{DYNAMIC_MENU}}
+    </nav>
+
+
+    <!-- Logout Area -->
+    <div class="p-6 border-t border-white/5 bg-white/5">
+        <button onclick="logoutAdmin()" class="w-full flex items-center justify-center gap-3 px-4 py-4 rounded-2xl bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white transition-all duration-300 group shadow-xl">
+            <span class="material-symbols-outlined text-[22px] group-hover:rotate-180 transition-transform duration-500">logout</span>
+            <span class="text-[11px] font-black uppercase tracking-widest">Exit System</span>
+        </button>
+    </div>
+
+    <!-- Dynamic Menu Loader -->
+    <script type="module">
+        import { getMenuForRole, renderMenuHTML } from '../services/menuService.js';
+        
+        // Global Helpers
+        window.toggleSidebar = () => {
+            const sidebar = document.getElementById('main_sidebar');
+            const backdrop = document.getElementById('sidebar_backdrop');
+            if (sidebar) {
+                const isOpen = sidebar.classList.contains('translate-x-0');
+                if (isOpen) {
+                    sidebar.classList.replace('translate-x-0', '-translate-x-full');
+                    if (backdrop) backdrop.classList.add('hidden');
+                } else {
+                    sidebar.classList.replace('-translate-x-full', 'translate-x-0');
+                    if (backdrop) backdrop.classList.remove('hidden');
+                }
+            }
+        };
+
+        window.toggleSubmenu = (id) => {
+            const menu = document.getElementById(id);
+            const arrow = document.querySelector(`#${id} + button #arrow_${id}`) || document.querySelector(`[onclick="toggleSubmenu('${id}')"] .transition-transform`);
+            if (menu) {
+                menu.classList.toggle('hidden');
+                if (arrow) {
+                    const isHidden = menu.classList.contains('hidden');
+                    arrow.style.transform = isHidden ? 'rotate(0deg)' : 'rotate(90deg)';
+                }
+            }
+        };
+
+        window.logoutAdmin = () => {
+            localStorage.removeItem('gaongrow_admin_session');
+            localStorage.removeItem('gaongrow_session');
+            window.location.href = 'login.html';
+        };
+
+        // Role Detection
+        const sessionStr = localStorage.getItem('gaongrow_admin_session') || localStorage.getItem('gaongrow_session');
+        const session = sessionStr ? JSON.parse(sessionStr) : null;
+        
+        const roleMap = {
+            1: 'SUPER_ADMIN',
+            2: 'HO_USER',
+            3: 'BRANCH_MANAGER',
+            4: 'CRO',
+            5: 'AUDITOR'
+        };
+
+        let role = 'HO_USER';
+        if (session && session.user) {
+            const r = session.user.role || session.user.role_id;
+            role = typeof r === 'string' ? r.toUpperCase() : (roleMap[r] || 'HO_USER');
+        }
+
+        // Render Menu
+        const menuItems = getMenuForRole(role);
+        const container = document.getElementById('dynamicMenuContainer');
+        if (container) {
+            container.innerHTML = renderMenuHTML(menuItems);
+        }
+
+        // CRO Visibility Hardening: Hide sidebar and toggles for CROs (Mobile Focused)
+        if (role === 'CRO') {
+            const sidebar = document.getElementById('main_sidebar');
+            const backdrop = document.getElementById('sidebar_backdrop');
+            if (sidebar) sidebar.style.setProperty('display', 'none', 'important');
+            if (backdrop) backdrop.style.setProperty('display', 'none', 'important');
+            
+            // Hide all hamburger/sidebar toggle buttons
+            document.querySelectorAll('[onclick="toggleSidebar()"]').forEach(btn => {
+                btn.style.setProperty('display', 'none', 'important');
+            });
+        }
+
+        // Populate User Info
+        if (session && session.user) {
+            const user = session.user;
+            const name = user.employee_name || user.full_name || user.name || 'User';
+            const roleName = typeof user.role === 'string' ? user.role : (roleMap[user.role] || user.role_name || 'Staff');
+            const empId = user.employee_id || user.id || '---';
+
+            if (document.getElementById('user_display_role')) document.getElementById('user_display_role').textContent = roleName;
+            if (document.getElementById('user_display_id')) document.getElementById('user_display_id').textContent = empId;
+            if (document.getElementById('user_full_name')) {
+                document.getElementById('user_full_name').innerHTML = `
+                    <span class="w-1 h-1 bg-primary rounded-full animate-pulse"></span>
+                    ${name}
+                `;
+            }
+            
+            // Initials
+            const initials = name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+            if (document.getElementById('user_initials_circle')) document.getElementById('user_initials_circle').textContent = initials;
+        }
+    </script>
+</aside>
+
+
+
+
+
+
+<!-- Top Bar -->
+<header class="bg-primary text-white h-16 flex items-center px-6 sticky top-0 z-50 shadow-lg">
+    <button onclick="window.location.href='dashboard.html'" class="p-2 -ml-2 active:scale-95 transition-transform">
+        <span class="material-symbols-outlined">arrow_back</span>
+    </button>
+    <div class="ml-4">
+        <h1 class="text-lg font-black uppercase tracking-tight leading-none">Select Center</h1>
+        <p class="text-[10px] font-black text-secondary uppercase tracking-widest mt-1">KYC Prerequisite</p>
+    </div>
+</header>
+
+<main class="max-w-md mx-auto p-6 space-y-6">
+    
+    <!-- Info Card -->
+    <div class="bg-navy text-white p-6 rounded-[2.5rem] shadow-2xl relative overflow-hidden">
+        <div class="absolute top-0 right-0 p-4 opacity-10">
+            <span class="material-symbols-outlined text-6xl">corporate_fare</span>
+        </div>
+        <p class="text-[10px] font-black text-secondary uppercase tracking-[0.2em] mb-1">Assigned Branch</p>
+        <h2 id="branch_name" class="text-xl font-black uppercase tracking-tight">Loading...</h2>
+        <div class="mt-4 flex items-center gap-2">
+            <span class="w-2 h-2 bg-secondary rounded-full animate-pulse"></span>
+            <p id="officer_name" class="text-xs font-bold text-white/60">CRO: Loading...</p>
+        </div>
+    </div>
+
+    <!-- Branch Selection -->
+    <div id="branch_selector_container" class="bg-white rounded-[2.5rem] p-8 shadow-sm border border-slate-100 space-y-6 hidden">
+        <div class="space-y-2">
+            <label class="text-[11px] font-black text-slate-400 uppercase ml-1 tracking-widest">Your Assigned Branch</label>
+            <div class="relative">
+                <select id="branch_select" onchange="handleBranchChange(this.value)" class="w-full h-14 px-5 rounded-2xl border border-slate-200 bg-slate-50/50 text-sm font-bold focus:bg-white focus:border-secondary outline-none transition-all appearance-none">
+                    <option value="">Select Branch</option>
+                </select>
+                <span class="material-symbols-outlined absolute right-4 top-4 text-slate-400 pointer-events-none">business</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Center Selection -->
+    <div class="bg-white rounded-[2.5rem] p-8 shadow-sm border border-slate-100 space-y-6">
+        <div class="space-y-2">
+            <label class="text-[11px] font-black text-slate-400 uppercase ml-1 tracking-widest">Select Operational Center</label>
+            <div class="relative">
+                <select id="center_select" onchange="handleCenterChange(this.value)" class="w-full h-14 px-5 rounded-2xl border border-slate-200 bg-slate-50/50 text-sm font-bold focus:bg-white focus:border-secondary outline-none transition-all appearance-none">
+                    <option value="">Choose Center</option>
+                </select>
+                <span class="material-symbols-outlined absolute right-4 top-4 text-slate-400 pointer-events-none">expand_more</span>
+            </div>
+        </div>
+
+        <!-- Center Details Display -->
+        <div id="center_details" class="hidden space-y-4 pt-4 border-t border-slate-50">
+            <div class="grid grid-cols-2 gap-4">
+                <div class="p-4 bg-slate-50 rounded-2xl border border-slate-100">
+                    <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Center ID</p>
+                    <p id="display_center_id" class="text-sm font-black text-primary">--</p>
+                </div>
+                <div class="p-4 bg-slate-50 rounded-2xl border border-slate-100">
+                    <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Group Code</p>
+                    <p id="display_group" class="text-sm font-black text-primary">G-01</p>
+                </div>
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+                <div class="p-4 bg-slate-50 rounded-2xl border border-slate-100">
+                    <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Meeting Day</p>
+                    <div class="flex items-center gap-2">
+                        <span class="material-symbols-outlined text-secondary text-lg">calendar_today</span>
+                        <p id="display_day" class="text-sm font-black text-primary">--</p>
+                    </div>
+                </div>
+                <div class="p-4 bg-slate-50 rounded-2xl border border-slate-100">
+                    <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Meeting Time</p>
+                    <div class="flex items-center gap-2">
+                        <span class="material-symbols-outlined text-secondary text-lg">schedule</span>
+                        <p id="display_time" class="text-sm font-black text-primary">--</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Instructions -->
+    <div class="p-4 bg-amber-50 rounded-2xl border border-amber-100 flex gap-3">
+        <span class="material-symbols-outlined text-amber-600">info</span>
+        <p class="text-[11px] text-amber-900 font-bold leading-relaxed">Selecting a center is mandatory. All subsequent member records will be automatically tagged to this center for CGT/GRT meetings.</p>
+    </div>
+
+</main>
+
+<!-- Bottom Action -->
+<footer class="fixed bottom-0 left-0 w-full p-6 bg-white/80 backdrop-blur-md border-t border-slate-100 z-50">
+    <button id="btn_continue" onclick="startKYC()" disabled class="w-full h-16 bg-slate-200 text-slate-400 rounded-[2rem] font-black uppercase tracking-widest transition-all cursor-not-allowed">
+        Continue to KYC
+    </button>
+</footer>
+
+<div id="toast" class="fixed top-24 left-1/2 -translate-x-1/2 bg-navy text-white px-6 py-3 rounded-full text-[10px] font-black uppercase tracking-widest shadow-2xl z-[100] hidden"></div>
+
+<script type="module">
+    import supabase from '../services/supabase.js'
+
+    let currentUser = null;
+    let centersData = [];
+    let selectedBranch = null;
+
+    async function init() {
+        const sessionStr = localStorage.getItem("gaongrow_session");
+        if (!sessionStr) { window.location.href = "login.html"; return; }
+        currentUser = JSON.parse(sessionStr).user;
+
+        document.getElementById('officer_name').innerText = `CRO: ${currentUser.name}`;
+
+        // Populate Branches
+        const branchSelect = document.getElementById('branch_select');
+        let branches = currentUser.branches || [];
+        
+        // Fallback: If branches table lookup failed but user has codes, show the codes
+        const codes = currentUser.branch_codes || [];
+        if (branches.length === 0 && codes.length > 0) {
+            branches = codes.map(code => ({
+                branch_code: code,
+                branch_name: code // Fallback to code as name
+            }));
+        }
+        
+        // Final Fallback for unblocking the user if even codes are missing but we know they belong to ROH_CSP
+        if (branches.length === 0 && currentUser.employee_id === 'GMPL0011') {
+            branches = [{ branch_code: 'ROH_CSP', branch_name: 'ROH_CSP' }];
+        }
+
+        if (branches.length > 0) {
+            document.getElementById('branch_selector_container').classList.remove('hidden');
+            branchSelect.innerHTML = ''; // Clear loading
+            branches.forEach(b => {
+                const bName = b.branch_name || b.branch_code || 'Unnamed Branch';
+                branchSelect.innerHTML += `<option value="${bName}">${bName}</option>`;
+            });
+            
+            // Auto-select first branch
+            const firstBranchName = branches[0].branch_name || branches[0].branch_code;
+            branchSelect.value = firstBranchName;
+            handleBranchChange(firstBranchName);
+        } else {
+            document.getElementById('branch_name').innerText = 'No Branch Assigned';
+            showToast("No branch assigned to your ID. Please contact Admin to map your branch.");
+        }
+    }
+
+    window.handleBranchChange = async function(branchName) {
+        selectedBranch = branchName;
+        document.getElementById('branch_name').innerText = branchName;
+        await fetchCenters(branchName);
+    };
+
+    async function fetchCenters(branchName) {
+        const select = document.getElementById('center_select');
+        select.innerHTML = '<option value="">Loading Centers...</option>';
+        
+        const { data, error } = await supabase
+            .from('centers')
+            .select('*')
+            .eq('officer_id', currentUser.employee_id)
+            .eq('branch_name', branchName)
+            .eq('status', 'active');
+        
+        if (error) {
+            showToast("Failed to fetch centers");
+            return;
+        }
+
+        centersData = data;
+        select.innerHTML = '<option value="">Choose Center</option>';
+        data.forEach(c => {
+            select.innerHTML += `<option value="${c.center_code}">${c.center_name}</option>`;
+        });
+        
+        if (data.length === 0) {
+            showToast("No centers found for this branch.");
+        }
+    }
+
+    window.handleCenterChange = function(code) {
+        const center = centersData.find(c => c.center_code === code);
+        const btn = document.getElementById('btn_continue');
+        const details = document.getElementById('center_details');
+
+        if (center) {
+            document.getElementById('display_center_id').innerText = center.center_code;
+            document.getElementById('display_day').innerText = center.center_day;
+            document.getElementById('display_time').innerText = center.center_time;
+            
+            details.classList.remove('hidden');
+            btn.disabled = false;
+            btn.classList.remove('bg-slate-200', 'text-slate-400', 'cursor-not-allowed');
+            btn.classList.add('bg-primary', 'text-white', 'shadow-xl', 'shadow-primary/20', 'active:scale-95');
+            
+            // Store selected center info
+            localStorage.setItem("selected_center_kyc", JSON.stringify(center));
+        } else {
+            details.classList.add('hidden');
+            btn.disabled = true;
+            btn.classList.add('bg-slate-200', 'text-slate-400', 'cursor-not-allowed');
+            btn.classList.remove('bg-primary', 'text-white', 'shadow-xl');
+        }
+    };
+
+    window.startKYC = function() {
+        window.location.href = "kyc_method.html";
+    };
+
+    function showToast(msg) {
+        const t = document.getElementById('toast');
+        t.innerText = msg;
+        t.classList.remove('hidden');
+        setTimeout(() => t.classList.add('hidden'), 3000);
+    }
+
+    init();
+</script>
+</body>
+</html>

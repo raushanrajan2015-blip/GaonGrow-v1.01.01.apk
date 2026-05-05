@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>GaonGrow - KYC Methods</title>
+  
+  <!-- Fonts & Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;700;900&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700" rel="stylesheet"/>
+  
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: '#6B8E23',
+              secondary: '#C5A028',
+              navy: '#0f172a',
+              card: '#1e293b',
+              accent: '#C5A028',
+            }
+          }
+        }
+      }
+    </script>
+  <style>
+    .method-card {
+        background: #1e293b;
+        transition: all 0.2s ease;
+    }
+    .method-card:active {
+        transform: scale(0.98);
+        background: #334155;
+    }
+  </style>
+</head>
+<body class="bg-[#0f172a] font-['Public_Sans'] text-white min-h-screen">
+
+<!-- Header -->
+<header class="p-6 flex items-center sticky top-0 bg-[#0f172a]/80 backdrop-blur-md z-50">
+    <button onclick="window.location.href='dashboard.html'" class="p-2 -ml-2 active:scale-95 transition-transform">
+        <span class="material-symbols-outlined text-accent text-[28px]">arrow_back</span>
+    </button>
+    <div class="ml-4">
+        <h1 class="text-xl font-black text-white">KYC Process</h1>
+        <p class="text-[10px] font-black text-accent uppercase tracking-widest">Select Method</p>
+    </div>
+</header>
+
+<main class="p-4 max-w-lg mx-auto space-y-4">
+
+    <!-- Description -->
+    <div class="px-2 py-4">
+        <p class="text-sm font-bold text-white/60 leading-relaxed">Choose how you want to perform the customer KYC. Biometric is the fastest method.</p>
+    </div>
+
+    <!-- Biometric KYC -->
+    <button onclick="window.location.href='photo_capture.html'" class="method-card w-full flex items-center p-6 rounded-[2rem] gap-6 border-2 border-accent/20 shadow-2xl relative overflow-hidden group">
+        <div class="absolute top-0 right-0 bg-accent text-navy px-4 py-1 rounded-bl-2xl text-[10px] font-black uppercase tracking-widest">FASTEST</div>
+        <div class="w-14 h-14 bg-accent/10 rounded-2xl flex items-center justify-center">
+            <span class="material-symbols-outlined text-accent text-[32px]">fingerprint</span>
+        </div>
+        <div class="flex-1 text-left">
+            <h3 class="text-lg font-black uppercase tracking-tight">Biometric KYC</h3>
+            <p class="text-[10px] text-white/40 font-bold uppercase mt-1">Fingerprint Authentication</p>
+        </div>
+    </button>
+
+    <!-- Aadhaar QR Scan -->
+    <button onclick="window.location.href='photo_capture.html'" class="method-card w-full flex items-center p-6 rounded-[2rem] gap-6 border border-white/5">
+        <div class="w-14 h-14 bg-white/5 rounded-2xl flex items-center justify-center">
+            <span class="material-symbols-outlined text-accent text-[32px]">qr_code_scanner</span>
+        </div>
+        <div class="flex-1 text-left">
+            <h3 class="text-lg font-black uppercase tracking-tight">KYC-QR Scan</h3>
+            <p class="text-[10px] text-white/40 font-bold uppercase mt-1">Scan Aadhaar QR Code</p>
+        </div>
+    </button>
+
+    <!-- Manual Entry -->
+    <button onclick="window.location.href='kyc_manual.html'" class="method-card w-full flex items-center p-6 rounded-[2rem] gap-6 border border-white/5">
+        <div class="w-14 h-14 bg-white/5 rounded-2xl flex items-center justify-center">
+            <span class="material-symbols-outlined text-accent text-[32px]">edit_document</span>
+        </div>
+        <div class="flex-1 text-left">
+            <h3 class="text-lg font-black uppercase tracking-tight">Manual KYC</h3>
+            <p class="text-[10px] text-white/40 font-bold uppercase mt-1">Data Entry & Doc Upload</p>
+        </div>
+    </button>
+
+</main>
+
+<script type="module">
+    import supabase from '../services/supabase.js'
+    // Logic if needed
+</script>
+</body>
+</html>

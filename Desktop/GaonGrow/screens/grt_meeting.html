@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GaonGrow - GRT Meeting</title>
+  <script src="../config/tailwind-setup.js"></script>
+  <script src="../components/layout.js"></script>
+</head>
+<body class="bg-surface font-body-md text-on-surface">
+<main class="mt-20 px-4 max-w-lg mx-auto pb-32">
+  <div class="mb-lg">
+    <h2 class="font-headline-md text-primary">GRT Evaluation</h2>
+    <p class="font-body-md text-on-surface-variant">Group Recognition Test by Branch Manager</p>
+  </div>
+
+  <div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-md mb-lg shadow-sm">
+    <div class="flex justify-between items-center mb-2 border-b border-outline-variant pb-2">
+      <h3 class="font-title-lg text-[16px] text-on-surface m-0">Group: Mahila Vikas Center 02</h3>
+      <span class="bg-tertiary-container text-on-tertiary-container px-2 py-1 rounded text-xs font-bold">Ready</span>
+    </div>
+    <p class="font-body-md text-sm text-on-surface-variant mb-1">Members: 5</p>
+    <p class="font-body-md text-sm text-on-surface-variant m-0">Total Requested: ₹ 2,50,000</p>
+  </div>
+
+  <form class="space-y-4">
+    <h3 class="font-title-lg text-[16px] text-on-surface border-b border-outline-variant pb-2">Evaluation Points</h3>
+    
+    <label class="flex items-center gap-3 p-3 bg-surface-container-lowest border border-outline-variant rounded-xl hover:bg-surface-container cursor-pointer transition-colors">
+      <input type="checkbox" class="w-5 h-5 rounded border-outline-variant text-primary focus:ring-primary">
+      <span class="font-body-md text-on-surface">All members recognize each other</span>
+    </label>
+
+    <label class="flex items-center gap-3 p-3 bg-surface-container-lowest border border-outline-variant rounded-xl hover:bg-surface-container cursor-pointer transition-colors">
+      <input type="checkbox" class="w-5 h-5 rounded border-outline-variant text-primary focus:ring-primary">
+      <span class="font-body-md text-on-surface">Members understand JLG responsibility</span>
+    </label>
+
+    <label class="flex items-center gap-3 p-3 bg-surface-container-lowest border border-outline-variant rounded-xl hover:bg-surface-container cursor-pointer transition-colors">
+      <input type="checkbox" class="w-5 h-5 rounded border-outline-variant text-primary focus:ring-primary">
+      <span class="font-body-md text-on-surface">Verified all loan purposes</span>
+    </label>
+    
+    <div class="mt-md">
+      <label class="font-label-lg text-on-surface-variant block mb-1">BM Remarks</label>
+      <textarea class="w-full p-3 border border-outline-variant rounded-xl focus:border-primary focus:ring-1 focus:ring-primary h-24 bg-surface-container-lowest" placeholder="Add observations..."></textarea>
+    </div>
+  </form>
+
+  <div class="mt-xl flex gap-md">
+    <button class="flex-1 h-[56px] border border-error text-error rounded-lg font-label-lg active:scale-95 transition-transform flex items-center justify-center gap-2">
+      <span class="material-symbols-outlined">cancel</span> Reject
+    </button>
+    <a href="dashboard.html" class="flex-[2] h-[56px] bg-primary text-on-primary rounded-lg font-label-lg flex items-center justify-center gap-2 shadow-sm active:scale-95 transition-transform">
+      <span class="material-symbols-outlined">verified</span> Approve GRT
+    </a>
+  </div>
+</main>
+</body>
+</html>

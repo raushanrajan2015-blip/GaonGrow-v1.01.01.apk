@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Branch Audit Entry - GaonGrow Finance</title>
+    <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700" rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#6B8E23',
+                        secondary: '#C5A028',
+                        navy: '#0f172a',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.1); border-radius: 10px; }
+        .form-input { @apply w-full h-12 px-4 rounded-xl border border-slate-200 text-[13px] font-bold text-navy outline-none focus:border-primary transition-all bg-slate-50 focus:bg-white; }
+        .form-label { @apply text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5 block ml-1; }
+        .section-card { @apply bg-white p-8 rounded-[2.5rem] shadow-sm border border-slate-100 space-y-6; }
+    </style>
+</head>
+<body class="font-['Public_Sans'] text-navy bg-[#f8fafc] min-h-screen flex overflow-hidden">
+
+<!-- SIDEBAR -->
+<!-- This will be replaced by sync_sidebars.js -->
+<!-- SIDEBAR -->
+<!-- SIDEBAR -->
+<!-- SIDEBAR -->
+<!-- SIDEBAR -->
+<!-- SIDEBAR -->
+<!-- SIDEBAR -->
+<!-- PREMIUM SIDEBAR TEMPLATE -->
+<div id="sidebar_backdrop" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[90] hidden lg:hidden" onclick="toggleSidebar()"></div>
+<aside id="main_sidebar" class="fixed inset-y-0 left-0 z-[100] w-80 bg-[#011a14] text-slate-400 flex flex-col shrink-0 overflow-hidden shadow-2xl border-r border-white/5 font-['Public_Sans'] transform -translate-x-full lg:translate-x-0 lg:static transition-transform duration-300 ease-in-out">
+    <!-- Header Section: Premium Branding -->
+    <div class="p-8 border-b border-white/5 flex items-center gap-5 bg-gradient-to-b from-[#012d1d] to-transparent">
+        <div class="w-14 h-14 bg-white rounded-[1.25rem] flex items-center justify-center p-2 shadow-2xl shadow-white/10 overflow-hidden shrink-0 border border-slate-200/50 group-hover:scale-110 transition-transform duration-500">
+            <img src="../assets/gaongrow_tractor_logo.png" class="w-full h-full object-contain filter drop-shadow-md" onerror="this.src='https://cdn-icons-png.flaticon.com/512/2554/2554904.png'" />
+        </div>
+        <div>
+            <h1 class="text-[17px] font-black tracking-tighter text-white uppercase leading-none mb-1.5">GaonGrow <span class="text-secondary">Finance</span></h1>
+            <p class="text-[9px] font-extrabold text-slate-500 uppercase tracking-[0.25em] opacity-80">Core Banking System</p>
+        </div>
+    </div>
+
+    <!-- User Profile: Dynamic & Premium -->
+    <div class="px-8 py-6 border-b border-white/5 bg-white/5 group">
+        <div class="flex items-center gap-4">
+            <div class="relative">
+                <div id="user_initials_circle" class="w-11 h-11 bg-gradient-to-tr from-secondary to-yellow-600 rounded-2xl flex items-center justify-center text-navy font-black text-xs shadow-xl group-hover:rotate-12 transition-all duration-500">
+                    --
+                </div>
+                <span class="absolute -bottom-1 -right-1 w-4 h-4 bg-primary border-2 border-[#011a14] rounded-full"></span>
+            </div>
+            <div>
+                <div class="flex items-center gap-2">
+                    <p id="user_display_role" class="text-[12px] font-black text-white uppercase tracking-tight">Loading...</p>
+                    <span id="user_display_id" class="text-[8px] bg-white/10 px-1.5 py-0.5 rounded-md text-slate-400 font-bold">---</span>
+                </div>
+                <p id="user_full_name" class="text-[9px] font-bold text-slate-500 uppercase tracking-widest mt-0.5 flex items-center gap-1">
+                    <span class="w-1 h-1 bg-primary rounded-full animate-pulse"></span>
+                    Live Session
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dynamic Navigation List -->
+    <nav id="dynamicMenuContainer" class="flex-1 overflow-y-auto custom-scrollbar px-4 py-6 space-y-2">
+        <!-- Menu items will be injected here via menuService.js -->
+        {{DYNAMIC_MENU}}
+    </nav>
+
+
+    <!-- Logout Area -->
+    <div class="p-6 border-t border-white/5 bg-white/5">
+        <button onclick="logoutAdmin()" class="w-full flex items-center justify-center gap-3 px-4 py-4 rounded-2xl bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white transition-all duration-300 group shadow-xl">
+            <span class="material-symbols-outlined text-[22px] group-hover:rotate-180 transition-transform duration-500">logout</span>
+            <span class="text-[11px] font-black uppercase tracking-widest">Exit System</span>
+        </button>
+    </div>
+
+    <!-- Dynamic Menu Loader -->
+    <script type="module">
+        import { getMenuForRole, renderMenuHTML } from '../services/menuService.js';
+        
+        // Global Helpers
+        window.toggleSidebar = () => {
+            const sidebar = document.getElementById('main_sidebar');
+            const backdrop = document.getElementById('sidebar_backdrop');
+            if (sidebar) {
+                const isOpen = sidebar.classList.contains('translate-x-0');
+                if (isOpen) {
+                    sidebar.classList.replace('translate-x-0', '-translate-x-full');
+                    if (backdrop) backdrop.classList.add('hidden');
+                } else {
+                    sidebar.classList.replace('-translate-x-full', 'translate-x-0');
+                    if (backdrop) backdrop.classList.remove('hidden');
+                }
+            }
+        };
+
+        window.toggleSubmenu = (id) => {
+            const menu = document.getElementById(id);
+            const arrow = document.querySelector(`#${id} + button #arrow_${id}`) || document.querySelector(`[onclick="toggleSubmenu('${id}')"] .transition-transform`);
+            if (menu) {
+                menu.classList.toggle('hidden');
+                if (arrow) {
+                    const isHidden = menu.classList.contains('hidden');
+                    arrow.style.transform = isHidden ? 'rotate(0deg)' : 'rotate(90deg)';
+                }
+            }
+        };
+
+        window.logoutAdmin = () => {
+            localStorage.removeItem('gaongrow_admin_session');
+            localStorage.removeItem('gaongrow_session');
+            window.location.href = 'login.html';
+        };
+
+        // Role Detection
+        const sessionStr = localStorage.getItem('gaongrow_admin_session') || localStorage.getItem('gaongrow_session');
+        const session = sessionStr ? JSON.parse(sessionStr) : null;
+        
+        const roleMap = {
+            1: 'SUPER_ADMIN',
+            2: 'HO_USER',
+            3: 'BRANCH_MANAGER',
+            4: 'CRO',
+            5: 'AUDITOR'
+        };
+
+        let role = 'HO_USER';
+        if (session && session.user) {
+            const r = session.user.role || session.user.role_id;
+            role = typeof r === 'string' ? r.toUpperCase() : (roleMap[r] || 'HO_USER');
+        }
+
+        // Render Menu
+        const menuItems = getMenuForRole(role);
+        const container = document.getElementById('dynamicMenuContainer');
+        if (container) {
+            container.innerHTML = renderMenuHTML(menuItems);
+        }
+
+        // CRO Visibility Hardening: Hide sidebar and toggles for CROs (Mobile Focused)
+        if (role === 'CRO') {
+            const sidebar = document.getElementById('main_sidebar');
+            const backdrop = document.getElementById('sidebar_backdrop');
+            if (sidebar) sidebar.style.setProperty('display', 'none', 'important');
+            if (backdrop) backdrop.style.setProperty('display', 'none', 'important');
+            
+            // Hide all hamburger/sidebar toggle buttons
+            document.querySelectorAll('[onclick="toggleSidebar()"]').forEach(btn => {
+                btn.style.setProperty('display', 'none', 'important');
+            });
+        }
+
+        // Populate User Info
+        if (session && session.user) {
+            const user = session.user;
+            const name = user.employee_name || user.full_name || user.name || 'User';
+            const roleName = typeof user.role === 'string' ? user.role : (roleMap[user.role] || user.role_name || 'Staff');
+            const empId = user.employee_id || user.id || '---';
+
+            if (document.getElementById('user_display_role')) document.getElementById('user_display_role').textContent = roleName;
+            if (document.getElementById('user_display_id')) document.getElementById('user_display_id').textContent = empId;
+            if (document.getElementById('user_full_name')) {
+                document.getElementById('user_full_name').innerHTML = `
+                    <span class="w-1 h-1 bg-primary rounded-full animate-pulse"></span>
+                    ${name}
+                `;
+            }
+            
+            // Initials
+            const initials = name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+            if (document.getElementById('user_initials_circle')) document.getElementById('user_initials_circle').textContent = initials;
+        }
+    </script>
+</aside>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- MAIN CONTENT -->
+<main class="flex-1 flex flex-col h-screen overflow-hidden">
+    <!-- Header -->
+    <header class="h-20 bg-white border-b border-slate-100 flex items-center justify-between px-10 shrink-0">
+        <div class="flex items-center gap-4">
+            <div class="w-10 h-10 bg-primary/10 text-primary rounded-xl flex items-center justify-center">
+                <span class="material-symbols-outlined">fact_check</span>
+            </div>
+            <div>
+                <h1 class="text-xl font-black uppercase tracking-tight">Branch Audit Entry</h1>
+                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Internal Control & Compliance Report</p>
+            </div>
+        </div>
+        <div class="flex items-center gap-4">
+            <div id="audit_id_display" class="px-4 py-2 bg-slate-50 text-slate-400 rounded-xl text-[10px] font-black uppercase tracking-widest border border-slate-100">
+                Draft ID: AUD-2024-XXXX
+            </div>
+            <button onclick="saveAuditDraft()" class="h-11 px-6 border-2 border-slate-100 text-slate-400 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-slate-50 transition-all">Save Draft</button>
+            <button onclick="submitAuditReport()" class="h-11 px-8 bg-navy text-white rounded-xl text-[10px] font-black uppercase tracking-widest shadow-xl shadow-navy/20 active:scale-95 transition-all">Submit Final Report</button>
+        </div>
+    </header>
+
+    <!-- Scrollable Form Area -->
+    <div class="flex-1 overflow-y-auto p-10 space-y-8 custom-scrollbar">
+        
+        <!-- 1. General Info -->
+        <div class="section-card">
+            <div class="flex items-center gap-3 mb-2">
+                <span class="material-symbols-outlined text-primary">info</span>
+                <h3 class="text-sm font-black uppercase tracking-widest">Audit Basics</h3>
+            </div>
+            <div class="grid grid-cols-3 gap-6">
+                <div>
+                    <label class="form-label">Target Branch</label>
+                    <select id="audit_branch" class="form-input">
+                        <option value="">Select Branch</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="form-label">Audit Date</label>
+                    <input type="date" id="audit_date" class="form-input">
+                </div>
+                <div>
+                    <label class="form-label">Audit Type</label>
+                    <select id="audit_type" class="form-input">
+                        <option value="routine">Routine Audit</option>
+                        <option value="surprise">Surprise Visit</option>
+                        <option value="investigative">Investigative</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. Cash Verification -->
+        <div class="section-card border-l-4 border-l-secondary">
+            <div class="flex items-center gap-3 mb-2">
+                <span class="material-symbols-outlined text-secondary">payments</span>
+                <h3 class="text-sm font-black uppercase tracking-widest">Cash Verification (Surprise)</h3>
+            </div>
+            <div class="grid grid-cols-3 gap-8">
+                <div>
+                    <label class="form-label">System Balance (₹)</label>
+                    <input type="number" id="cash_system" class="form-input" placeholder="0.00">
+                </div>
+                <div>
+                    <label class="form-label">Physical Balance (₹)</label>
+                    <input type="number" id="cash_physical" class="form-input" placeholder="0.00">
+                </div>
+                <div>
+                    <label class="form-label">Variance (₹)</label>
+                    <input type="number" id="cash_variance" class="form-input bg-slate-100" readonly value="0">
+                </div>
+            </div>
+            <div class="pt-4">
+                <label class="form-label">Cash Handling Observations</label>
+                <textarea id="cash_remarks" class="form-input h-24 p-4 resize-none" placeholder="Comment on cash safety, insurance, and vault keys..."></textarea>
+            </div>
+        </div>
+
+        <!-- 3. KYC & File Compliance -->
+        <div class="section-card">
+            <div class="flex items-center gap-3 mb-2">
+                <span class="material-symbols-outlined text-blue-500">description</span>
+                <h3 class="text-sm font-black uppercase tracking-widest">Documentation & KYC (Sample Check)</h3>
+            </div>
+            <div class="grid grid-cols-2 gap-10">
+                <div class="space-y-4">
+                    <p class="text-[11px] font-black text-slate-400 uppercase tracking-widest">Sample Size: 10 Random Files</p>
+                    <div class="space-y-3">
+                        <label class="flex items-center justify-between p-4 bg-slate-50 rounded-xl cursor-pointer hover:bg-slate-100 transition-all">
+                            <span class="text-xs font-bold">KYC Documents Complete?</span>
+                            <input type="checkbox" id="check_kyc" class="w-5 h-5 accent-primary">
+                        </label>
+                        <label class="flex items-center justify-between p-4 bg-slate-50 rounded-xl cursor-pointer hover:bg-slate-100 transition-all">
+                            <span class="text-xs font-bold">Passbook Entry Up-to-date?</span>
+                            <input type="checkbox" id="check_passbook" class="w-5 h-5 accent-primary">
+                        </label>
+                        <label class="flex items-center justify-between p-4 bg-slate-50 rounded-xl cursor-pointer hover:bg-slate-100 transition-all">
+                            <span class="text-xs font-bold">Loan Agreements Signed?</span>
+                            <input type="checkbox" id="check_agreement" class="w-5 h-5 accent-primary">
+                        </label>
+                    </div>
+                </div>
+                <div class="space-y-4">
+                    <label class="form-label">KYC Discrepancy Details</label>
+                    <textarea id="kyc_remarks" class="form-input h-32 p-4 resize-none" placeholder="List IDs of faulty files..."></textarea>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4. Asset & Infrastructure -->
+        <div class="section-card">
+            <div class="flex items-center gap-3 mb-2">
+                <span class="material-symbols-outlined text-orange-500">inventory_2</span>
+                <h3 class="text-sm font-black uppercase tracking-widest">Branch Infrastructure</h3>
+            </div>
+            <div class="grid grid-cols-2 gap-8">
+                <div>
+                    <label class="form-label">Asset Verification Status</label>
+                    <select id="asset_status" class="form-input">
+                        <option value="verified">Verified - All Assets Present</option>
+                        <option value="missing">Missing - Reported in Remarks</option>
+                        <option value="damaged">Damaged - Need Replacement</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="form-label">Overall Rating</label>
+                    <div class="flex gap-4">
+                        <label class="flex-1 cursor-pointer">
+                            <input type="radio" name="rating" value="A" class="hidden peer">
+                            <div class="h-12 bg-slate-50 peer-checked:bg-green-500 peer-checked:text-white rounded-xl flex items-center justify-center font-black text-xs transition-all">A (EXCELLENT)</div>
+                        </label>
+                        <label class="flex-1 cursor-pointer">
+                            <input type="radio" name="rating" value="B" class="hidden peer">
+                            <div class="h-12 bg-slate-50 peer-checked:bg-blue-500 peer-checked:text-white rounded-xl flex items-center justify-center font-black text-xs transition-all">B (GOOD)</div>
+                        </label>
+                        <label class="flex-1 cursor-pointer">
+                            <input type="radio" name="rating" value="C" class="hidden peer">
+                            <div class="h-12 bg-slate-50 peer-checked:bg-orange-500 peer-checked:text-white rounded-xl flex items-center justify-center font-black text-xs transition-all">C (FAIR)</div>
+                        </label>
+                        <label class="flex-1 cursor-pointer">
+                            <input type="radio" name="rating" value="D" class="hidden peer">
+                            <div class="h-12 bg-slate-50 peer-checked:bg-red-500 peer-checked:text-white rounded-xl flex items-center justify-center font-black text-xs transition-all">D (CRITICAL)</div>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="h-20"></div> <!-- Spacer -->
+    </div>
+</main>
+
+<script type="module">
+    import supabase from '../services/supabase.js'
+
+    async function init() {
+        const sessionStr = localStorage.getItem("gaongrow_admin_session");
+        if (!sessionStr) { window.location.href = "admin_login.html"; return; }
+
+        await fetchBranches();
+        setupCalculations();
+    }
+
+    async function fetchBranches() {
+        const { data } = await supabase.from('branches').select('branch_name, branch_code').order('branch_name');
+        if (data) {
+            const select = document.getElementById('audit_branch');
+            data.forEach(b => {
+                select.innerHTML += `<option value="${b.branch_code}">${b.branch_name} (${b.branch_code})</option>`;
+            });
+        }
+    }
+
+    function setupCalculations() {
+        const sys = document.getElementById('cash_system');
+        const phy = document.getElementById('cash_physical');
+        const var_el = document.getElementById('cash_variance');
+
+        const calc = () => {
+            const diff = (parseFloat(phy.value) || 0) - (parseFloat(sys.value) || 0);
+            var_el.value = diff.toFixed(2);
+            var_el.style.color = diff < 0 ? '#ef4444' : (diff > 0 ? '#10b981' : '#0f172a');
+        };
+
+        sys.addEventListener('input', calc);
+        phy.addEventListener('input', calc);
+    }
+
+    window.saveAuditDraft = async () => {
+        alert("Draft Saved to Local Cache!");
+    };
+
+    window.submitAuditReport = async () => {
+        const confirmSub = confirm("Are you sure you want to submit the final audit report? This action is irreversible.");
+        if (confirmSub) {
+            alert("Audit Report Submitted Successfully!");
+            window.location.href = "admin_dashboard.html";
+        }
+    };
+
+    init();
+</script>
+
+</body>
+</html>

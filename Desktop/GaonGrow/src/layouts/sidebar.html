@@ -1,0 +1,17 @@
+<!-- Dynamic Sidebar Placeholder -->
+<div id="sidebarContainer"></div>
+
+<script type="module">
+  import { getMenuForRole, renderMenuHTML } from '../../services/menuService.js';
+  const adminSessionStr = localStorage.getItem('gaongrow_admin_session');
+  const adminSession = adminSessionStr ? JSON.parse(adminSessionStr) : null;
+  const role = (adminSession && adminSession.user && adminSession.user.role) ? adminSession.user.role.toUpperCase() : 'HO_USER';
+  const menuItems = getMenuForRole(role);
+  const sidebarHTML = `
+    <aside id="sidebar" class="fixed inset-y-0 left-0 w-64 bg-[#011a14] text-slate-400 flex flex-col overflow-hidden shadow-2xl z-50 border-r border-white/5 font-['Public_Sans']">
+      <nav class="flex-1 overflow-y-auto custom-scrollbar px-4 py-6 space-y-6">
+        ${renderMenuHTML(menuItems)}
+      </nav>
+    </aside>`;
+  document.getElementById('sidebarContainer').innerHTML = sidebarHTML;
+</script>

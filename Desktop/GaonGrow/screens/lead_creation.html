@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GaonGrow - Lead Creation</title>
+  <script src="../config/tailwind-setup.js"></script>
+  <script src="../components/layout.js"></script>
+</head>
+<body class="bg-surface font-body-md text-on-surface">
+  
+<!-- Top App Bar -->
+
+<main class="pt-[72px] px-edge-margin space-y-lg max-w-md mx-auto">
+<!-- Section Header -->
+<div class="space-y-xs">
+<span class="text-label-sm uppercase tracking-widest text-on-surface-variant">Applicant Onboarding</span>
+<h2 class="font-headline-md text-headline-md text-primary">Basic Information</h2>
+<p class="text-body-md text-on-surface-variant">Capture essential details for the initial loan assessment.</p>
+</div>
+<!-- Form Section -->
+<section class="space-y-md">
+<!-- Input: Name -->
+<div class="space-y-xs">
+<label class="font-label-lg text-on-surface ml-xs">Full Name</label>
+<input class="w-full h-tap-target-min px-md border-2 border-outline-variant rounded-lg focus:border-primary focus:ring-0 bg-white transition-colors" placeholder="Enter applicant's legal name" type="text"/>
+</div>
+<!-- Input: Mobile -->
+<div class="space-y-xs">
+<label class="font-label-lg text-on-surface ml-xs">Mobile Number</label>
+<div class="relative">
+<span class="absolute left-md top-1/2 -translate-y-1/2 text-on-surface-variant font-label-lg">+91</span>
+<input class="w-full h-tap-target-min pl-[52px] pr-md border-2 border-outline-variant rounded-lg focus:border-primary focus:ring-0 bg-white transition-colors" placeholder="00000 00000" type="tel"/>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-md">
+<!-- Input: Village -->
+<div class="space-y-xs">
+<label class="font-label-lg text-on-surface ml-xs">Village</label>
+<input class="w-full h-tap-target-min px-md border-2 border-outline-variant rounded-lg focus:border-primary focus:ring-0 bg-white transition-colors" placeholder="Village name" type="text"/>
+</div>
+<!-- Input: Income Source -->
+<div class="space-y-xs">
+<label class="font-label-lg text-on-surface ml-xs">Income Source</label>
+<select class="w-full h-tap-target-min px-md border-2 border-outline-variant rounded-lg focus:border-primary focus:ring-0 bg-white transition-colors appearance-none">
+<option>Agriculture</option>
+<option>Small Shop</option>
+<option>Livestock</option>
+<option>Handicrafts</option>
+</select>
+</div>
+</div>
+<!-- Input: Address -->
+<div class="space-y-xs">
+<label class="font-label-lg text-on-surface ml-xs">Detailed Address</label>
+<textarea class="w-full px-md py-sm border-2 border-outline-variant rounded-lg focus:border-primary focus:ring-0 bg-white transition-colors" placeholder="House number, landmark, etc." rows="3"></textarea>
+</div>
+</section>
+<!-- Dynamic Widgets -->
+<section class="space-y-md">
+<h3 class="font-headline-sm text-headline-sm text-primary">Verification Assets</h3>
+<!-- GPS Location Widget -->
+<div class="rooted-stripe bg-white border border-stone-200 rounded-lg p-md shadow-sm space-y-sm">
+<div class="flex justify-between items-center">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-secondary" data-icon="location_on">location_on</span>
+<span class="font-label-lg text-on-surface">Capture GPS Location</span>
+</div>
+<button class="text-primary font-label-lg active:opacity-70">Refresh</button>
+</div>
+<div class="h-32 w-full rounded-lg bg-surface-container-high overflow-hidden relative border border-outline-variant">
+<img alt="Location Map" class="w-full h-full object-cover opacity-80" data-alt="A detailed map snippet showing a rural village layout with lush green fields surrounding a small cluster of homes. The map is presented in a clean, high-contrast digital style with earthy green and terracotta tones. A large emerald green pinpoint icon is centered on the map to indicate the lead's exact location, conveying accuracy and professional geo-tagging." data-location="Rural India Village" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDzFjyzat1ZlSNt6NI-AjXcSagFcl2DRZs_HcAwzFg7CNPC8_m2slCD-tnYDwSIjCWAqBm0KFPFLrvQ0oBjd8aBXMB3HTSqLnyr44IHtQnalMLlCQvGfnD7WQYJe1C3QEuViwMEoyhyXB64VzFvJ5iDGJon3Qbnsjun_odXqdxQ0e2daAw5hpA1XIL1rvftGNwMZy-tv6a1t226sv4a6KBGlASqON4FMT8PeJzhyJqs0jjbKEcZSeXWDwLV5oUsa38lxrIYKLVF5_Y"/>
+<div class="absolute bottom-sm left-sm right-sm bg-white/90 backdrop-blur-sm p-xs rounded-md border border-stone-200">
+<p class="text-label-sm text-on-surface flex items-center gap-xs">
+<span class="material-symbols-outlined text-[14px]" data-icon="gps_fixed">gps_fixed</span>
+                            26.8467° N, 80.9462° E • Accurate to 4m
+                        </p>
+</div>
+</div>
+</div>
+<!-- Photo Capture Widget -->
+<div class="rooted-stripe bg-white border border-stone-200 rounded-lg p-md shadow-sm space-y-sm">
+<div class="flex justify-between items-center">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-secondary" data-icon="photo_camera">photo_camera</span>
+<span class="font-label-lg text-on-surface">Applicant Photo</span>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-sm">
+<!-- Preview Box -->
+<div class="aspect-square bg-surface-container rounded-lg border-2 border-dashed border-outline-variant flex flex-col items-center justify-center gap-xs text-on-surface-variant active:bg-surface-container-high transition-colors cursor-pointer">
+<span class="material-symbols-outlined text-[32px]" data-icon="add_a_photo">add_a_photo</span>
+<span class="text-label-sm">Capture Now</span>
+</div>
+<!-- Placeholder/Guide -->
+<div class="aspect-square bg-surface-container-low rounded-lg overflow-hidden border border-outline-variant relative">
+<img alt="Photo Sample" class="w-full h-full object-cover grayscale opacity-40" data-alt="A clear, professional sample photo of a rural artisan working in their bright studio, used as a reference for capturing lead photos. The lighting is soft and even, highlighting the person's face and work environment. The aesthetic is clean and dignified, following the rooted growth theme with emerald and natural wood tones in the background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCTPbO8IHskTdD9jpUEpxS8Yj0s_bow8m6EM-dhLb3R5wqOZPFOhZsipanLoEuppcNcGoUk0UolMi77MOh3WCEz9hi6C_JdleaMkwVvmzz0tOvIgbyZjIGUy0LgCU6qaJi9aCuGQ9wvgxLTOAMHR0cT5fXhSdY1bmIpTDFF4yWvECF-yjVpSxPtqyL1WlSwMJ0LOmXI9J02Zpg_cVncpS7AUtjIXmJSHBMZH5Q_Yf_BRys2TJ3pk77EG8q3w55C32rmD8XFCCwpvxc"/>
+<div class="absolute inset-0 flex items-center justify-center p-md">
+<p class="text-label-sm text-center font-semibold text-on-surface-variant leading-tight">Center applicant's face in the frame</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Progress Indicator -->
+<div class="space-y-xs pt-md">
+<div class="flex justify-between text-label-sm text-on-surface-variant">
+<span>Profile Completion</span>
+<span>85%</span>
+</div>
+<div class="w-full h-[12px] bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-primary-container w-[85%] rounded-full"></div>
+</div>
+</div>
+<!-- Primary Action Button -->
+<div class="pt-lg">
+<button class="w-full h-tap-target-min bg-primary text-on-primary font-headline-sm rounded-lg shadow-lg active:scale-[0.98] transition-transform flex items-center justify-center gap-sm">
+<span class="material-symbols-outlined" data-icon="person_add">person_add</span>
+                Create Lead
+            </button>
+<p class="text-center text-label-sm text-on-surface-variant mt-md">Data is encrypted and synced to the central branch.</p>
+</div>
+</main>
+<!-- Bottom Nav Bar (Suppressed because this is a focused creation task, but keeping the container logic if it were a dashboard) -->
+<!-- Navigation hidden per "Task-Focused" rule in system instructions -->
+
+</body>
+</html>

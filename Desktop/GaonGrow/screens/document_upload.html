@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GaonGrow - Document Upload</title>
+  <script src="../config/tailwind-setup.js"></script>
+  <script src="../components/layout.js"></script>
+</head>
+<body class="bg-surface font-body-md text-on-surface">
+<main class="mt-20 px-4 max-w-lg mx-auto pb-32">
+  <div class="mb-lg flex items-center gap-sm py-xs">
+    <div class="w-8 h-8 rounded-full bg-primary text-on-primary flex items-center justify-center font-label-sm border border-outline-variant">1</div>
+    <div class="flex-grow border-t border-outline-variant"></div>
+    <div class="w-8 h-8 rounded-full bg-primary text-on-primary flex items-center justify-center font-label-sm border border-outline-variant">2</div>
+    <div class="flex-grow border-t border-outline-variant"></div>
+    <div class="w-8 h-8 rounded-full bg-primary text-on-primary flex items-center justify-center font-label-sm">3</div>
+  </div>
+
+  <h2 class="font-headline-md text-primary mb-md">Upload Documents</h2>
+  <p class="font-body-md text-on-surface-variant mb-lg">Please capture clear photos of the original documents.</p>
+  
+  <div class="space-y-md">
+    <div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-4 flex items-center justify-between shadow-sm">
+      <div class="flex items-center gap-md">
+        <div class="w-10 h-10 bg-primary-container rounded-lg flex items-center justify-center text-on-primary-container">
+          <span class="material-symbols-outlined">credit_card</span>
+        </div>
+        <div>
+          <p class="font-title-lg text-[16px] text-on-surface m-0">Aadhaar Card</p>
+          <p class="font-body-md text-on-surface-variant text-sm m-0">Front & Back</p>
+        </div>
+      </div>
+      <button class="w-10 h-10 rounded-full border border-outline flex items-center justify-center text-primary hover:bg-surface-container active:scale-95 transition-all">
+        <span class="material-symbols-outlined">photo_camera</span>
+      </button>
+    </div>
+
+    <div class="bg-surface-container-lowest border border-primary rounded-xl p-4 shadow-sm relative overflow-hidden">
+      <div class="absolute top-0 right-0 bg-primary text-on-primary px-2 py-1 rounded-bl-lg font-label-sm text-xs">Uploaded</div>
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-md">
+          <div class="w-10 h-10 bg-surface-container rounded-lg flex items-center justify-center text-primary">
+            <span class="material-symbols-outlined">account_balance</span>
+          </div>
+          <div>
+            <p class="font-title-lg text-[16px] text-on-surface m-0">Bank Passbook</p>
+            <p class="font-body-md text-primary text-sm m-0">bank_passbook.jpg</p>
+          </div>
+        </div>
+        <button class="w-10 h-10 rounded-full flex items-center justify-center text-error hover:bg-error-container active:scale-95 transition-all">
+          <span class="material-symbols-outlined">delete</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-4 flex items-center justify-between shadow-sm">
+      <div class="flex items-center gap-md">
+        <div class="w-10 h-10 bg-surface-container rounded-lg flex items-center justify-center text-on-surface-variant">
+          <span class="material-symbols-outlined">description</span>
+        </div>
+        <div>
+          <p class="font-title-lg text-[16px] text-on-surface m-0">PAN Card</p>
+          <p class="font-body-md text-on-surface-variant text-sm m-0">Optional</p>
+        </div>
+      </div>
+      <button class="w-10 h-10 rounded-full border border-outline flex items-center justify-center text-primary hover:bg-surface-container active:scale-95 transition-all">
+        <span class="material-symbols-outlined">photo_camera</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="mt-xl flex gap-md">
+    <button onclick="window.history.back()" class="flex-1 h-[56px] border border-outline text-primary rounded-lg font-label-lg active:scale-95 transition-transform">Back</button>
+    <a href="photo_capture.html" class="flex-[2] h-[56px] bg-primary text-on-primary rounded-lg font-label-lg flex items-center justify-center gap-2 shadow-sm active:scale-95 transition-transform">
+      Next: Member Photo
+      <span class="material-symbols-outlined">arrow_forward</span>
+    </a>
+  </div>
+</main>
+</body>
+</html>

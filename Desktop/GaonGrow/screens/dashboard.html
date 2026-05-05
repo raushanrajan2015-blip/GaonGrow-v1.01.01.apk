@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>GaonGrow - Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700" rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#6B8E23',
+                        secondary: '#C5A028',
+                        navy: '#0f172a',
+                        card: '#1e293b',
+                        accent: '#C5A028',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            -webkit-tap-highlight-color: transparent;
+            padding-top: env(safe-area-inset-top);
+            padding-bottom: env(safe-area-inset-bottom);
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            background: #1e293b;
+            transition: all 0.2s ease;
+        }
+        .dashboard-card {
+            background: #1e293b;
+            transition: all 0.2s ease;
+        }
+        .dashboard-card:active {
+            transform: scale(0.98);
+            background: #334155;
+        }
+    </style>
+</head>
+<body class="bg-[#0f172a] font-['Public_Sans'] text-white min-h-screen">
+
+<!-- Header Section (Refined Layout) -->
+<header class="p-4 flex justify-between items-center sticky top-0 bg-[#0f172a]/90 backdrop-blur-md z-50 border-b border-white/5">
+    <!-- Left: Logo & Full Name -->
+    <div class="flex items-center gap-2.5">
+        <div class="w-12 h-12 bg-white rounded-2xl flex items-center justify-center p-1 shadow-lg shadow-white/5 overflow-hidden shrink-0 border border-slate-100">
+            <img src="../assets/gaongrow_tractor_logo.png" alt="Logo" class="w-full h-full object-contain" onerror="this.src='https://cdn-icons-png.flaticon.com/512/2554/2554904.png'">
+        </div>
+        <div class="flex flex-col">
+            <h1 class="text-[15px] font-black tracking-tight text-[#6B8E23] uppercase leading-none">GaonGrow</h1>
+            <p class="text-[9px] font-black text-[#C5A028] uppercase tracking-[0.15em] mt-1.5 opacity-100">Microfinance</p>
+        </div>
+    </div>
+
+    <!-- Right: Profile Info -->
+    <div class="flex items-center gap-3">
+        <div class="text-right flex flex-col justify-center max-w-[100px] hidden sm:flex">
+            <p id="header_user_name" class="text-[10px] font-black text-white uppercase leading-tight truncate">Officer Name</p>
+            <p id="header_user_designation" class="text-[8px] font-bold text-accent uppercase tracking-widest mt-0.5 opacity-90 truncate"></p>
+        </div>
+        <button id="profile_trigger" class="w-10 h-10 bg-accent rounded-2xl flex items-center justify-center text-navy font-black text-xs shadow-lg shadow-accent/20 active:scale-90 transition-transform shrink-0">
+            <span id="user_initials">NA</span>
+        </button>
+    </div>
+</header>
+
+<main class="p-4 space-y-6 pb-24">
+    
+    <!-- Hero Section -->
+    <div class="bg-[#1e293b] p-6 rounded-[2rem] flex justify-between items-center border border-white/5 shadow-2xl">
+        <div class="space-y-1">
+            <p id="today_date" class="text-[10px] font-black text-accent uppercase tracking-widest">SATURDAY, 2 MAY</p>
+            <h2 class="text-xl font-black text-white">Daily Operations</h2>
+        </div>
+        <div class="bg-black/20 p-3 px-5 rounded-2xl border border-white/5 text-right">
+            <p class="text-[8px] font-black text-white/40 uppercase tracking-widest">Collections</p>
+            <p class="text-lg font-black text-accent mt-0.5">₹ 42,850</p>
+        </div>
+    </div>
+
+    <div class="space-y-3">
+        <button class="dashboard-card w-full flex items-center p-5 rounded-[1.5rem] gap-5 group">
+            <div class="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center">
+                <span class="material-symbols-outlined text-accent text-[26px]">domain</span>
+            </div>
+            <div class="flex-1 text-left">
+                <p class="text-[13px] font-black uppercase tracking-wide">Branch Summary</p>
+                <p class="text-[10px] text-white/40 mt-0.5 font-medium uppercase">Performance & targets</p>
+            </div>
+            <span class="material-symbols-outlined text-white/20 text-[20px]">chevron_right</span>
+        </button>
+
+        <button onclick="window.location.href='collection.html'" class="dashboard-card w-full flex items-center p-5 rounded-[1.5rem] gap-5 group border-l-4 border-accent/30">
+            <div class="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center">
+                <span class="material-symbols-outlined text-accent text-[26px]">payments</span>
+            </div>
+            <div class="flex-1 text-left">
+                <p class="text-[13px] font-black uppercase tracking-wide">Add Collection</p>
+                <p class="text-[10px] text-white/40 mt-0.5 font-medium uppercase">Repayments & receipts</p>
+            </div>
+            <span class="material-symbols-outlined text-white/20 text-[20px]">chevron_right</span>
+        </button>
+
+        <button onclick="window.location.href='cgt_meeting.html'" class="dashboard-card w-full flex items-center p-5 rounded-[1.5rem] gap-5 group">
+            <div class="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center">
+                <span class="material-symbols-outlined text-accent text-[26px]">groups</span>
+            </div>
+            <div class="flex-1 text-left">
+                <p class="text-[13px] font-black uppercase tracking-wide">Center Meeting</p>
+                <p class="text-[10px] text-white/40 mt-0.5 font-medium uppercase">CGT & GRT Process</p>
+            </div>
+            <span class="material-symbols-outlined text-white/20 text-[20px]">chevron_right</span>
+        </button>
+
+        <button onclick="window.location.href='village_list.html'" class="dashboard-card w-full flex items-center p-5 rounded-[1.5rem] gap-5 group">
+            <div class="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center">
+                <span class="material-symbols-outlined text-accent text-[26px]">list_alt</span>
+            </div>
+            <div class="flex-1 text-left">
+                <p class="text-[13px] font-black uppercase tracking-wide">All Centers</p>
+                <p class="text-[10px] text-white/40 mt-0.5 font-medium uppercase">Assigned center list</p>
+            </div>
+            <span class="material-symbols-outlined text-white/20 text-[20px]">chevron_right</span>
+        </button>
+
+        <button onclick="window.location.href='select_center.html'" class="dashboard-card w-full flex items-center p-5 rounded-[1.5rem] gap-5 group">
+            <div class="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center">
+                <span class="material-symbols-outlined text-accent text-[26px]">badge</span>
+            </div>
+            <div class="flex-1 text-left">
+                <p class="text-[13px] font-black uppercase tracking-wide">KYC Process</p>
+                <p class="text-[10px] text-white/40 mt-0.5 font-medium uppercase">Manual & Biometric</p>
+            </div>
+            <span class="material-symbols-outlined text-white/20 text-[20px]">chevron_right</span>
+        </button>
+
+        <button onclick="window.location.href='village_survey.html'" class="dashboard-card w-full flex items-center p-5 rounded-[1.5rem] gap-5 group">
+            <div class="w-12 h-12 bg-white/5 rounded-xl flex items-center justify-center">
+                <span class="material-symbols-outlined text-accent text-[26px]">pin_drop</span>
+            </div>
+            <div class="flex-1 text-left">
+                <p class="text-[13px] font-black uppercase tracking-wide">Village Survey</p>
+                <p class="text-[10px] text-white/40 mt-0.5 font-medium uppercase">New village sourcing</p>
+            </div>
+            <span class="material-symbols-outlined text-white/20 text-[20px]">chevron_right</span>
+        </button>
+
+        <button onclick="window.location.href='kyc_draft.html'" class="dashboard-card w-full flex items-center p-5 rounded-[1.5rem] gap-5 group">
+            <div class="w-12 h-12 bg-white/5 rounded-xl flex items-center justify-center">
+                <span class="material-symbols-outlined text-accent text-[26px]">edit_document</span>
+            </div>
+            <div class="flex-1 text-left">
+                <p class="text-[13px] font-black uppercase tracking-wide">Today KYC</p>
+                <p class="text-[10px] text-white/40 mt-0.5 font-medium uppercase">Pending KYC entries</p>
+            </div>
+            <span class="material-symbols-outlined text-white/20 text-[20px]">chevron_right</span>
+        </button>
+
+        <button id="btn_add_center_dash" onclick="handleAddCenterDash()" class="dashboard-card w-full flex items-center p-5 rounded-[1.5rem] gap-5 group opacity-50 transition-opacity" data-enabled="false">
+            <div class="w-12 h-12 bg-white/5 rounded-xl flex items-center justify-center">
+                <span class="material-symbols-outlined text-accent text-[26px]">add_business</span>
+            </div>
+            <div class="flex-1 text-left">
+                <p class="text-[13px] font-black uppercase tracking-wide">Add Center</p>
+                <p class="text-[10px] text-white/40 mt-0.5 font-medium uppercase">Create a new center</p>
+            </div>
+            <span class="material-symbols-outlined text-white/20 text-[20px]">chevron_right</span>
+        </button>
+
+        <button onclick="window.location.href='sync.html'" class="dashboard-card w-full flex items-center p-5 rounded-[1.5rem] gap-5 group border border-accent/20 bg-accent/5">
+            <div class="w-12 h-12 bg-accent/10 rounded-xl flex items-center justify-center">
+                <span class="material-symbols-outlined text-accent text-[26px]">sync</span>
+            </div>
+            <div class="flex-1 text-left">
+                <p class="text-[13px] font-black uppercase tracking-wide">Sync Data</p>
+                <p id="sync_status_text" class="text-[10px] text-accent/60 mt-0.5 font-bold uppercase tracking-widest">All data is synced</p>
+            </div>
+            <span class="material-symbols-outlined text-accent text-[20px] animate-pulse">cloud_done</span>
+        </button>
+    </div>
+
+    <!-- Profile Menu -->
+    <div id="profile_menu" class="hidden fixed inset-0 z-[100]">
+        <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="toggleMenu()"></div>
+        <div class="absolute bottom-0 w-full bg-[#1e293b] rounded-t-[3rem] p-8 space-y-6 animate-in slide-in-from-bottom duration-300">
+            <div class="w-12 h-1.5 bg-white/10 rounded-full mx-auto"></div>
+            <div class="flex items-center gap-5">
+                <div id="menu_initials" class="w-16 h-16 bg-accent rounded-2xl flex items-center justify-center text-navy font-black text-xl">NA</div>
+                <div>
+                    <h3 id="user_full_name" class="text-xl font-black text-white">Officer Name</h3>
+                    <p id="user_emp_id" class="text-accent text-xs font-bold uppercase tracking-widest">Emp ID: 1007936</p>
+                </div>
+            </div>
+            <div class="grid grid-cols-1 gap-3">
+                <button onclick="window.location.href='profile.html'" class="w-full flex items-center gap-4 p-5 bg-white/5 rounded-2xl border border-white/5 text-white/80 font-bold hover:bg-white/10 transition-all">
+                    <span class="material-symbols-outlined text-accent">person</span>
+                    View Profile
+                </button>
+                <button onclick="alert('Latest APK download link will be updated soon. Please contact Admin.')" class="w-full flex items-center gap-4 p-5 bg-white/5 rounded-2xl border border-white/5 text-white/80 font-bold hover:bg-white/10 transition-all">
+                    <span class="material-symbols-outlined text-secondary">update</span>
+                    Check for Updates
+                </button>
+                <button id="btn_logout" class="w-full flex items-center gap-4 p-5 bg-red-500/10 rounded-2xl border border-red-500/20 text-red-400 font-bold hover:bg-red-500/20 transition-all">
+                    <span class="material-symbols-outlined">logout</span>
+                    Logout Account
+                </button>
+            </div>
+        </div>
+    </div>
+
+</main>
+
+<script type="module">
+    import supabase from '../services/supabase.js'
+
+    async function init() {
+        const sessionStr = localStorage.getItem("gaongrow_session");
+        if (!sessionStr) { window.location.href = "login.html"; return; }
+        
+        const user = JSON.parse(sessionStr).user;
+
+        // Force logout for old numeric IDs
+        if (!user.employee_id || !user.employee_id.startsWith('GMPL')) {
+            localStorage.removeItem("gaongrow_session");
+            window.location.href = "login.html";
+            return;
+        }
+
+        // Verify active status in admin_users
+        const { data: adminUser, error: adminError } = await supabase
+            .from('admin_users')
+            .select('role_id, status')
+            .eq('user_id', user.employee_id)
+            .maybeSingle();
+
+        if (adminError || !adminUser || adminUser.status !== 'active') {
+            localStorage.removeItem("gaongrow_session");
+            window.location.href = "login.html";
+            return;
+        }
+
+        const initials = (user.name || "U")[0] + (user.name.split(' ')[1] || "A")[0];
+        document.getElementById('user_initials').innerText = initials;
+        document.getElementById('menu_initials').innerText = initials;
+        document.getElementById('user_full_name').innerText = user.name;
+        document.getElementById('header_user_name').innerText = user.name;
+        document.getElementById('user_emp_id').innerText = `Emp ID: ${user.employee_id}`;
+        document.getElementById('header_user_designation').innerText = adminUser.role_id;
+
+        const days = ['SUNDAY', 'MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY'];
+        const months = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
+        const d = new Date();
+        document.getElementById('today_date').innerText = `${days[d.getDay()]}, ${d.getDate()} ${months[d.getMonth()]}`;
+
+        // Check for approved villages
+        const { data: vData, error: vError } = await supabase
+            .from('village_surveys')
+            .select('id')
+            .eq('officer_id', user.employee_id)
+            .eq('status', 'approved')
+            .limit(1);
+            
+        const btnAddCenter = document.getElementById('btn_add_center_dash');
+        if (btnAddCenter && !vError && vData && vData.length > 0) {
+            btnAddCenter.dataset.enabled = 'true';
+            btnAddCenter.classList.remove('opacity-50');
+        }
+
+        const trigger = document.getElementById('profile_trigger');
+        const menu = document.getElementById('profile_menu');
+        trigger.addEventListener('click', () => menu.classList.remove('hidden'));
+        window.toggleMenu = () => menu.classList.add('hidden');
+        
+        window.handleAddCenterDash = function() {
+            const btnAdd = document.getElementById('btn_add_center_dash');
+            if (btnAdd.dataset.enabled === 'true') {
+                window.location.href = 'center_creation.html';
+            } else {
+                alert("Center creation is disabled. You must have at least one village in 'Approved' status to create a center.");
+            }
+        };
+
+        document.getElementById('btn_logout').addEventListener('click', async () => {
+            await supabase.auth.signOut();
+            localStorage.removeItem("gaongrow_session");
+            window.location.href = "login.html";
+        });
+    }
+
+    init();
+</script>
+</body>
+</html>

@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GaonGrow Admin - Village Management</title>
+    <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700" rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com">
+    window.toggleSubmenu = (id) => {
+        const menu = document.getElementById(id);
+        const arrow = document.getElementById('arrow_' + id);
+        if (menu) {
+            menu.classList.toggle('hidden');
+            if (arrow) arrow.style.transform = menu.classList.contains('hidden') ? 'rotate(0deg)' : 'rotate(90deg)';
+        }
+    };
+
+    window.logoutAdmin = async () => {
+        localStorage.removeItem("gaongrow_admin_session");
+        window.location.href = "admin_login.html";
+    };
+
+</script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#6B8E23',
+                        secondary: '#C5A028',
+                        navy: '#0f172a',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+    </style>
+</head>
+<body class="font-['Public_Sans'] text-navy bg-[#f8fafc] min-h-screen">
+
+<!-- PREMIUM SIDEBAR TEMPLATE -->
+<div id="sidebar_backdrop" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[90] hidden lg:hidden" onclick="toggleSidebar()"></div>
+<aside id="main_sidebar" class="fixed inset-y-0 left-0 z-[100] w-80 bg-[#011a14] text-slate-400 flex flex-col shrink-0 overflow-hidden shadow-2xl border-r border-white/5 font-['Public_Sans'] transform -translate-x-full lg:translate-x-0 lg:static transition-transform duration-300 ease-in-out">
+    <!-- Header Section: Premium Branding -->
+    <div class="p-8 border-b border-white/5 flex items-center gap-5 bg-gradient-to-b from-[#012d1d] to-transparent">
+        <div class="w-14 h-14 bg-white rounded-[1.25rem] flex items-center justify-center p-2 shadow-2xl shadow-white/10 overflow-hidden shrink-0 border border-slate-200/50 group-hover:scale-110 transition-transform duration-500">
+            <img src="../assets/gaongrow_tractor_logo.png" class="w-full h-full object-contain filter drop-shadow-md" onerror="this.src='https://cdn-icons-png.flaticon.com/512/2554/2554904.png'" />
+        </div>
+        <div>
+            <h1 class="text-[17px] font-black tracking-tighter text-white uppercase leading-none mb-1.5">GaonGrow <span class="text-secondary">Finance</span></h1>
+            <p class="text-[9px] font-extrabold text-slate-500 uppercase tracking-[0.25em] opacity-80">Core Banking System</p>
+        </div>
+    </div>
+
+    <!-- User Profile: Dynamic & Premium -->
+    <div class="px-8 py-6 border-b border-white/5 bg-white/5 group">
+        <div class="flex items-center gap-4">
+            <div class="relative">
+                <div id="user_initials_circle" class="w-11 h-11 bg-gradient-to-tr from-secondary to-yellow-600 rounded-2xl flex items-center justify-center text-navy font-black text-xs shadow-xl group-hover:rotate-12 transition-all duration-500">
+                    --
+                </div>
+                <span class="absolute -bottom-1 -right-1 w-4 h-4 bg-primary border-2 border-[#011a14] rounded-full"></span>
+            </div>
+            <div>
+                <div class="flex items-center gap-2">
+                    <p id="user_display_role" class="text-[12px] font-black text-white uppercase tracking-tight">Loading...</p>
+                    <span id="user_display_id" class="text-[8px] bg-white/10 px-1.5 py-0.5 rounded-md text-slate-400 font-bold">---</span>
+                </div>
+                <p id="user_full_name" class="text-[9px] font-bold text-slate-500 uppercase tracking-widest mt-0.5 flex items-center gap-1">
+                    <span class="w-1 h-1 bg-primary rounded-full animate-pulse"></span>
+                    Live Session
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dynamic Navigation List -->
+    <nav id="dynamicMenuContainer" class="flex-1 overflow-y-auto custom-scrollbar px-4 py-6 space-y-2">
+        <!-- Menu items will be injected here via menuService.js -->
+        {{DYNAMIC_MENU}}
+    </nav>
+
+
+    <!-- Logout Area -->
+    <div class="p-6 border-t border-white/5 bg-white/5">
+        <button onclick="logoutAdmin()" class="w-full flex items-center justify-center gap-3 px-4 py-4 rounded-2xl bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white transition-all duration-300 group shadow-xl">
+            <span class="material-symbols-outlined text-[22px] group-hover:rotate-180 transition-transform duration-500">logout</span>
+            <span class="text-[11px] font-black uppercase tracking-widest">Exit System</span>
+        </button>
+    </div>
+
+    <!-- Dynamic Menu Loader -->
+    <script type="module">
+        import { getMenuForRole, renderMenuHTML } from '../services/menuService.js';
+        
+        // Global Helpers
+        window.toggleSidebar = () => {
+            const sidebar = document.getElementById('main_sidebar');
+            const backdrop = document.getElementById('sidebar_backdrop');
+            if (sidebar) {
+                const isOpen = sidebar.classList.contains('translate-x-0');
+                if (isOpen) {
+                    sidebar.classList.replace('translate-x-0', '-translate-x-full');
+                    if (backdrop) backdrop.classList.add('hidden');
+                } else {
+                    sidebar.classList.replace('-translate-x-full', 'translate-x-0');
+                    if (backdrop) backdrop.classList.remove('hidden');
+                }
+            }
+        };
+
+        window.toggleSubmenu = (id) => {
+            const menu = document.getElementById(id);
+            const arrow = document.querySelector(`#${id} + button #arrow_${id}`) || document.querySelector(`[onclick="toggleSubmenu('${id}')"] .transition-transform`);
+            if (menu) {
+                menu.classList.toggle('hidden');
+                if (arrow) {
+                    const isHidden = menu.classList.contains('hidden');
+                    arrow.style.transform = isHidden ? 'rotate(0deg)' : 'rotate(90deg)';
+                }
+            }
+        };
+
+        window.logoutAdmin = () => {
+            localStorage.removeItem('gaongrow_admin_session');
+            localStorage.removeItem('gaongrow_session');
+            window.location.href = 'login.html';
+        };
+
+        // Role Detection
+        const sessionStr = localStorage.getItem('gaongrow_admin_session') || localStorage.getItem('gaongrow_session');
+        const session = sessionStr ? JSON.parse(sessionStr) : null;
+        
+        const roleMap = {
+            1: 'SUPER_ADMIN',
+            2: 'HO_USER',
+            3: 'BRANCH_MANAGER',
+            4: 'CRO',
+            5: 'AUDITOR'
+        };
+
+        let role = 'HO_USER';
+        if (session && session.user) {
+            const r = session.user.role || session.user.role_id;
+            role = typeof r === 'string' ? r.toUpperCase() : (roleMap[r] || 'HO_USER');
+        }
+
+        // Render Menu
+        const menuItems = getMenuForRole(role);
+        const container = document.getElementById('dynamicMenuContainer');
+        if (container) {
+            container.innerHTML = renderMenuHTML(menuItems);
+        }
+
+        // CRO Visibility Hardening: Hide sidebar and toggles for CROs (Mobile Focused)
+        if (role === 'CRO') {
+            const sidebar = document.getElementById('main_sidebar');
+            const backdrop = document.getElementById('sidebar_backdrop');
+            if (sidebar) sidebar.style.setProperty('display', 'none', 'important');
+            if (backdrop) backdrop.style.setProperty('display', 'none', 'important');
+            
+            // Hide all hamburger/sidebar toggle buttons
+            document.querySelectorAll('[onclick="toggleSidebar()"]').forEach(btn => {
+                btn.style.setProperty('display', 'none', 'important');
+            });
+        }
+
+        // Populate User Info
+        if (session && session.user) {
+            const user = session.user;
+            const name = user.employee_name || user.full_name || user.name || 'User';
+            const roleName = typeof user.role === 'string' ? user.role : (roleMap[user.role] || user.role_name || 'Staff');
+            const empId = user.employee_id || user.id || '---';
+
+            if (document.getElementById('user_display_role')) document.getElementById('user_display_role').textContent = roleName;
+            if (document.getElementById('user_display_id')) document.getElementById('user_display_id').textContent = empId;
+            if (document.getElementById('user_full_name')) {
+                document.getElementById('user_full_name').innerHTML = `
+                    <span class="w-1 h-1 bg-primary rounded-full animate-pulse"></span>
+                    ${name}
+                `;
+            }
+            
+            // Initials
+            const initials = name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+            if (document.getElementById('user_initials_circle')) document.getElementById('user_initials_circle').textContent = initials;
+        }
+    </script>
+</aside>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- Top Bar -->
+<header class="h-20 bg-white border-b border-slate-100 flex items-center justify-between px-10 sticky top-0 z-40 shadow-sm">
+    <div class="flex items-center gap-4">
+        <div class="w-10 h-10 bg-primary/10 text-primary rounded-xl flex items-center justify-center">
+            <span class="material-symbols-outlined">map</span>
+        </div>
+        <div>
+            <h1 class="text-xl font-black uppercase tracking-tight">Village Management</h1>
+            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Survey Database & Sourcing Control</p>
+        </div>
+    </div>
+
+    <div class="flex items-center gap-4">
+        <button onclick="window.location.reload()" class="w-10 h-10 rounded-full hover:bg-slate-50 flex items-center justify-center text-slate-400 transition-all">
+            <span class="material-symbols-outlined">refresh</span>
+        </button>
+        <button onclick="window.location.href='admin_dashboard.html'" class="px-6 h-11 bg-navy text-white rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg shadow-navy/20 active:scale-95 transition-all">Back to Dashboard</button>
+    </div>
+</header>
+
+<main class="p-8">
+    <!-- Filter Panel -->
+    <div class="bg-white rounded-[2rem] p-6 shadow-sm border border-slate-100 mb-8">
+        <div class="flex items-center gap-2 mb-6">
+            <span class="material-symbols-outlined text-primary">filter_list</span>
+            <h2 class="text-[11px] font-black uppercase tracking-[0.2em]">Filter Surveys</h2>
+        </div>
+        
+        <div class="grid grid-cols-5 gap-4 items-end">
+            <div class="space-y-1.5">
+                <label class="text-[9px] font-black text-slate-400 uppercase tracking-widest ml-1">Branch</label>
+                <select id="filter_branch" class="w-full h-10 px-3 rounded-lg border border-slate-200 text-[11px] font-bold uppercase tracking-wider focus:border-primary outline-none bg-slate-50">
+                    <option value="">Select Branch</option>
+                </select>
+            </div>
+            <div class="space-y-1.5">
+                <label class="text-[9px] font-black text-slate-400 uppercase tracking-widest ml-1">Village Name</label>
+                <input id="filter_village" type="text" placeholder="Search Village..." class="w-full h-10 px-3 rounded-lg border border-slate-200 text-[11px] font-bold uppercase tracking-wider focus:border-primary outline-none bg-slate-50">
+            </div>
+            <div class="space-y-1.5">
+                <label class="text-[9px] font-black text-slate-400 uppercase tracking-widest ml-1">Status</label>
+                <select id="filter_status" class="w-full h-10 px-3 rounded-lg border border-slate-200 text-[11px] font-bold uppercase tracking-wider focus:border-primary outline-none bg-slate-50">
+                    <option value="">Select Status</option>
+                    <option value="draft">Draft</option>
+                    <option value="pending">Pending</option>
+                    <option value="approved">Approved</option>
+                    <option value="rejected">Rejected</option>
+                </select>
+            </div>
+            <div class="space-y-1.5">
+                <label class="text-[9px] font-black text-slate-400 uppercase tracking-widest ml-1">Loan Officer ID</label>
+                <input id="filter_officer" type="text" placeholder="GMPLXXXX" class="w-full h-10 px-3 rounded-lg border border-slate-200 text-[11px] font-bold uppercase tracking-wider focus:border-primary outline-none bg-slate-50">
+            </div>
+            <div class="flex gap-2">
+                <button onclick="applyFilters()" class="flex-1 h-10 bg-primary text-white rounded-lg text-[10px] font-black uppercase tracking-widest active:scale-95 transition-all">Apply Filters</button>
+                <button onclick="resetFilters()" class="w-10 h-10 bg-slate-100 text-slate-400 rounded-lg flex items-center justify-center hover:bg-slate-200 transition-all">
+                    <span class="material-symbols-outlined">delete</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Data Table -->
+    <div class="bg-white rounded-[2.5rem] shadow-sm border border-slate-100 overflow-hidden">
+        <div class="p-8 border-b border-slate-50 flex justify-between items-center">
+            <div>
+                <h3 class="text-sm font-black uppercase tracking-widest">Village Survey Records</h3>
+                <p id="total_count" class="text-[10px] font-bold text-slate-400 uppercase mt-1">Showing 0 Surveys</p>
+            </div>
+            <div class="flex gap-4">
+                <button onclick="approveAll()" class="px-5 h-10 bg-green-500 text-white rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-green-600 transition-all flex items-center gap-2">
+                    <span class="material-symbols-outlined text-[18px]">verified</span>
+                    Quick Approve
+                </button>
+            </div>
+        </div>
+
+        <div class="overflow-x-auto custom-scrollbar">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="bg-slate-50/50">
+                        <th class="p-5 text-[10px] font-black text-slate-400 uppercase tracking-widest border-b border-slate-100">Actions</th>
+                        <th class="p-5 text-[10px] font-black text-slate-400 uppercase tracking-widest border-b border-slate-100">Village Name</th>
+                        <th class="p-5 text-[10px] font-black text-slate-400 uppercase tracking-widest border-b border-slate-100">Branch</th>
+                        <th class="p-5 text-[10px] font-black text-slate-400 uppercase tracking-widest border-b border-slate-100">District / State</th>
+                        <th class="p-5 text-[10px] font-black text-slate-400 uppercase tracking-widest border-b border-slate-100">Houses</th>
+                        <th class="p-5 text-[10px] font-black text-slate-400 uppercase tracking-widest border-b border-slate-100">Potential</th>
+                        <th class="p-5 text-[10px] font-black text-slate-400 uppercase tracking-widest border-b border-slate-100">Status</th>
+                        <th class="p-5 text-[10px] font-black text-slate-400 uppercase tracking-widest border-b border-slate-100">Survey By</th>
+                        <th class="p-5 text-[10px] font-black text-slate-400 uppercase tracking-widest border-b border-slate-100">Date</th>
+                    </tr>
+                </thead>
+                <tbody id="village_table_body" class="divide-y divide-slate-50">
+                    <!-- Data Rows Here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+</main>
+
+<!-- Details Modal -->
+<div id="details_modal" class="fixed inset-0 z-[100] hidden">
+    <div class="absolute inset-0 bg-navy/60 backdrop-blur-sm" onclick="closeModal()"></div>
+    <div class="absolute right-0 top-0 h-screen w-full max-w-3xl bg-white shadow-2xl animate-in slide-in-from-right duration-500 overflow-y-auto custom-scrollbar">
+        <div class="p-10">
+            <div class="flex justify-between items-start mb-10">
+                <div>
+                    <h2 id="modal_village_name" class="text-2xl font-black uppercase tracking-tight">Village Name</h2>
+                    <p id="modal_survey_id" class="text-[11px] font-bold text-primary uppercase tracking-[0.2em] mt-1">SURVEY-XXXX</p>
+                </div>
+                <div class="flex gap-2">
+                    <button id="btn_approve" class="px-6 h-12 bg-green-500 text-white rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg shadow-green-500/20 active:scale-95 transition-all">Approve</button>
+                    <button id="btn_reject" class="px-6 h-12 bg-red-500 text-white rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg shadow-red-500/20 active:scale-95 transition-all">Reject</button>
+                    <button onclick="closeModal()" class="w-12 h-12 rounded-2xl bg-slate-50 text-slate-400 flex items-center justify-center hover:bg-slate-100 transition-all ml-4">
+                        <span class="material-symbols-outlined">close</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-10">
+                <div class="space-y-8">
+                    <div class="space-y-6">
+                        <h4 class="text-[10px] font-black text-primary uppercase tracking-[0.2em] border-b border-slate-100 pb-2">Geography Details</h4>
+                        <div id="modal_geo_content" class="grid grid-cols-1 gap-4"></div>
+                    </div>
+                    <div class="space-y-6">
+                        <h4 class="text-[10px] font-black text-primary uppercase tracking-[0.2em] border-b border-slate-100 pb-2">Logistics Details</h4>
+                        <div id="modal_logistics_content" class="grid grid-cols-1 gap-4"></div>
+                    </div>
+                </div>
+                <div class="space-y-8">
+                    <div class="space-y-6">
+                        <h4 class="text-[10px] font-black text-primary uppercase tracking-[0.2em] border-b border-slate-100 pb-2">Survey Photo</h4>
+                        <div class="aspect-video bg-slate-100 rounded-2xl overflow-hidden relative group">
+                            <img id="modal_photo" src="" class="w-full h-full object-cover" onerror="this.src='https://images.unsplash.com/photo-1500382017468-9049fed747ef?q=80&w=2832&auto=format&fit=crop'" />
+                        </div>
+                    </div>
+                    <div class="space-y-6">
+                        <h4 class="text-[10px] font-black text-primary uppercase tracking-[0.2em] border-b border-slate-100 pb-2">House Visit Data</h4>
+                        <div id="modal_house_content" class="grid grid-cols-1 gap-4"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="module">
+    import supabase from '../services/supabase.js'
+
+    let surveys = [];
+
+    async function init() {
+        const sessionStr = localStorage.getItem("gaongrow_admin_session");
+        if (!sessionStr) { window.location.href = "admin_login.html"; return; }
+
+        await fetchBranches();
+        await fetchSurveys();
+    }
+
+    async function fetchBranches() {
+        const { data } = await supabase.from('branches').select('branch_name').order('branch_name');
+        if (data) {
+            const select = document.getElementById('filter_branch');
+            data.forEach(b => {
+                select.innerHTML += `<option value="${b.branch_name}">${b.branch_name}</option>`;
+            });
+        }
+    }
+
+    async function fetchSurveys(filters = {}) {
+        const tbody = document.getElementById('village_table_body');
+        tbody.innerHTML = `<tr><td colspan="9" class="p-20 text-center"><span class="material-symbols-outlined animate-spin text-slate-200">refresh</span></td></tr>`;
+
+        let query = supabase.from('village_surveys').select('*');
+
+        if (filters.branch) query = query.eq('branch_name', filters.branch);
+        if (filters.village) query = query.ilike('village_name', `%${filters.village}%`);
+        if (filters.status) query = query.eq('status', filters.status);
+        if (filters.officer) query = query.ilike('officer_id', `%${filters.officer}%`);
+
+        const { data, error } = await query.order('created_at', { ascending: false });
+
+        if (error) {
+            tbody.innerHTML = `<tr><td colspan="9" class="p-10 text-center text-red-500 font-bold uppercase text-xs">Error: ${error.message}</td></tr>`;
+            return;
+        }
+
+        surveys = data;
+        document.getElementById('total_count').innerText = `Showing ${data.length} Surveys`;
+
+        if (data.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="9" class="p-20 text-center text-slate-300 font-black uppercase text-[10px] tracking-widest">No matching surveys found</td></tr>`;
+            return;
+        }
+
+        tbody.innerHTML = data.map(s => `
+            <tr class="hover:bg-slate-50 transition-all group">
+                <td class="p-5">
+                    <button onclick="viewSurvey('${s.id}')" class="w-10 h-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center hover:bg-primary hover:text-white transition-all">
+                        <span class="material-symbols-outlined text-[20px]">visibility</span>
+                    </button>
+                </td>
+                <td class="p-5">
+                    <p class="text-[11px] font-black text-navy uppercase">${s.village_name}</p>
+                    <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest mt-0.5">${s.mauja_name || '--'}</p>
+                </td>
+                <td class="p-5 text-[10px] font-bold text-slate-600 uppercase">${s.branch_name || '--'}</td>
+                <td class="p-5">
+                    <p class="text-[10px] font-bold text-slate-500 uppercase">${s.district || '--'}</p>
+                    <p class="text-[9px] font-bold text-slate-400 uppercase tracking-tighter">${s.state || '--'}</p>
+                </td>
+                <td class="p-5 text-[10px] font-black text-navy">${s.house_count || 0}</td>
+                <td class="p-5 text-[10px] font-black text-secondary">${s.potential_members || 0}</td>
+                <td class="p-5">
+                    <span class="px-3 py-1 rounded-full text-[8px] font-black uppercase tracking-widest 
+                    ${s.status === 'approved' ? 'bg-green-50 text-green-500' : s.status === 'rejected' ? 'bg-red-50 text-red-500' : 'bg-amber-50 text-amber-500'}">
+                        ${s.status}
+                    </span>
+                </td>
+                <td class="p-5">
+                    <p class="text-[10px] font-black text-navy uppercase">${s.officer_id}</p>
+                    <p class="text-[8px] font-bold text-slate-400 uppercase">${s.officer_name || 'CRO'}</p>
+                </td>
+                <td class="p-5 text-[10px] font-bold text-slate-400">${new Date(s.created_at).toLocaleDateString()}</td>
+            </tr>
+        `).join('');
+    }
+
+    window.applyFilters = () => {
+        fetchSurveys({
+            branch: document.getElementById('filter_branch').value,
+            village: document.getElementById('filter_village').value,
+            status: document.getElementById('filter_status').value,
+            officer: document.getElementById('filter_officer').value
+        });
+    };
+
+    window.resetFilters = () => {
+        document.querySelectorAll('input, select').forEach(i => i.value = '');
+        fetchSurveys();
+    };
+
+    window.viewSurvey = (id) => {
+        const s = surveys.find(x => x.id == id);
+        if (!s) return;
+
+        document.getElementById('modal_village_name').innerText = s.village_name;
+        document.getElementById('modal_survey_id').innerText = `ID: ${s.id} | PIN: ${s.pincode || '--'}`;
+        document.getElementById('modal_photo').src = s.village_photo || '';
+
+        const geoFields = [
+            { label: 'Mauja Name', value: s.mauja_name },
+            { label: 'Block Name', value: s.block_name },
+            { label: 'District', value: s.district },
+            { label: 'State', value: s.state }
+        ];
+
+        const logisticFields = [
+            { label: 'Distance from Branch', value: `${s.distance_from_branch || 0} KM` },
+            { label: 'Nearest Bank', value: `${s.nearest_bank_distance || 0} KM` },
+            { label: 'Police Station', value: `${s.police_station_distance || 0} KM` },
+            { label: 'Road Type', value: s.road_type }
+        ];
+
+        const houseFields = [
+            { label: 'Total Houses', value: s.house_count },
+            { label: 'Potential Members', value: s.potential_members },
+            { label: 'Total Population', value: s.total_population },
+            { label: 'Flood Affected', value: s.flood_affected },
+            { label: 'Migration Flag', value: s.migration }
+        ];
+
+        const mapFields = (fields) => fields.map(f => `
+            <div class="flex justify-between items-center py-2 border-b border-slate-50">
+                <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest">${f.label}</p>
+                <p class="text-[10px] font-bold text-navy uppercase">${f.value || '--'}</p>
+            </div>
+        `).join('');
+
+        document.getElementById('modal_geo_content').innerHTML = mapFields(geoFields);
+        document.getElementById('modal_logistics_content').innerHTML = mapFields(logisticFields);
+        document.getElementById('modal_house_content').innerHTML = mapFields(houseFields);
+
+        document.getElementById('btn_approve').onclick = () => updateStatus(s.id, 'approved');
+        document.getElementById('btn_reject').onclick = () => updateStatus(s.id, 'rejected');
+
+        document.getElementById('details_modal').classList.remove('hidden');
+    };
+
+    async function updateStatus(id, status) {
+        const { error } = await supabase.from('village_surveys').update({ status }).eq('id', id);
+        if (error) alert("Error updating status: " + error.message);
+        else {
+            closeModal();
+            fetchSurveys();
+        }
+    }
+
+    window.closeModal = () => document.getElementById('details_modal').classList.add('hidden');
+
+    window.approveAll = async () => {
+        if (!confirm("Are you sure you want to approve all pending surveys?")) return;
+        const { error } = await supabase.from('village_surveys').update({ status: 'approved' }).eq('status', 'pending');
+        if (error) alert(error.message);
+        else fetchSurveys();
+    };
+
+    init();
+</script>
+</body>
+</html>

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GaonGrow - Financial Details</title>
+  <script src="../config/tailwind-setup.js"></script>
+  <script src="../components/layout.js"></script>
+</head>
+<body class="bg-surface font-body-md text-on-surface">
+<main class="mt-20 px-4 max-w-lg mx-auto pb-32">
+  <div class="mb-lg flex items-center gap-sm py-xs">
+    <div class="w-8 h-8 rounded-full bg-primary text-on-primary flex items-center justify-center font-label-sm border border-outline-variant">1</div>
+    <div class="flex-grow border-t border-outline-variant"></div>
+    <div class="w-8 h-8 rounded-full bg-primary text-on-primary flex items-center justify-center font-label-sm">2</div>
+    <div class="flex-grow border-t-2 border-primary"></div>
+    <div class="w-8 h-8 rounded-full bg-surface-container-high text-on-surface-variant flex items-center justify-center font-label-sm border border-outline-variant">3</div>
+  </div>
+
+  <h2 class="font-headline-md text-primary mb-md">Financial Details</h2>
+  
+  <form class="space-y-lg">
+    <div class="space-y-md">
+      <h3 class="font-title-lg text-[16px] text-on-surface border-b border-outline-variant pb-2">Income Information</h3>
+      
+      <div>
+        <label class="font-label-lg text-on-surface-variant block mb-1">Primary Occupation</label>
+        <select class="w-full h-[56px] px-4 border border-outline-variant rounded-lg focus:border-primary focus:ring-1 focus:ring-primary bg-surface-container-lowest">
+          <option>Agriculture</option>
+          <option>Livestock</option>
+          <option>Small Business</option>
+          <option>Labor</option>
+        </select>
+      </div>
+
+      <div class="relative">
+        <label class="font-label-lg text-on-surface-variant block mb-1">Monthly Income (₹)</label>
+        <span class="absolute left-4 top-[38px] text-on-surface-variant">₹</span>
+        <input type="number" class="w-full h-[56px] pl-8 pr-4 border border-outline-variant rounded-lg focus:border-primary focus:ring-1 focus:ring-primary" placeholder="e.g. 15000">
+      </div>
+      
+      <div class="relative">
+        <label class="font-label-lg text-on-surface-variant block mb-1">Other Household Income (₹)</label>
+        <span class="absolute left-4 top-[38px] text-on-surface-variant">₹</span>
+        <input type="number" class="w-full h-[56px] pl-8 pr-4 border border-outline-variant rounded-lg focus:border-primary focus:ring-1 focus:ring-primary" placeholder="e.g. 5000">
+      </div>
+    </div>
+
+    <div class="space-y-md">
+      <h3 class="font-title-lg text-[16px] text-on-surface border-b border-outline-variant pb-2 mt-lg">Expense & Liabilities</h3>
+      
+      <div class="relative">
+        <label class="font-label-lg text-on-surface-variant block mb-1">Monthly Expenses (₹)</label>
+        <span class="absolute left-4 top-[38px] text-on-surface-variant">₹</span>
+        <input type="number" class="w-full h-[56px] pl-8 pr-4 border border-outline-variant rounded-lg focus:border-primary focus:ring-1 focus:ring-primary" placeholder="e.g. 8000">
+      </div>
+
+      <div class="relative">
+        <label class="font-label-lg text-on-surface-variant block mb-1">Existing EMI (if any) (₹)</label>
+        <span class="absolute left-4 top-[38px] text-on-surface-variant">₹</span>
+        <input type="number" class="w-full h-[56px] pl-8 pr-4 border border-outline-variant rounded-lg focus:border-primary focus:ring-1 focus:ring-primary" value="0">
+      </div>
+    </div>
+    
+    <div class="bg-surface-container-low p-4 rounded-xl border border-outline-variant mt-md">
+      <div class="flex justify-between items-center">
+        <span class="font-label-lg text-on-surface-variant">Calculated FOIR</span>
+        <span class="font-headline-sm text-primary">32%</span>
+      </div>
+      <p class="text-xs text-on-surface-variant mt-1">FOIR < 50% is required for approval.</p>
+    </div>
+  </form>
+
+  <div class="mt-xl flex gap-md">
+    <button onclick="window.history.back()" class="flex-1 h-[56px] border border-outline text-primary rounded-lg font-label-lg active:scale-95 transition-transform">Back</button>
+    <a href="document_upload.html" class="flex-[2] h-[56px] bg-primary text-on-primary rounded-lg font-label-lg flex items-center justify-center gap-2 shadow-sm active:scale-95 transition-transform">
+      Next: Documents
+      <span class="material-symbols-outlined">arrow_forward</span>
+    </a>
+  </div>
+</main>
+</body>
+</html>

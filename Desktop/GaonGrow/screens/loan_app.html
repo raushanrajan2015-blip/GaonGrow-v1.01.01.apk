@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GaonGrow - Loan Application</title>
+  
+  <!-- Fonts & Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "primary": "#012d1d",
+            "primary-container": "#1b4332",
+            "surface": "#f7f9ff",
+            "on-surface": "#181c20",
+            "on-surface-variant": "#414844",
+            "outline-variant": "#c1c8c2",
+            "surface-container-lowest": "#ffffff"
+          }
+        }
+      }
+    }
+  </script>
+  
+  <script src="/components/layout.js"></script>
+</head>
+<body class="bg-surface font-body-md text-on-surface">
+  
+<!-- TopAppBar -->
+
+<main class="max-w-xl mx-auto px-edge-margin pt-lg">
+<!-- Progress Indicator -->
+<section class="mb-xxl">
+<div class="flex justify-between items-end mb-sm">
+<h1 class="font-headline-md text-headline-md text-primary">Loan Application</h1>
+<span class="font-label-lg text-label-lg text-secondary">Step 1 of 4</span>
+</div>
+<div class="w-full bg-surface-container-high h-[12px] rounded-full overflow-hidden">
+<div class="bg-primary h-full w-1/4 rounded-r-full"></div>
+</div>
+<p class="mt-md font-body-md text-on-surface-variant">Personal Details</p>
+</section>
+<!-- Form Canvas -->
+<form id="loan_form" class="space-y-lg">
+<!-- Rooted Stripe Section: Identity -->
+<div class="bg-white rounded-xl shadow-sm rooted-stripe overflow-hidden p-md">
+<h2 class="font-headline-sm text-headline-sm mb-lg text-primary">Basic Information</h2>
+<div class="space-y-lg">
+<!-- Full Name -->
+<div>
+<label class="block font-label-lg text-label-lg mb-xs text-on-surface">Full Name</label>
+<input id="full_name" class="w-full h-[56px] px-md rounded-lg border-2 border-surface-container-highest focus:border-primary focus:ring-0 text-body-md transition-colors bg-surface-container-lowest" placeholder="e.g. Rajesh Kumar" required="" type="text"/>
+</div>
+<!-- Contact Number -->
+<div>
+<label class="block font-label-lg text-label-lg mb-xs text-on-surface">Primary Phone Number</label>
+<div class="flex gap-2">
+<span class="flex items-center justify-center h-[56px] px-md bg-surface-container-low border-2 border-surface-container-highest rounded-lg font-label-lg">+91</span>
+<input id="phone_number" class="flex-1 h-[56px] px-md rounded-lg border-2 border-surface-container-highest focus:border-primary focus:ring-0 text-body-md transition-colors bg-surface-container-lowest" placeholder="10-digit number" required="" type="tel" pattern="[0-9]{10}" maxlength="10" oninput="this.value = this.value.replace(/[^0-9]/g, '')"/>
+</div>
+</div>
+</div>
+</div>
+<!-- Address Section -->
+<div class="bg-white rounded-xl shadow-sm rooted-stripe overflow-hidden p-md">
+<h2 class="font-headline-sm text-headline-sm mb-lg text-primary">Permanent Address</h2>
+<div class="space-y-lg">
+<div>
+<label class="block font-label-lg text-label-lg mb-xs text-on-surface">Street Address / Village</label>
+<input id="address" class="w-full h-[56px] px-md rounded-lg border-2 border-surface-container-highest focus:border-primary focus:ring-0 text-body-md transition-colors bg-surface-container-lowest" placeholder="House No, Village name" required="" type="text"/>
+</div>
+<div class="grid grid-cols-2 gap-md">
+<div>
+<label class="block font-label-lg text-label-lg mb-xs text-on-surface">District</label>
+<input id="district" class="w-full h-[56px] px-md rounded-lg border-2 border-surface-container-highest focus:border-primary focus:ring-0 text-body-md transition-colors bg-surface-container-lowest" required="" type="text"/>
+</div>
+<div>
+<label class="block font-label-lg text-label-lg mb-xs text-on-surface">Postal Code</label>
+<input id="postal_code" class="w-full h-[56px] px-md rounded-lg border-2 border-surface-container-highest focus:border-primary focus:ring-0 text-body-md transition-colors bg-surface-container-lowest" required="" type="number"/>
+</div>
+</div>
+</div>
+</div>
+<!-- ID Upload Section -->
+<div class="bg-white rounded-xl shadow-sm rooted-stripe overflow-hidden p-md">
+<div class="flex items-center justify-between mb-lg">
+<h2 class="font-headline-sm text-headline-sm text-primary">Identification</h2>
+<span class="bg-secondary-fixed text-on-secondary-container px-sm py-1 rounded-full font-label-sm">Mandatory</span>
+</div>
+<div class="mb-lg">
+<label class="block font-label-lg text-label-lg mb-xs text-on-surface">Aadhar or PAN Number</label>
+<input id="aadhar_pan" class="w-full h-[56px] px-md rounded-lg border-2 border-surface-container-highest focus:border-primary focus:ring-0 text-body-md transition-colors bg-surface-container-lowest" placeholder="XXXX-XXXX-XXXX" required="" type="text"/>
+</div>
+<div class="relative group cursor-pointer border-2 border-dashed border-outline-variant rounded-xl p-xl flex flex-col items-center justify-center hover:bg-surface-container-low transition-colors">
+<input id="id_document" aria-label="Upload ID Document" class="absolute inset-0 opacity-0 cursor-pointer" type="file" required=""/>
+<div class="w-16 h-16 rounded-full bg-primary-fixed flex items-center justify-center mb-md">
+<span class="material-symbols-outlined text-primary text-[32px]">file_upload</span>
+</div>
+<p class="font-label-lg text-primary text-center">Tap to Upload Document</p>
+<p class="font-label-sm text-on-surface-variant text-center mt-xs">PDF, JPG, or PNG (Max 5MB)</p>
+</div>
+<!-- Preview State (Hidden by default, shown for UI demonstration) -->
+<div class="mt-lg p-md bg-surface-container-low rounded-lg flex items-center gap-md">
+<div class="w-12 h-12 bg-surface-container-highest rounded border border-outline-variant flex items-center justify-center overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A close-up shot of a professional identification card resting on a clean, white minimalist surface. The card displays a placeholder portrait and blurred text, indicating a secure document. The lighting is bright and even, reflecting a corporate financial atmosphere with soft green color accents from the surrounding brand elements. The overall mood is official and secure." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAuebSqrI81hBOZR9ZlIum47f7VDqtxPrhkgtviA_MU23dXgnovCbKxW9GkkoXuXBOrrhlx3ZanzVvqPeTFREYLVDxwM-2oUOAWis_YUojl2T699c5LH_D0iA4lFYvi4EarwRnoYYSBHRzveEIpx9rnL7r4JuAoMmGnvPVzLsGsZ0DDMnQG7jat3arbvrm5jZllOYSFI_gmABPoBlyyl-gQjRERInKNWXZsBkMavwTVhvs-rjOaVvRSWpeJhO0CizGHgvbl7HI3MUg"/>
+</div>
+<div class="flex-1 overflow-hidden">
+<p class="font-label-lg text-on-surface truncate">aadhar_front_scan.jpg</p>
+<p class="font-label-sm text-on-surface-variant">1.2 MB • Uploaded</p>
+</div>
+<button class="material-symbols-outlined text-error p-2 hover:bg-error-container rounded-full" type="button">delete</button>
+</div>
+</div>
+<!-- Action Buttons -->
+<div class="pt-xl pb-xxl">
+<button id="submit_btn" class="w-full h-[56px] bg-primary text-white rounded-xl font-headline-sm flex items-center justify-center gap-sm active:scale-[0.98] transition-transform shadow-md" type="submit">
+                    <span id="btn_text">Save &amp; Continue</span>
+                    <span id="btn_icon" class="material-symbols-outlined">arrow_forward</span>
+</button>
+<p class="text-center mt-md font-label-sm text-on-surface-variant">Your data is secured with bank-grade encryption</p>
+</div>
+</form>
+</main>
+<!-- BottomNavBar (Hidden on desktop via design rule if needed, but here as per mandate) -->
+
+<script type="module">
+  import supabase from '/services/supabase.js'
+
+  // Protect the route
+  let sessionPhone = null;
+  async function checkSession() {
+    const { data: { session } } = await supabase.auth.getSession()
+    if (!session) {
+      window.location.href = "login.html"
+    } else {
+      sessionPhone = session.user.phone || "Unknown Officer";
+    }
+  }
+  checkSession()
+
+  // Handle Form Submission
+  const form = document.getElementById("loan_form")
+  const submitBtn = document.getElementById("submit_btn")
+  const btnText = document.getElementById("btn_text")
+  const btnIcon = document.getElementById("btn_icon")
+  const fileInput = document.getElementById("id_document")
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    // UI Loading state
+    submitBtn.disabled = true;
+    submitBtn.classList.add("opacity-50");
+    btnText.innerText = "Uploading & Saving...";
+    btnIcon.innerText = "sync";
+    btnIcon.classList.add("animate-spin");
+
+    try {
+      // 0. Validation
+      const phone = document.getElementById("phone_number").value;
+      if (phone.length !== 10) throw new Error("Phone number must be exactly 10 digits.");
+
+      // 1. Get the file
+      const file = fileInput.files[0];
+      if (!file) throw new Error("Please upload an ID document.");
+
+      // 2. Upload file to Supabase Storage
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${Math.random()}.${fileExt}`;
+      const filePath = `${sessionPhone}/${fileName}`; // Folder based on officer phone
+
+      const { data: uploadData, error: uploadError } = await supabase.storage
+        .from('id_documents')
+        .upload(filePath, file);
+
+      if (uploadError) throw uploadError;
+
+      // 3. Get Public URL of the uploaded image
+      const { data: { publicUrl } } = supabase.storage
+        .from('id_documents')
+        .getPublicUrl(filePath);
+
+      // 4. Insert data into the database
+      const { error: dbError } = await supabase
+        .from('loan_applications')
+        .insert([{
+          officer_phone: sessionPhone,
+          full_name: document.getElementById("full_name").value,
+          phone_number: document.getElementById("phone_number").value,
+          address: document.getElementById("address").value,
+          district: document.getElementById("district").value,
+          postal_code: document.getElementById("postal_code").value,
+          aadhar_pan: document.getElementById("aadhar_pan").value,
+          id_document_url: publicUrl
+        }]);
+
+      if (dbError) throw dbError;
+
+      // 5. Success!
+      alert("Application saved successfully!");
+      window.location.href = "dashboard.html"; // Redirect back to dashboard
+
+    } catch (err) {
+      console.error(err);
+      alert("Error: " + err.message);
+      
+      // Reset button
+      submitBtn.disabled = false;
+      submitBtn.classList.remove("opacity-50");
+      btnText.innerText = "Save & Continue";
+      btnIcon.innerText = "arrow_forward";
+      btnIcon.classList.remove("animate-spin");
+    }
+  });
+
+  // Basic image preview handling
+  fileInput.addEventListener('change', function() {
+    if (this.files && this.files[0]) {
+      // In a real app, you could update the "Preview State" UI here.
+      // For now, we'll just log it.
+      console.log("File selected:", this.files[0].name);
+    }
+  });
+
+</script>
+</body>
+</html>

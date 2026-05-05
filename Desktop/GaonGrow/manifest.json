@@ -1,0 +1,22 @@
+{
+  "name": "GaonGrow Microfinance",
+  "short_name": "GaonGrow",
+  "description": "Premium Field Officer App for GaonGrow Microfinance",
+  "start_url": "/screens/login.html",
+  "display": "standalone",
+  "background_color": "#ebf1f5",
+  "theme_color": "#012d1d",
+  "icons": [
+    {
+      "src": "/gaongrow_tractor_logo_1777740586581.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/gaongrow_tractor_logo_1777740586581.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

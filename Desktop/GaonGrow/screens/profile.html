@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>GaonGrow - My Profile</title>
+  
+  <!-- Fonts & Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700" rel="stylesheet"/>
+  
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#012d1d",
+            "secondary": "#1db2c9",
+            "surface": "#f8fafc",
+            "on-surface": "#1e293b",
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-surface font-['Public_Sans'] text-on-surface min-h-screen">
+
+<!-- Top Bar -->
+<header class="bg-primary text-white h-16 flex items-center px-4 sticky top-0 z-50 shadow-lg">
+    <button onclick="window.location.href='dashboard.html'" class="p-2 -ml-2 active:scale-95 transition-transform">
+        <span class="material-symbols-outlined">arrow_back</span>
+    </button>
+    <h1 class="ml-2 text-lg font-bold">My Profile</h1>
+    <button id="btn_save" class="ml-auto bg-secondary px-4 py-1.5 rounded-lg text-xs font-black uppercase tracking-wider shadow-md active:scale-95 transition-all">
+        Save
+    </button>
+</header>
+
+<main class="p-6 max-w-lg mx-auto space-y-8 pb-32">
+    
+    <!-- Photo Section -->
+    <div class="flex flex-col items-center gap-4">
+        <div class="relative">
+            <div id="photo_container" class="w-28 h-28 bg-slate-200 rounded-full border-4 border-white shadow-xl flex items-center justify-center overflow-hidden">
+                <span class="material-symbols-outlined text-[48px] text-slate-400">person</span>
+                <img id="profile_img" class="hidden w-full h-full object-cover" />
+            </div>
+            <label for="photo_input" class="absolute bottom-0 right-0 bg-secondary text-primary w-10 h-10 rounded-full flex items-center justify-center border-4 border-white shadow-lg cursor-pointer active:scale-90 transition-all">
+                <span class="material-symbols-outlined text-[20px]">photo_camera</span>
+                <input id="photo_input" type="file" class="hidden" accept="image/*" />
+            </label>
+        </div>
+        <div class="text-center">
+            <h2 id="display_name" class="text-xl font-black text-primary">Officer Name</h2>
+            <p id="display_role" class="text-xs font-bold text-slate-400 uppercase tracking-widest mt-1">Designation</p>
+        </div>
+    </div>
+
+    <!-- Form Section -->
+    <div class="space-y-5">
+        
+        <!-- Disabled Fields -->
+        <div class="grid grid-cols-2 gap-4">
+            <div class="space-y-1.5 opacity-60">
+                <label class="text-[10px] font-black text-slate-500 uppercase ml-1 tracking-widest">Employee ID</label>
+                <input id="emp_id" type="text" disabled class="w-full h-[50px] px-4 rounded-xl border border-slate-200 bg-slate-50 font-bold text-sm cursor-not-allowed" value="1007936" />
+            </div>
+            <div class="space-y-1.5 opacity-60">
+                <label class="text-[10px] font-black text-slate-500 uppercase ml-1 tracking-widest">Mobile</label>
+                <input id="emp_mobile" type="text" disabled class="w-full h-[50px] px-4 rounded-xl border border-slate-200 bg-slate-50 font-bold text-sm cursor-not-allowed" value="+91 0000000000" />
+            </div>
+        </div>
+
+        <div class="space-y-1.5 opacity-60">
+            <label class="text-[10px] font-black text-slate-500 uppercase ml-1 tracking-widest">Company Name</label>
+            <input type="text" disabled class="w-full h-[50px] px-4 rounded-xl border border-slate-200 bg-slate-50 font-bold text-sm cursor-not-allowed" value="GaonGrow Microfinance" />
+        </div>
+
+        <!-- Editable Address -->
+        <div class="space-y-1.5">
+            <label class="text-[10px] font-black text-slate-400 uppercase ml-1 tracking-widest">Current Address</label>
+            <div class="relative">
+                <span class="material-symbols-outlined absolute left-4 top-4 text-slate-400 text-[20px]">location_on</span>
+                <textarea id="emp_address" rows="3" class="w-full pl-12 pr-4 py-4 rounded-2xl border border-slate-200 bg-white focus:border-secondary focus:ring-4 focus:ring-secondary/10 outline-none transition-all font-bold text-sm" placeholder="Enter your current address..."></textarea>
+            </div>
+            <p class="text-[9px] text-slate-400 font-bold italic ml-1">* You can only update your address and photo.</p>
+        </div>
+
+    </div>
+
+</main>
+
+<script type="module">
+    import supabase from '../services/supabase.js'
+
+    async function init() {
+        const sessionStr = localStorage.getItem("gaongrow_session");
+        if (!sessionStr) { window.location.href = "login.html"; return; }
+        const user = JSON.parse(sessionStr).user;
+
+        // Fetch user data from DB to ensure it's up to date
+        const { data: empData, error: empError } = await supabase
+            .from('employees')
+            .select('*')
+            .ilike('Employee Id', user.employee_id)
+            .maybeSingle();
+
+        if (empData) {
+            document.getElementById('display_name').innerText = empData['Employee Name'] || user.name || "Officer";
+            document.getElementById('display_role').innerText = empData['Designation'] || "Field Officer";
+            document.getElementById('emp_id').value = empData['Employee Id'] || user.employee_id || "N/A";
+            document.getElementById('emp_mobile').value = empData['Mobile Phone'] || user.phone || "N/A";
+            document.getElementById('emp_address').value = empData['Address'] || user.address || "";
+        } else {
+            // Fill data from session as fallback
+            document.getElementById('display_name').innerText = user.name || "Officer";
+            document.getElementById('display_role').innerText = user.designation || "Field Officer";
+            document.getElementById('emp_id').value = user.employee_id || "N/A";
+            document.getElementById('emp_mobile').value = user.phone || "N/A";
+            document.getElementById('emp_address').value = user.address || "";
+        }
+
+        if (user.photo_url) {
+            const img = document.getElementById('profile_img');
+            img.src = user.photo_url;
+            img.classList.remove('hidden');
+            document.querySelector('#photo_container span').classList.add('hidden');
+        }
+    }
+
+    // Handle Photo Upload
+    document.getElementById('photo_input').addEventListener('change', async (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const img = document.getElementById('profile_img');
+                img.src = e.target.result;
+                img.classList.remove('hidden');
+                document.querySelector('#photo_container span').classList.add('hidden');
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
+    // Handle Save
+    document.getElementById('btn_save').addEventListener('click', async () => {
+        const btn = document.getElementById('btn_save');
+        btn.disabled = true;
+        btn.innerText = "SAVING...";
+
+        const sessionStr = localStorage.getItem("gaongrow_session");
+        const session = JSON.parse(sessionStr);
+        const newAddress = document.getElementById('emp_address').value;
+
+        // Update in Supabase (Employees table)
+        const { error } = await supabase
+            .from('employees')
+            .update({ Address: newAddress })
+            .ilike('Employee Id', session.user.employee_id);
+
+        if (error) {
+            alert("Error updating profile: " + error.message);
+        } else {
+            // Update local session
+            session.user.address = newAddress;
+            localStorage.setItem("gaongrow_session", JSON.stringify(session));
+            alert("Profile updated successfully!");
+        }
+        btn.disabled = false;
+        btn.innerText = "SAVE";
+    });
+
+    init();
+</script>
+</body>
+</html>

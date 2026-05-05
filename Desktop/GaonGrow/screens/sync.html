@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>GaonGrow - Data Sync</title>
+    <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700" rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#6B8E23',
+                        secondary: '#C5A028',
+                        navy: '#0f172a',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            padding-top: env(safe-area-inset-top);
+            padding-bottom: env(safe-area-inset-bottom);
+        }
+        .sync-card {
+            background: #1e293b;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+    </style>
+</head>
+<body class="bg-[#0f172a] font-['Public_Sans'] text-white min-h-screen">
+
+<header class="p-4 flex items-center gap-4 sticky top-0 bg-[#0f172a]/90 backdrop-blur-md z-50">
+    <button onclick="window.history.back()" class="w-10 h-10 rounded-2xl bg-white/5 flex items-center justify-center">
+        <span class="material-symbols-outlined">arrow_back</span>
+    </button>
+    <h1 class="text-lg font-black uppercase tracking-tight">Data Synchronization</h1>
+</header>
+
+<main class="p-4 space-y-6">
+    <!-- Sync Progress Hero -->
+    <div class="bg-gradient-to-br from-primary/20 to-primary/5 p-8 rounded-[2.5rem] text-center border border-primary/20">
+        <div id="sync_icon_container" class="w-24 h-24 bg-primary rounded-full flex items-center justify-center mx-auto mb-6 shadow-2xl shadow-primary/40 relative">
+            <span class="material-symbols-outlined text-[48px] text-white">cloud_done</span>
+            <div id="sync_spinner" class="absolute inset-0 border-4 border-white/30 border-t-white rounded-full hidden animate-spin"></div>
+        </div>
+        <h2 id="sync_status_title" class="text-xl font-black uppercase tracking-tight">System Synced</h2>
+        <p id="sync_status_desc" class="text-[10px] font-bold text-primary uppercase tracking-[0.2em] mt-2">Last Sync: Today, 12:45 PM</p>
+    </div>
+
+    <!-- Sync Sections -->
+    <div class="space-y-4">
+        <div class="sync-card p-5 rounded-[2rem] flex items-center gap-4">
+            <div class="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center">
+                <span class="material-symbols-outlined text-accent">person_add</span>
+            </div>
+            <div class="flex-1">
+                <p class="text-[11px] font-black uppercase tracking-wider">Member eKYC Data</p>
+                <div class="flex items-center gap-2 mt-1">
+                    <div class="flex-1 h-1 bg-white/10 rounded-full overflow-hidden">
+                        <div class="w-full h-full bg-primary"></div>
+                    </div>
+                    <span class="text-[9px] font-black text-primary uppercase">100%</span>
+                </div>
+            </div>
+            <span class="material-symbols-outlined text-primary text-[20px]">check_circle</span>
+        </div>
+
+        <div class="sync-card p-5 rounded-[2rem] flex items-center gap-4">
+            <div class="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center">
+                <span class="material-symbols-outlined text-accent">payments</span>
+            </div>
+            <div class="flex-1">
+                <p class="text-[11px] font-black uppercase tracking-wider">Collection Records</p>
+                <div class="flex items-center gap-2 mt-1">
+                    <div class="flex-1 h-1 bg-white/10 rounded-full overflow-hidden">
+                        <div class="w-full h-full bg-primary"></div>
+                    </div>
+                    <span class="text-[9px] font-black text-primary uppercase">100%</span>
+                </div>
+            </div>
+            <span class="material-symbols-outlined text-primary text-[20px]">check_circle</span>
+        </div>
+
+        <div class="sync-card p-5 rounded-[2rem] flex items-center gap-4">
+            <div class="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center">
+                <span class="material-symbols-outlined text-accent">pin_drop</span>
+            </div>
+            <div class="flex-1">
+                <p class="text-[11px] font-black uppercase tracking-wider">Village Survey Photos</p>
+                <div class="flex items-center gap-2 mt-1">
+                    <div class="flex-1 h-1 bg-white/10 rounded-full overflow-hidden">
+                        <div class="w-1/2 h-full bg-secondary"></div>
+                    </div>
+                    <span class="text-[9px] font-black text-secondary uppercase">Pending</span>
+                </div>
+            </div>
+            <span class="material-symbols-outlined text-white/20 text-[20px]">pending</span>
+        </div>
+    </div>
+
+    <!-- Sync Button -->
+    <div class="pt-6">
+        <button onclick="startManualSync()" id="btn_sync_now" class="w-full h-16 bg-white text-navy rounded-2xl font-black uppercase tracking-[0.2em] text-xs shadow-2xl active:scale-95 transition-all flex items-center justify-center gap-3">
+            <span class="material-symbols-outlined">sync</span>
+            Start Manual Sync
+        </button>
+        <p class="text-[9px] text-white/30 text-center font-bold uppercase tracking-widest mt-4">Automated background sync is active</p>
+    </div>
+
+</main>
+
+<script type="module">
+    import supabase from '../services/supabase.js'
+
+    window.startManualSync = async () => {
+        const btn = document.getElementById('btn_sync_now');
+        const spinner = document.getElementById('sync_spinner');
+        const title = document.getElementById('sync_status_title');
+        const desc = document.getElementById('sync_status_desc');
+
+        btn.disabled = true;
+        btn.innerHTML = `<span class="material-symbols-outlined animate-spin">refresh</span> Processing Data...`;
+        spinner.classList.remove('hidden');
+        title.innerText = "Syncing Records...";
+        desc.innerText = "Connecting to Central CBS Server...";
+
+        // Simulate Sync Process
+        setTimeout(() => {
+            title.innerText = "Uploading Media...";
+            desc.innerText = "Sending compressed images (2/4)...";
+        }, 2000);
+
+        setTimeout(() => {
+            title.innerText = "System Synced";
+            desc.innerText = "Last Sync: Just Now";
+            spinner.classList.add('hidden');
+            btn.disabled = false;
+            btn.innerHTML = `<span class="material-symbols-outlined">sync</span> Start Manual Sync`;
+            
+            // Update all progress bars to 100%
+            document.querySelectorAll('.bg-secondary').forEach(bar => {
+                bar.classList.remove('bg-secondary');
+                bar.classList.add('bg-primary');
+                bar.style.width = '100%';
+            });
+            document.querySelectorAll('.text-secondary').forEach(text => {
+                text.classList.remove('text-secondary');
+                text.classList.add('text-primary');
+                text.innerText = '100%';
+            });
+            document.querySelectorAll('.material-symbols-outlined.text-white\\/20').forEach(icon => {
+                icon.classList.remove('text-white/20');
+                icon.classList.add('text-primary');
+                icon.innerText = 'check_circle';
+            });
+
+            alert("Sync completed successfully. All data is now live on the Central Server.");
+        }, 5000);
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,13 @@
+{
+  "appId": "com.gaongrow.microfinance",
+  "appName": "GaonGrow",
+  "webDir": "www",
+  "server": {
+    "androidScheme": "https"
+  },
+  "android": {
+    "allowMixedContent": true,
+    "captureInput": true,
+    "webContentsDebuggingEnabled": false
+  }
+}

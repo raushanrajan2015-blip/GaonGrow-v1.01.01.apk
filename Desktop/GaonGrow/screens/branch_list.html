@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Branch List - GaonGrow Control Panel</title>
+    <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700" rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com">
+    window.toggleSubmenu = (id) => {
+        const menu = document.getElementById(id);
+        const arrow = document.getElementById('arrow_' + id);
+        if (menu) {
+            menu.classList.toggle('hidden');
+            if (arrow) arrow.style.transform = menu.classList.contains('hidden') ? 'rotate(0deg)' : 'rotate(90deg)';
+        }
+    };
+
+    window.logoutAdmin = async () => {
+        localStorage.removeItem("gaongrow_admin_session");
+        window.location.href = "admin_login.html";
+    };
+
+</script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#6B8E23',
+                        secondary: '#C5A028',
+                        navy: '#0f172a',
+                        sidebar: '#012d1d'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .nav-link.active { background: rgba(255, 255, 255, 0.1); border-left: 4px solid #C5A028; }
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+    </style>
+</head>
+<body class="font-['Public_Sans'] text-navy bg-slate-50 min-h-screen flex overflow-hidden">
+
+<!-- SIDEBAR -->
+<!-- SIDEBAR -->
+<!-- SIDEBAR -->
+<!-- SIDEBAR -->
+<!-- SIDEBAR -->
+<!-- SIDEBAR -->
+<!-- SIDEBAR -->
+<!-- SIDEBAR -->
+<!-- SIDEBAR -->
+<!-- SIDEBAR -->
+<!-- PREMIUM SIDEBAR TEMPLATE -->
+<div id="sidebar_backdrop" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[90] hidden lg:hidden" onclick="toggleSidebar()"></div>
+<aside id="main_sidebar" class="fixed inset-y-0 left-0 z-[100] w-80 bg-[#011a14] text-slate-400 flex flex-col shrink-0 overflow-hidden shadow-2xl border-r border-white/5 font-['Public_Sans'] transform -translate-x-full lg:translate-x-0 lg:static transition-transform duration-300 ease-in-out">
+    <!-- Header Section: Premium Branding -->
+    <div class="p-8 border-b border-white/5 flex items-center gap-5 bg-gradient-to-b from-[#012d1d] to-transparent">
+        <div class="w-14 h-14 bg-white rounded-[1.25rem] flex items-center justify-center p-2 shadow-2xl shadow-white/10 overflow-hidden shrink-0 border border-slate-200/50 group-hover:scale-110 transition-transform duration-500">
+            <img src="../assets/gaongrow_tractor_logo.png" class="w-full h-full object-contain filter drop-shadow-md" onerror="this.src='https://cdn-icons-png.flaticon.com/512/2554/2554904.png'" />
+        </div>
+        <div>
+            <h1 class="text-[17px] font-black tracking-tighter text-white uppercase leading-none mb-1.5">GaonGrow <span class="text-secondary">Finance</span></h1>
+            <p class="text-[9px] font-extrabold text-slate-500 uppercase tracking-[0.25em] opacity-80">Core Banking System</p>
+        </div>
+    </div>
+
+    <!-- User Profile: Dynamic & Premium -->
+    <div class="px-8 py-6 border-b border-white/5 bg-white/5 group">
+        <div class="flex items-center gap-4">
+            <div class="relative">
+                <div id="user_initials_circle" class="w-11 h-11 bg-gradient-to-tr from-secondary to-yellow-600 rounded-2xl flex items-center justify-center text-navy font-black text-xs shadow-xl group-hover:rotate-12 transition-all duration-500">
+                    --
+                </div>
+                <span class="absolute -bottom-1 -right-1 w-4 h-4 bg-primary border-2 border-[#011a14] rounded-full"></span>
+            </div>
+            <div>
+                <div class="flex items-center gap-2">
+                    <p id="user_display_role" class="text-[12px] font-black text-white uppercase tracking-tight">Loading...</p>
+                    <span id="user_display_id" class="text-[8px] bg-white/10 px-1.5 py-0.5 rounded-md text-slate-400 font-bold">---</span>
+                </div>
+                <p id="user_full_name" class="text-[9px] font-bold text-slate-500 uppercase tracking-widest mt-0.5 flex items-center gap-1">
+                    <span class="w-1 h-1 bg-primary rounded-full animate-pulse"></span>
+                    Live Session
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dynamic Navigation List -->
+    <nav id="dynamicMenuContainer" class="flex-1 overflow-y-auto custom-scrollbar px-4 py-6 space-y-2">
+        <!-- Menu items will be injected here via menuService.js -->
+        {{DYNAMIC_MENU}}
+    </nav>
+
+
+    <!-- Logout Area -->
+    <div class="p-6 border-t border-white/5 bg-white/5">
+        <button onclick="logoutAdmin()" class="w-full flex items-center justify-center gap-3 px-4 py-4 rounded-2xl bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white transition-all duration-300 group shadow-xl">
+            <span class="material-symbols-outlined text-[22px] group-hover:rotate-180 transition-transform duration-500">logout</span>
+            <span class="text-[11px] font-black uppercase tracking-widest">Exit System</span>
+        </button>
+    </div>
+
+    <!-- Dynamic Menu Loader -->
+    <script type="module">
+        import { getMenuForRole, renderMenuHTML } from '../services/menuService.js';
+        
+        // Global Helpers
+        window.toggleSidebar = () => {
+            const sidebar = document.getElementById('main_sidebar');
+            const backdrop = document.getElementById('sidebar_backdrop');
+            if (sidebar) {
+                const isOpen = sidebar.classList.contains('translate-x-0');
+                if (isOpen) {
+                    sidebar.classList.replace('translate-x-0', '-translate-x-full');
+                    if (backdrop) backdrop.classList.add('hidden');
+                } else {
+                    sidebar.classList.replace('-translate-x-full', 'translate-x-0');
+                    if (backdrop) backdrop.classList.remove('hidden');
+                }
+            }
+        };
+
+        window.toggleSubmenu = (id) => {
+            const menu = document.getElementById(id);
+            const arrow = document.querySelector(`#${id} + button #arrow_${id}`) || document.querySelector(`[onclick="toggleSubmenu('${id}')"] .transition-transform`);
+            if (menu) {
+                menu.classList.toggle('hidden');
+                if (arrow) {
+                    const isHidden = menu.classList.contains('hidden');
+                    arrow.style.transform = isHidden ? 'rotate(0deg)' : 'rotate(90deg)';
+                }
+            }
+        };
+
+        window.logoutAdmin = () => {
+            localStorage.removeItem('gaongrow_admin_session');
+            localStorage.removeItem('gaongrow_session');
+            window.location.href = 'login.html';
+        };
+
+        // Role Detection
+        const sessionStr = localStorage.getItem('gaongrow_admin_session') || localStorage.getItem('gaongrow_session');
+        const session = sessionStr ? JSON.parse(sessionStr) : null;
+        
+        const roleMap = {
+            1: 'SUPER_ADMIN',
+            2: 'HO_USER',
+            3: 'BRANCH_MANAGER',
+            4: 'CRO',
+            5: 'AUDITOR'
+        };
+
+        let role = 'HO_USER';
+        if (session && session.user) {
+            const r = session.user.role || session.user.role_id;
+            role = typeof r === 'string' ? r.toUpperCase() : (roleMap[r] || 'HO_USER');
+        }
+
+        // Render Menu
+        const menuItems = getMenuForRole(role);
+        const container = document.getElementById('dynamicMenuContainer');
+        if (container) {
+            container.innerHTML = renderMenuHTML(menuItems);
+        }
+
+        // CRO Visibility Hardening: Hide sidebar and toggles for CROs (Mobile Focused)
+        if (role === 'CRO') {
+            const sidebar = document.getElementById('main_sidebar');
+            const backdrop = document.getElementById('sidebar_backdrop');
+            if (sidebar) sidebar.style.setProperty('display', 'none', 'important');
+            if (backdrop) backdrop.style.setProperty('display', 'none', 'important');
+            
+            // Hide all hamburger/sidebar toggle buttons
+            document.querySelectorAll('[onclick="toggleSidebar()"]').forEach(btn => {
+                btn.style.setProperty('display', 'none', 'important');
+            });
+        }
+
+        // Populate User Info
+        if (session && session.user) {
+            const user = session.user;
+            const name = user.employee_name || user.full_name || user.name || 'User';
+            const roleName = typeof user.role === 'string' ? user.role : (roleMap[user.role] || user.role_name || 'Staff');
+            const empId = user.employee_id || user.id || '---';
+
+            if (document.getElementById('user_display_role')) document.getElementById('user_display_role').textContent = roleName;
+            if (document.getElementById('user_display_id')) document.getElementById('user_display_id').textContent = empId;
+            if (document.getElementById('user_full_name')) {
+                document.getElementById('user_full_name').innerHTML = `
+                    <span class="w-1 h-1 bg-primary rounded-full animate-pulse"></span>
+                    ${name}
+                `;
+            }
+            
+            // Initials
+            const initials = name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+            if (document.getElementById('user_initials_circle')) document.getElementById('user_initials_circle').textContent = initials;
+        }
+    </script>
+</aside>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<main class="flex-1 flex flex-col h-screen overflow-hidden">
+    <header class="h-20 bg-white border-b border-slate-100 flex items-center justify-between px-10 shrink-0">
+        <div>
+            <h2 class="text-xl font-black uppercase tracking-tight">Branch Management</h2>
+            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Monitor branch performance and staff assignment</p>
+        </div>
+        <button onclick="alert('Branch creation is currently restricted to Super Admin.')" class="h-12 bg-navy text-white px-8 rounded-xl text-xs font-black uppercase tracking-widest flex items-center gap-3 hover:bg-primary transition-all">
+            <span class="material-symbols-outlined text-lg">add_business</span>
+            Add New Branch
+        </button>
+    </header>
+
+    <div class="flex-1 overflow-y-auto p-10 custom-scrollbar">
+        <div class="bg-white rounded-[2.5rem] shadow-sm border border-slate-100 overflow-hidden">
+            <div class="p-8 border-b border-slate-50 flex justify-between items-center bg-slate-50/30">
+                <div class="relative w-96">
+                    <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-300">search</span>
+                    <input type="text" id="search_branch" onkeyup="filterBranches()" class="w-full h-12 pl-12 pr-4 bg-white rounded-xl border border-slate-100 text-xs font-bold focus:border-primary outline-none" placeholder="Search branch name or code...">
+                </div>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="w-full">
+                    <thead class="bg-slate-50/50">
+                        <tr class="text-left">
+                            <th class="px-8 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Branch Name</th>
+                            <th class="px-8 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Region</th>
+                            <th class="px-8 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest text-center">Total Staff</th>
+                            <th class="px-8 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest text-center">Branch Manager</th>
+                            <th class="px-8 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Status</th>
+                            <th class="px-8 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest text-right">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="branches_tbody" class="divide-y divide-slate-50">
+                        <!-- Branches will be loaded here -->
+                        <tr>
+                            <td colspan="6" class="p-20 text-center">
+                                <span class="material-symbols-outlined animate-spin text-4xl text-primary">refresh</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</main>
+
+<script type="module">
+    import supabase from '../services/supabase.js'
+
+    let branches = [];
+    let staffCountMap = {};
+    let bmMap = {};
+
+    async function init() {
+        await loadData();
+    }
+
+    async function loadData() {
+        // Fetch branches
+        const { data: bData } = await supabase.from('branches').select('*').order('branch_name');
+        branches = bData || [];
+
+        // Fetch staff counts and BMs from admin_users
+        const { data: uData } = await supabase.from('admin_users').select('user_id, name, role_id, branch_codes');
+        
+        staffCountMap = {};
+        bmMap = {};
+        
+        uData.forEach(u => {
+            if (u.branch_codes) {
+                u.branch_codes.forEach(bc => {
+                    staffCountMap[bc] = (staffCountMap[bc] || 0) + 1;
+                    if (u.role_id === 'BRANCH_MANAGER') {
+                        bmMap[bc] = u.name;
+                    }
+                });
+            }
+        });
+
+        renderBranches(branches);
+    }
+
+    function renderBranches(list) {
+        const tbody = document.getElementById('branches_tbody');
+        tbody.innerHTML = '';
+        
+        if (list.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="6" class="p-10 text-center font-bold text-slate-400 uppercase tracking-widest">No branch records found</td></tr>';
+            return;
+        }
+
+        list.forEach(b => {
+            const tr = document.createElement('tr');
+            tr.className = "hover:bg-slate-50/50 transition-all group";
+            
+            const staffCount = staffCountMap[b.branch_code] || 0;
+            const bmName = bmMap[b.branch_code] || 'NOT ASSIGNED';
+
+            tr.innerHTML = `
+                <td class="px-8 py-5">
+                    <div>
+                        <p class="text-sm font-black uppercase tracking-tight">${b.branch_name}</p>
+                        <p class="text-[9px] font-bold text-primary uppercase tracking-widest">${b.branch_code}</p>
+                    </div>
+                </td>
+                <td class="px-8 py-5 text-[10px] font-black uppercase tracking-widest text-slate-500">${b.region || 'CENTRAL'}</td>
+                <td class="px-8 py-5 text-center">
+                    <span class="px-3 py-1 bg-slate-100 rounded-lg text-[10px] font-black">${staffCount}</span>
+                </td>
+                <td class="px-8 py-5 text-center">
+                    <p class="text-[10px] font-bold uppercase tracking-wider ${bmName === 'NOT ASSIGNED' ? 'text-red-400' : 'text-slate-600'}">${bmName}</p>
+                </td>
+                <td class="px-8 py-5">
+                    <span class="px-3 py-1 rounded-full text-[8px] font-black uppercase tracking-widest bg-green-50 text-green-600">
+                        ${b.status || 'ACTIVE'}
+                    </span>
+                </td>
+                <td class="px-8 py-5 text-right">
+                    <button class="w-9 h-9 rounded-lg bg-slate-50 flex items-center justify-center text-slate-400 hover:text-primary hover:bg-primary/5 transition-all">
+                        <span class="material-symbols-outlined text-lg">visibility</span>
+                    </button>
+                </td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+
+    window.filterBranches = function() {
+        const term = document.getElementById('search_branch').value.toLowerCase();
+        const filtered = branches.filter(b => 
+            b.branch_name.toLowerCase().includes(term) || 
+            b.branch_code.toLowerCase().includes(term)
+        );
+        renderBranches(filtered);
+    }
+
+    init();
+</script>
+
+</body>
+</html>

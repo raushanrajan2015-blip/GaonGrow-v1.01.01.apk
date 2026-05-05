@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>GaonGrow - Collection Module</title>
+    <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700" rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#6B8E23',
+                        secondary: '#C5A028',
+                        navy: '#0f172a',
+                        surface: '#f8fafc'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .step-view { display: none; }
+        .step-view.active { display: block; animation: fadeIn 0.3s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .tap-scale { transition: transform 0.1s; }
+        .tap-scale:active { transform: scale(0.95); }
+        .status-dot { width: 8px; height: 8px; border-radius: 50%; }
+    </style>
+</head>
+<body class="bg-slate-50 font-['Public_Sans'] text-navy min-h-screen">
+
+<!-- PREMIUM SIDEBAR TEMPLATE -->
+<div id="sidebar_backdrop" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[90] hidden lg:hidden" onclick="toggleSidebar()"></div>
+<aside id="main_sidebar" class="fixed inset-y-0 left-0 z-[100] w-80 bg-[#011a14] text-slate-400 flex flex-col shrink-0 overflow-hidden shadow-2xl border-r border-white/5 font-['Public_Sans'] transform -translate-x-full lg:translate-x-0 lg:static transition-transform duration-300 ease-in-out">
+    <!-- Header Section: Premium Branding -->
+    <div class="p-8 border-b border-white/5 flex items-center gap-5 bg-gradient-to-b from-[#012d1d] to-transparent">
+        <div class="w-14 h-14 bg-white rounded-[1.25rem] flex items-center justify-center p-2 shadow-2xl shadow-white/10 overflow-hidden shrink-0 border border-slate-200/50 group-hover:scale-110 transition-transform duration-500">
+            <img src="../assets/gaongrow_tractor_logo.png" class="w-full h-full object-contain filter drop-shadow-md" onerror="this.src='https://cdn-icons-png.flaticon.com/512/2554/2554904.png'" />
+        </div>
+        <div>
+            <h1 class="text-[17px] font-black tracking-tighter text-white uppercase leading-none mb-1.5">GaonGrow <span class="text-secondary">Finance</span></h1>
+            <p class="text-[9px] font-extrabold text-slate-500 uppercase tracking-[0.25em] opacity-80">Core Banking System</p>
+        </div>
+    </div>
+
+    <!-- User Profile: Dynamic & Premium -->
+    <div class="px-8 py-6 border-b border-white/5 bg-white/5 group">
+        <div class="flex items-center gap-4">
+            <div class="relative">
+                <div id="user_initials_circle" class="w-11 h-11 bg-gradient-to-tr from-secondary to-yellow-600 rounded-2xl flex items-center justify-center text-navy font-black text-xs shadow-xl group-hover:rotate-12 transition-all duration-500">
+                    --
+                </div>
+                <span class="absolute -bottom-1 -right-1 w-4 h-4 bg-primary border-2 border-[#011a14] rounded-full"></span>
+            </div>
+            <div>
+                <div class="flex items-center gap-2">
+                    <p id="user_display_role" class="text-[12px] font-black text-white uppercase tracking-tight">Loading...</p>
+                    <span id="user_display_id" class="text-[8px] bg-white/10 px-1.5 py-0.5 rounded-md text-slate-400 font-bold">---</span>
+                </div>
+                <p id="user_full_name" class="text-[9px] font-bold text-slate-500 uppercase tracking-widest mt-0.5 flex items-center gap-1">
+                    <span class="w-1 h-1 bg-primary rounded-full animate-pulse"></span>
+                    Live Session
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dynamic Navigation List -->
+    <nav id="dynamicMenuContainer" class="flex-1 overflow-y-auto custom-scrollbar px-4 py-6 space-y-2">
+        <!-- Menu items will be injected here via menuService.js -->
+        {{DYNAMIC_MENU}}
+    </nav>
+
+
+    <!-- Logout Area -->
+    <div class="p-6 border-t border-white/5 bg-white/5">
+        <button onclick="logoutAdmin()" class="w-full flex items-center justify-center gap-3 px-4 py-4 rounded-2xl bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white transition-all duration-300 group shadow-xl">
+            <span class="material-symbols-outlined text-[22px] group-hover:rotate-180 transition-transform duration-500">logout</span>
+            <span class="text-[11px] font-black uppercase tracking-widest">Exit System</span>
+        </button>
+    </div>
+
+    <!-- Dynamic Menu Loader -->
+    <script type="module">
+        import { getMenuForRole, renderMenuHTML } from '../services/menuService.js';
+        
+        // Global Helpers
+        window.toggleSidebar = () => {
+            const sidebar = document.getElementById('main_sidebar');
+            const backdrop = document.getElementById('sidebar_backdrop');
+            if (sidebar) {
+                const isOpen = sidebar.classList.contains('translate-x-0');
+                if (isOpen) {
+                    sidebar.classList.replace('translate-x-0', '-translate-x-full');
+                    if (backdrop) backdrop.classList.add('hidden');
+                } else {
+                    sidebar.classList.replace('-translate-x-full', 'translate-x-0');
+                    if (backdrop) backdrop.classList.remove('hidden');
+                }
+            }
+        };
+
+        window.toggleSubmenu = (id) => {
+            const menu = document.getElementById(id);
+            const arrow = document.querySelector(`#${id} + button #arrow_${id}`) || document.querySelector(`[onclick="toggleSubmenu('${id}')"] .transition-transform`);
+            if (menu) {
+                menu.classList.toggle('hidden');
+                if (arrow) {
+                    const isHidden = menu.classList.contains('hidden');
+                    arrow.style.transform = isHidden ? 'rotate(0deg)' : 'rotate(90deg)';
+                }
+            }
+        };
+
+        window.logoutAdmin = () => {
+            localStorage.removeItem('gaongrow_admin_session');
+            localStorage.removeItem('gaongrow_session');
+            window.location.href = 'login.html';
+        };
+
+        // Role Detection
+        const sessionStr = localStorage.getItem('gaongrow_admin_session') || localStorage.getItem('gaongrow_session');
+        const session = sessionStr ? JSON.parse(sessionStr) : null;
+        
+        const roleMap = {
+            1: 'SUPER_ADMIN',
+            2: 'HO_USER',
+            3: 'BRANCH_MANAGER',
+            4: 'CRO',
+            5: 'AUDITOR'
+        };
+
+        let role = 'HO_USER';
+        if (session && session.user) {
+            const r = session.user.role || session.user.role_id;
+            role = typeof r === 'string' ? r.toUpperCase() : (roleMap[r] || 'HO_USER');
+        }
+
+        // Render Menu
+        const menuItems = getMenuForRole(role);
+        const container = document.getElementById('dynamicMenuContainer');
+        if (container) {
+            container.innerHTML = renderMenuHTML(menuItems);
+        }
+
+        // CRO Visibility Hardening: Hide sidebar and toggles for CROs (Mobile Focused)
+        if (role === 'CRO') {
+            const sidebar = document.getElementById('main_sidebar');
+            const backdrop = document.getElementById('sidebar_backdrop');
+            if (sidebar) sidebar.style.setProperty('display', 'none', 'important');
+            if (backdrop) backdrop.style.setProperty('display', 'none', 'important');
+            
+            // Hide all hamburger/sidebar toggle buttons
+            document.querySelectorAll('[onclick="toggleSidebar()"]').forEach(btn => {
+                btn.style.setProperty('display', 'none', 'important');
+            });
+        }
+
+        // Populate User Info
+        if (session && session.user) {
+            const user = session.user;
+            const name = user.employee_name || user.full_name || user.name || 'User';
+            const roleName = typeof user.role === 'string' ? user.role : (roleMap[user.role] || user.role_name || 'Staff');
+            const empId = user.employee_id || user.id || '---';
+
+            if (document.getElementById('user_display_role')) document.getElementById('user_display_role').textContent = roleName;
+            if (document.getElementById('user_display_id')) document.getElementById('user_display_id').textContent = empId;
+            if (document.getElementById('user_full_name')) {
+                document.getElementById('user_full_name').innerHTML = `
+                    <span class="w-1 h-1 bg-primary rounded-full animate-pulse"></span>
+                    ${name}
+                `;
+            }
+            
+            // Initials
+            const initials = name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+            if (document.getElementById('user_initials_circle')) document.getElementById('user_initials_circle').textContent = initials;
+        }
+    </script>
+</aside>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- Top Bar -->
+<header class="bg-primary text-white h-16 flex items-center px-6 sticky top-0 z-50 shadow-lg">
+    <button id="btn_back" onclick="handleBack()" class="p-2 -ml-2 active:scale-95 transition-transform">
+        <span class="material-symbols-outlined">arrow_back</span>
+    </button>
+    <div class="ml-4">
+        <h1 id="view_title" class="text-lg font-black uppercase tracking-tight leading-none">Collection</h1>
+        <p id="view_subtitle" class="text-[10px] font-black text-secondary uppercase tracking-widest mt-1">Dashboard</p>
+    </div>
+    <div class="ml-auto flex items-center gap-3">
+        <div id="sync_status" class="flex items-center gap-1.5 px-3 py-1 bg-white/10 rounded-full">
+            <span class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
+            <span class="text-[9px] font-black uppercase tracking-widest">Online</span>
+        </div>
+    </div>
+</header>
+
+<main class="p-6 pb-32 max-w-md mx-auto">
+    
+    <!-- VIEW 1: DASHBOARD -->
+    <div id="view_dashboard" class="step-view active space-y-6">
+        <!-- Summary Cards -->
+        <div class="bg-navy rounded-[2.5rem] p-8 text-white relative overflow-hidden shadow-2xl">
+            <div class="absolute top-0 right-0 p-6 opacity-10">
+                <span class="material-symbols-outlined text-7xl">account_balance_wallet</span>
+            </div>
+            <p class="text-[10px] font-black text-secondary uppercase tracking-[0.2em] mb-2">Today's Total Demand</p>
+            <h2 id="dash_total_demand" class="text-4xl font-black tracking-tighter">₹ 0</h2>
+            <div class="mt-8 grid grid-cols-2 gap-6">
+                <div class="space-y-1">
+                    <p class="text-[9px] font-black text-white/40 uppercase tracking-widest">Collected</p>
+                    <p id="dash_collected" class="text-xl font-black text-green-400">₹ 0</p>
+                </div>
+                <div class="space-y-1">
+                    <p class="text-[9px] font-black text-white/40 uppercase tracking-widest">Pending</p>
+                    <p id="dash_pending" class="text-xl font-black text-red-400">₹ 0</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Metrics Grid -->
+        <div class="grid grid-cols-2 gap-4">
+            <div class="bg-white p-5 rounded-3xl border border-slate-100 shadow-sm flex flex-col gap-3">
+                <div class="w-10 h-10 bg-primary/10 text-primary rounded-xl flex items-center justify-center">
+                    <span class="material-symbols-outlined text-xl">groups</span>
+                </div>
+                <div>
+                    <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Centers Today</p>
+                    <p id="dash_centers_count" class="text-xl font-black">0</p>
+                </div>
+            </div>
+            <div class="bg-white p-5 rounded-3xl border border-slate-100 shadow-sm flex flex-col gap-3">
+                <div class="w-10 h-10 bg-secondary/10 text-secondary rounded-xl flex items-center justify-center">
+                    <span class="material-symbols-outlined text-xl">event_busy</span>
+                </div>
+                <div>
+                    <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Overdue</p>
+                    <p id="dash_overdue_count" class="text-xl font-black">0</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="space-y-3 pt-2">
+            <button onclick="switchView('center_select')" class="w-full h-16 bg-primary text-white rounded-2xl flex items-center justify-between px-6 shadow-xl shadow-primary/20 tap-scale">
+                <div class="flex items-center gap-4">
+                    <span class="material-symbols-outlined">center_focus_strong</span>
+                    <span class="text-sm font-black uppercase tracking-widest">Start Collection</span>
+                </div>
+                <span class="material-symbols-outlined">arrow_forward_ios</span>
+            </button>
+            <button onclick="syncOffline()" class="w-full h-16 bg-white border border-slate-200 text-navy rounded-2xl flex items-center justify-between px-6 tap-scale">
+                <div class="flex items-center gap-4">
+                    <span class="material-symbols-outlined text-slate-400">sync</span>
+                    <span class="text-sm font-black uppercase tracking-widest">Sync Data</span>
+                </div>
+                <div class="bg-slate-100 px-3 py-1 rounded-full text-[9px] font-black">0 PENDING</div>
+            </button>
+        </div>
+    </div>
+
+    <!-- VIEW 2: CENTER SELECT -->
+    <div id="view_center_select" class="step-view space-y-6">
+        <div class="bg-white rounded-[2.5rem] p-8 shadow-sm border border-slate-100 space-y-6">
+            <div class="space-y-2">
+                <label class="text-[11px] font-black text-slate-400 uppercase ml-1 tracking-widest">Select Operational Center</label>
+                <div class="relative">
+                    <select id="center_select" onchange="handleCenterChange(this.value)" class="w-full h-14 px-5 rounded-2xl border border-slate-200 bg-slate-50/50 text-sm font-bold appearance-none">
+                        <option value="">Choose Center</option>
+                    </select>
+                    <span class="material-symbols-outlined absolute right-4 top-4 text-slate-400 pointer-events-none">expand_more</span>
+                </div>
+            </div>
+
+            <div id="center_info" class="hidden space-y-4 pt-4 border-t border-slate-50">
+                <div class="p-5 bg-slate-50 rounded-2xl border border-slate-100 flex justify-between items-center">
+                    <div>
+                        <p class="text-[9px] font-black text-slate-400 uppercase mb-1">Center Demand</p>
+                        <p id="sel_center_demand" class="text-lg font-black text-primary">₹ 0</p>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-[9px] font-black text-slate-400 uppercase mb-1">Members Due</p>
+                        <p id="sel_center_members" class="text-lg font-black text-navy">0</p>
+                    </div>
+                </div>
+                <button onclick="switchView('meeting_start')" class="w-full h-14 bg-navy text-white rounded-2xl font-black uppercase text-xs tracking-widest tap-scale">Proceed to Meeting</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- VIEW 3: MEETING START (Attendance/Geo/Photo) -->
+    <div id="view_meeting_start" class="step-view space-y-6">
+        <div class="bg-white rounded-[2.5rem] p-8 shadow-sm border border-slate-100 space-y-8">
+            <div class="text-center space-y-2">
+                <h2 class="text-xl font-black uppercase tracking-tight">Meeting Prerequisite</h2>
+                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Compliance Mandatory Checks</p>
+            </div>
+
+            <div class="space-y-4">
+                <!-- Geo Tag -->
+                <div class="flex items-center justify-between p-5 bg-slate-50 rounded-2xl border border-slate-100">
+                    <div class="flex items-center gap-4">
+                        <div class="w-10 h-10 bg-green-100 text-green-600 rounded-xl flex items-center justify-center">
+                            <span class="material-symbols-outlined">location_on</span>
+                        </div>
+                        <div>
+                            <p class="text-[10px] font-black text-navy uppercase">Geo Tagging</p>
+                            <p id="meeting_gps_status" class="text-[9px] font-bold text-slate-400 uppercase">Waiting for lock...</p>
+                        </div>
+                    </div>
+                    <span id="geo_check" class="material-symbols-outlined text-slate-200">check_circle</span>
+                </div>
+
+                <!-- Center Photo -->
+                <button onclick="openCamera('center')" class="w-full flex items-center justify-between p-5 bg-slate-50 rounded-2xl border border-slate-100 tap-scale">
+                    <div class="flex items-center gap-4">
+                        <div class="w-10 h-10 bg-secondary/10 text-secondary rounded-xl flex items-center justify-center">
+                            <span class="material-symbols-outlined">groups</span>
+                        </div>
+                        <div class="text-left">
+                            <p class="text-[10px] font-black text-navy uppercase">Group Meeting Photo</p>
+                            <p id="center_photo_status" class="text-[9px] font-bold text-slate-400 uppercase">Mandatory Capture</p>
+                        </div>
+                    </div>
+                    <span id="photo_check" class="material-symbols-outlined text-slate-200">add_a_photo</span>
+                </button>
+
+                <!-- Attendance -->
+                <div class="p-5 bg-slate-50 rounded-2xl border border-slate-100 space-y-4">
+                    <div class="flex justify-between items-center">
+                        <p class="text-[10px] font-black text-navy uppercase">Member Attendance</p>
+                        <p id="attendance_count" class="text-[10px] font-black text-primary uppercase">0/0 Marked</p>
+                    </div>
+                    <button onclick="switchView('member_list')" class="w-full h-12 bg-white border border-slate-200 rounded-xl text-[10px] font-black uppercase tracking-widest tap-scale">Open Attendance Sheet</button>
+                </div>
+            </div>
+
+            <button id="btn_start_collection" disabled class="w-full h-16 bg-slate-200 text-slate-400 rounded-2xl font-black uppercase text-sm tracking-widest cursor-not-allowed">Start Collection</button>
+        </div>
+    </div>
+
+    <!-- VIEW 4: MEMBER LIST -->
+    <div id="view_member_list" class="step-view space-y-4">
+        <div class="flex gap-2 mb-4 overflow-x-auto pb-2 scrollbar-hide">
+            <button class="flex-shrink-0 px-4 py-2 bg-navy text-white rounded-full text-[10px] font-black uppercase tracking-widest">All Members</button>
+            <button class="flex-shrink-0 px-4 py-2 bg-white border border-slate-200 rounded-full text-[10px] font-black uppercase tracking-widest text-slate-400">Due Today</button>
+            <button class="flex-shrink-0 px-4 py-2 bg-white border border-slate-200 rounded-full text-[10px] font-black uppercase tracking-widest text-red-500">Overdue</button>
+        </div>
+
+        <div id="member_list_container" class="space-y-3">
+            <!-- Members will be injected here -->
+            <div class="animate-pulse space-y-3">
+                <div class="h-20 bg-slate-200 rounded-3xl w-full"></div>
+                <div class="h-20 bg-slate-200 rounded-3xl w-full"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- VIEW 5: SETTLEMENT -->
+    <div id="view_settlement" class="step-view space-y-6">
+        <div class="bg-white rounded-[2.5rem] p-8 shadow-sm border border-slate-100 space-y-6 text-center">
+            <div class="w-20 h-20 bg-primary/10 text-primary rounded-full flex items-center justify-center mx-auto mb-4">
+                <span class="material-symbols-outlined text-4xl">check_circle</span>
+            </div>
+            <h2 class="text-xl font-black uppercase tracking-tight">Collection Closed</h2>
+            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Center: <span id="closed_center_name">--</span></p>
+
+            <div class="grid grid-cols-2 gap-4 py-4">
+                <div class="p-5 bg-slate-50 rounded-2xl">
+                    <p class="text-[8px] font-black text-slate-400 uppercase">Cash Collected</p>
+                    <p id="closed_cash" class="text-lg font-black text-primary">₹ 0</p>
+                </div>
+                <div class="p-5 bg-slate-50 rounded-2xl">
+                    <p class="text-[8px] font-black text-slate-400 uppercase">Digital (UPI)</p>
+                    <p id="closed_digital" class="text-lg font-black text-secondary">₹ 0</p>
+                </div>
+            </div>
+
+            <button onclick="switchView('dashboard')" class="w-full h-16 bg-navy text-white rounded-2xl font-black uppercase text-sm tracking-widest tap-scale">Return to Dashboard</button>
+        </div>
+    </div>
+
+</main>
+
+<!-- MEMBER COLLECTION MODAL -->
+<div id="payment_modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[1000] hidden flex items-end sm:items-center justify-center p-4">
+    <div class="bg-white w-full max-w-md rounded-t-[3rem] sm:rounded-[3rem] p-8 space-y-6 animate-slide-up">
+        <div class="flex justify-between items-start">
+            <div>
+                <h3 id="modal_member_name" class="text-xl font-black uppercase tracking-tight">Member Name</h3>
+                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Loan ID: <span id="modal_loan_id">--</span></p>
+            </div>
+            <button onclick="closeModal()" class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-400">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4">
+            <div class="p-4 bg-slate-50 rounded-2xl border border-slate-100">
+                <p class="text-[8px] font-black text-slate-400 uppercase mb-1">Installment</p>
+                <p id="modal_emi" class="text-sm font-black">₹ 0</p>
+            </div>
+            <div class="p-4 bg-red-50 rounded-2xl border border-red-100">
+                <p class="text-[8px] font-black text-red-400 uppercase mb-1">Overdue Amount</p>
+                <p id="modal_overdue" class="text-sm font-black text-red-600">₹ 0</p>
+            </div>
+        </div>
+
+        <div class="space-y-4">
+            <div class="space-y-1">
+                <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Payment Mode</label>
+                <div class="grid grid-cols-2 gap-2">
+                    <button id="mode_cash" onclick="setPaymentMode('CASH')" class="h-14 rounded-2xl border-2 border-primary bg-primary/5 text-primary text-xs font-black uppercase">CASH</button>
+                    <button id="mode_upi" onclick="setPaymentMode('UPI')" class="h-14 rounded-2xl border-2 border-slate-100 text-slate-400 text-xs font-black uppercase">UPI / QR</button>
+                </div>
+            </div>
+
+            <div class="space-y-1">
+                <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Amount Received</label>
+                <input type="number" id="pay_amount" class="w-full h-16 px-6 rounded-2xl border border-slate-200 bg-slate-50 text-2xl font-black focus:border-primary outline-none transition-all" placeholder="0.00">
+            </div>
+
+            <!-- UPI QR Placeholder -->
+            <div id="upi_qr_box" class="hidden p-6 bg-slate-50 rounded-[2rem] border border-slate-200 text-center space-y-4">
+                <div class="w-48 h-48 bg-white mx-auto rounded-2xl border border-slate-100 flex items-center justify-center p-2">
+                    <img id="upi_qr_img" src="" alt="UPI QR" class="w-full h-full object-contain">
+                </div>
+                <p class="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em]">Scan to pay ₹ <span id="qr_amount">0</span></p>
+            </div>
+        </div>
+
+        <button onclick="processPayment()" class="w-full h-16 bg-primary text-white rounded-2xl font-black uppercase text-sm tracking-widest shadow-xl shadow-primary/20 tap-scale">Submit Payment</button>
+    </div>
+</div>
+
+<div id="toast" class="fixed top-24 left-1/2 -translate-x-1/2 bg-navy text-white px-6 py-3 rounded-full text-[10px] font-black uppercase tracking-widest shadow-2xl z-[2000] hidden"></div>
+
+<!-- CAMERA OVERLAY -->
+<div id="camera_overlay" class="fixed inset-0 bg-black z-[3000] hidden flex flex-col">
+    <div class="p-6 flex justify-between items-center text-white">
+        <button onclick="closeCamera()" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center">
+            <span class="material-symbols-outlined">close</span>
+        </button>
+        <p class="text-[10px] font-black uppercase tracking-widest">Center Meeting Photo</p>
+        <div class="w-10"></div>
+    </div>
+    <div class="flex-1 bg-slate-900 relative">
+        <video id="video_preview" class="w-full h-full object-cover" autoplay playsinline></video>
+        <div class="absolute inset-x-8 top-1/2 -translate-y-1/2 h-64 border-2 border-white/20 rounded-3xl"></div>
+    </div>
+    <div class="p-12 flex justify-center bg-black">
+        <button onclick="takePicture()" class="w-20 h-20 rounded-full border-4 border-white flex items-center justify-center">
+            <div class="w-16 h-16 bg-white rounded-full"></div>
+        </button>
+    </div>
+</div>
+
+<script type="module">
+    import supabase from '../services/supabase.js'
+
+    let currentUser = null;
+    let currentView = 'dashboard';
+    let selectedCenter = null;
+    let members = [];
+    let currentMember = null;
+    let paymentMode = 'CASH';
+    let centerPhoto = null;
+    let attendance = new Set();
+    let userLocation = null;
+
+    const VIEWS = {
+        'dashboard': { title: 'Collection', sub: 'Dashboard' },
+        'center_select': { title: 'Select Center', sub: 'Meeting Entry' },
+        'meeting_start': { title: 'Center Meeting', sub: 'Prerequisites' },
+        'member_list': { title: 'Collections', sub: 'Member List' },
+        'settlement': { title: 'Day End', sub: 'Settlement' }
+    };
+
+    async function init() {
+        const sessionStr = localStorage.getItem("gaongrow_session");
+        if (!sessionStr) { window.location.href = "login.html"; return; }
+        currentUser = JSON.parse(sessionStr).user;
+
+        await loadDashboard();
+        await fetchCenters();
+        updateOfflineCount();
+        
+        // Try to get GPS
+        navigator.geolocation.getCurrentPosition(pos => {
+            userLocation = `${pos.coords.latitude},${pos.coords.longitude}`;
+            const statusEl = document.getElementById('meeting_gps_status');
+            if (statusEl) {
+                statusEl.innerText = "LOCATION LOCKED ✔";
+                document.getElementById('geo_check').classList.replace('text-slate-200', 'text-green-500');
+            }
+            checkStartCollection();
+        }, (err) => {
+            console.error("GPS Error", err);
+            const statusEl = document.getElementById('meeting_gps_status');
+            if (statusEl) statusEl.innerText = "GPS REQUIRED ⚠️";
+        });
+    }
+
+    function updateOfflineCount() {
+        const pending = JSON.parse(localStorage.getItem('pending_collections') || '[]');
+        const countEl = document.querySelector('#view_dashboard button div');
+        if (countEl) countEl.innerText = `${pending.length} PENDING`;
+    }
+
+    window.syncOffline = async function() {
+        const pending = JSON.parse(localStorage.getItem('pending_collections') || '[]');
+        if (pending.length === 0) { showToast("No pending records"); return; }
+        
+        showToast("Syncing data...");
+        for (const record of pending) {
+            const { error } = await supabase.from('collections').insert(record);
+            if (error) { showToast("Sync failed partially"); return; }
+        }
+        
+        localStorage.setItem('pending_collections', '[]');
+        updateOfflineCount();
+        showToast("Sync Completed! ✅");
+    };
+
+    async function loadDashboard() {
+        // Mock data for now
+        const total = 42500;
+        const coll = 0;
+        
+        document.getElementById('dash_total_demand').innerText = `₹ ${total.toLocaleString()}`;
+        document.getElementById('dash_collected').innerText = `₹ ${coll.toLocaleString()}`;
+        document.getElementById('dash_pending').innerText = `₹ ${(total - coll).toLocaleString()}`;
+        document.getElementById('dash_centers_count').innerText = "4";
+        document.getElementById('dash_overdue_count').innerText = "8";
+    }
+
+    async function fetchCenters() {
+        const { data } = await supabase.from('centers')
+            .select('*')
+            .eq('officer_id', currentUser.employee_id);
+        
+        const sel = document.getElementById('center_select');
+        (data || []).forEach(c => {
+            sel.innerHTML += `<option value="${c.center_code}">${c.center_name}</option>`;
+        });
+    }
+
+    window.handleCenterChange = async function(code) {
+        if (!code) {
+            document.getElementById('center_info').classList.add('hidden');
+            return;
+        }
+
+        const { data } = await supabase.from('centers').select('*').eq('center_code', code).single();
+        selectedCenter = data;
+
+        document.getElementById('sel_center_demand').innerText = "₹ 12,500";
+        document.getElementById('sel_center_members').innerText = "12";
+        document.getElementById('center_info').classList.remove('hidden');
+
+        await fetchMembers(code);
+    }
+
+    async function fetchMembers(centerCode) {
+        const { data } = await supabase.from('members_kyc')
+            .select('id, full_name')
+            .eq('center_id', centerCode);
+        
+        members = (data || []).map(m => ({
+            ...m,
+            loan_id: 'GG' + Math.random().toString().slice(2,8),
+            emi: 1500,
+            overdue: Math.random() > 0.8 ? 2000 : 0,
+            status: Math.random() > 0.8 ? 'OVERDUE' : 'CURRENT'
+        }));
+
+        document.getElementById('attendance_count').innerText = `0/${members.length} Marked`;
+    }
+
+    window.switchView = function(view) {
+        document.querySelectorAll('.step-view').forEach(v => v.classList.remove('active'));
+        document.getElementById(`view_${view}`).classList.add('active');
+        
+        currentView = view;
+        document.getElementById('view_title').innerText = VIEWS[view].title;
+        document.getElementById('view_subtitle').innerText = VIEWS[view].sub;
+
+        if (view === 'member_list') renderMemberList();
+    };
+
+    function renderMemberList() {
+        const container = document.getElementById('member_list_container');
+        container.innerHTML = '';
+
+        members.forEach(m => {
+            const card = document.createElement('div');
+            card.className = "bg-white p-5 rounded-[2rem] border border-slate-100 shadow-sm flex items-center justify-between tap-scale";
+            card.onclick = () => openPayment(m);
+            
+            const statusColor = m.status === 'OVERDUE' ? 'bg-red-500' : 'bg-green-500';
+            
+            card.innerHTML = `
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 bg-slate-50 rounded-2xl flex items-center justify-center font-black text-primary relative">
+                        ${m.full_name.charAt(0)}
+                        <div class="absolute -top-1 -right-1 w-3 h-3 ${statusColor} rounded-full border-2 border-white"></div>
+                    </div>
+                    <div>
+                        <p class="text-xs font-black text-navy uppercase truncate w-32">${m.full_name}</p>
+                        <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">EMI: ₹ ${m.emi}</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3">
+                    <div class="text-right">
+                        <p class="text-[9px] font-black text-primary uppercase">Due Today</p>
+                        <p class="text-sm font-black text-navy">₹ ${m.emi + m.overdue}</p>
+                    </div>
+                    <span class="material-symbols-outlined text-slate-300">chevron_right</span>
+                </div>
+            `;
+            container.appendChild(card);
+        });
+    }
+
+    window.openPayment = function(member) {
+        currentMember = member;
+        document.getElementById('modal_member_name').innerText = member.full_name;
+        document.getElementById('modal_loan_id').innerText = member.loan_id;
+        document.getElementById('modal_emi').innerText = `₹ ${member.emi}`;
+        document.getElementById('modal_overdue').innerText = `₹ ${member.overdue}`;
+        document.getElementById('pay_amount').value = member.emi + member.overdue;
+        
+        document.getElementById('payment_modal').classList.remove('hidden');
+    };
+
+    window.setPaymentMode = function(mode) {
+        paymentMode = mode;
+        const btnCash = document.getElementById('mode_cash');
+        const btnUpi = document.getElementById('mode_upi');
+        const upiBox = document.getElementById('upi_qr_box');
+
+        if (mode === 'CASH') {
+            btnCash.classList.add('border-primary', 'bg-primary/5', 'text-primary');
+            btnCash.classList.remove('border-slate-100', 'text-slate-400');
+            btnUpi.classList.remove('border-primary', 'bg-primary/5', 'text-primary');
+            btnUpi.classList.add('border-slate-100', 'text-slate-400');
+            upiBox.classList.add('hidden');
+        } else {
+            btnUpi.classList.add('border-primary', 'bg-primary/5', 'text-primary');
+            btnUpi.classList.remove('border-slate-100', 'text-slate-400');
+            btnCash.classList.remove('border-primary', 'bg-primary/5', 'text-primary');
+            btnCash.classList.add('border-slate-100', 'text-slate-400');
+            upiBox.classList.remove('hidden');
+            generateUPI();
+        }
+    };
+
+    function generateUPI() {
+        const amt = document.getElementById('pay_amount').value;
+        document.getElementById('qr_amount').innerText = amt;
+        const vpa = "gaon-grow@ybl";
+        const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=upi://pay?pa=${vpa}&pn=GaonGrow&am=${amt}&cu=INR`;
+        document.getElementById('upi_qr_img').src = qrUrl;
+    }
+
+    window.processPayment = async function() {
+        const amt = parseFloat(document.getElementById('pay_amount').value);
+        if (!amt || amt <= 0) { showToast("Enter Valid Amount"); return; }
+
+        const payload = {
+            member_id: currentMember.id,
+            member_name: currentMember.full_name,
+            center_name: selectedCenter.center_name,
+            loan_id: currentMember.loan_id,
+            demand_amount: currentMember.emi + currentMember.overdue,
+            collected_amount: amt,
+            payment_mode: paymentMode,
+            officer_id: currentUser.employee_id,
+            gps_location: userLocation,
+            center_photo: centerPhoto,
+            receipt_no: 'GG-' + Date.now().toString().slice(-6),
+            collection_date: new Date().toISOString().split('T')[0]
+        };
+
+        try {
+            const { error } = await supabase.from('collections').insert(payload);
+            if (error) throw error;
+            showToast("Payment Successful! ✅");
+        } catch (e) {
+            // Save to offline storage
+            const pending = JSON.parse(localStorage.getItem('pending_collections') || '[]');
+            pending.push(payload);
+            localStorage.setItem('pending_collections', JSON.stringify(pending));
+            showToast("Saved Offline (No Network) 💾");
+            updateOfflineCount();
+        }
+
+        closeModal();
+        members = members.filter(m => m.id !== currentMember.id);
+        renderMemberList();
+
+        if (members.length === 0) {
+            switchView('settlement');
+            document.getElementById('closed_center_name').innerText = selectedCenter.center_name;
+            const cashTotal = (payload.payment_mode === 'CASH' ? amt : 0);
+            const digiTotal = (payload.payment_mode === 'UPI' ? amt : 0);
+            document.getElementById('closed_cash').innerText = `₹ ${cashTotal.toLocaleString()}`;
+            document.getElementById('closed_digital').innerText = `₹ ${digiTotal.toLocaleString()}`;
+        }
+    };
+
+    window.closeModal = function() {
+        document.getElementById('payment_modal').classList.add('hidden');
+    };
+
+    window.handleBack = function() {
+        if (currentView === 'dashboard') window.location.href = 'dashboard.html';
+        else if (currentView === 'center_select') switchView('dashboard');
+        else if (currentView === 'meeting_start') switchView('center_select');
+        else if (currentView === 'member_list') switchView('meeting_start');
+    };
+
+    let cameraStream = null;
+    window.openCamera = async function(type) {
+        document.getElementById('camera_overlay').classList.remove('hidden');
+        try {
+            cameraStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
+            document.getElementById('video_preview').srcObject = cameraStream;
+        } catch(e) { showToast("Camera access denied"); }
+    };
+
+    window.takePicture = function() {
+        const canvas = document.createElement('canvas');
+        const video = document.getElementById('video_preview');
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        canvas.getContext('2d').drawImage(video, 0, 0);
+        centerPhoto = canvas.toDataURL('image/jpeg');
+        
+        document.getElementById('photo_check').innerText = "check_circle";
+        document.getElementById('photo_check').classList.replace('text-slate-200', 'text-green-500');
+        document.getElementById('center_photo_status').innerText = "PHOTO CAPTURED ✔";
+        
+        closeCamera();
+        checkStartCollection();
+    };
+
+    window.closeCamera = function() {
+        if (cameraStream) {
+            cameraStream.getTracks().forEach(t => t.stop());
+        }
+        document.getElementById('camera_overlay').classList.add('hidden');
+    };
+
+    function checkStartCollection() {
+        const btn = document.getElementById('btn_start_collection');
+        if (centerPhoto && userLocation) {
+            btn.disabled = false;
+            btn.classList.replace('bg-slate-200', 'bg-primary');
+            btn.classList.replace('text-slate-400', 'text-white');
+            btn.classList.remove('cursor-not-allowed');
+            btn.onclick = () => switchView('member_list');
+        }
+    }
+
+    function showToast(msg) {
+        const t = document.getElementById('toast');
+        t.innerText = msg;
+        t.classList.remove('hidden');
+        setTimeout(() => t.classList.add('hidden'), 3000);
+    }
+
+    init();
+</script>
+
+</body>
+</html>

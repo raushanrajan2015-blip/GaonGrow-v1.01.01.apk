@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>GaonGrow Microfinance - Empowering Grassroots Economies</title>
+    <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700" rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#6B8E23',
+                        secondary: '#C5A028',
+                        navy: '#0f172a',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Public Sans', sans-serif; }
+        .font-headline { font-family: 'Public Sans', sans-serif; font-weight: 900; }
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+        .scroll-mt-header { scroll-margin-top: 80px; }
+        .bg-pattern {
+            background-image: radial-gradient(#6B8E23 0.5px, transparent 0.5px);
+            background-size: 24px 24px;
+            opacity: 0.05;
+        }
+        .gradient-text {
+            background: linear-gradient(135deg, #6B8E23, #4a6318);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+    </style>
+</head>
+<body class="bg-white text-navy selection:bg-secondary/30">
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full z-[100] glass-nav border-b border-slate-100 h-20">
+        <div class="max-w-7xl mx-auto px-6 h-full flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <div class="w-14 h-14 flex items-center justify-center overflow-hidden">
+                    <img src="assets/gaongrow_tractor_logo.png" alt="Logo" class="w-full h-full object-contain mix-blend-multiply contrast-[1.1]">
+                </div>
+                <div>
+                    <span class="text-lg font-headline text-primary tracking-tight leading-none block uppercase">GaonGrow</span>
+                    <span class="text-[9px] font-black text-secondary uppercase tracking-[0.2em]">Microfinance</span>
+                </div>
+            </div>
+            
+            <div class="hidden lg:flex items-center gap-6">
+                <a href="#home" class="text-[11px] font-black uppercase tracking-widest text-navy hover:text-primary transition-colors">Home</a>
+                <a href="#about" class="text-[11px] font-black uppercase tracking-widest text-navy hover:text-primary transition-colors">About</a>
+                <a href="#vision" class="text-[11px] font-black uppercase tracking-widest text-navy hover:text-primary transition-colors">Vision</a>
+                <a href="#products" class="text-[11px] font-black uppercase tracking-widest text-navy hover:text-primary transition-colors">Products</a>
+                <a href="#governance" class="text-[11px] font-black uppercase tracking-widest text-navy hover:text-primary transition-colors">Governance</a>
+                <a href="#careers" class="text-[11px] font-black uppercase tracking-widest text-navy hover:text-primary transition-colors">Careers</a>
+                <a href="#contact" class="text-[11px] font-black uppercase tracking-widest text-navy hover:text-primary transition-colors">Contact</a>
+                <a href="screens/login.html" class="ml-4 px-6 py-2.5 bg-navy text-white text-[10px] font-black uppercase tracking-[0.2em] rounded-xl hover:bg-primary transition-all shadow-lg shadow-navy/10">Officer Portal</a>
+            </div>
+
+            <!-- Mobile Menu Toggle -->
+            <button id="menu_toggle" class="lg:hidden w-12 h-12 flex items-center justify-center text-navy hover:text-primary transition-colors focus:outline-none">
+                <span id="menu_icon" class="material-symbols-outlined text-3xl">menu</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Mobile Navigation Drawer -->
+    <div id="mobile_drawer" class="fixed inset-0 z-[999] lg:hidden invisible opacity-0 transition-all duration-300">
+        <!-- Backdrop -->
+        <div id="drawer_backdrop" class="absolute inset-0 bg-navy"></div>
+        
+        <!-- Drawer Content -->
+        <div id="drawer_content" class="relative h-full w-full flex flex-col">
+            <div class="p-6 border-b border-white/10 flex justify-between items-center">
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 bg-white rounded-lg p-1">
+                        <img src="assets/gaongrow_tractor_logo.png" alt="Logo" class="w-full h-full object-contain">
+                    </div>
+                    <span class="text-sm font-headline text-white uppercase">GaonGrow</span>
+                </div>
+                <button id="close_drawer" class="w-12 h-12 flex items-center justify-center text-white">
+                    <span class="material-symbols-outlined text-3xl">close</span>
+                </button>
+            </div>
+            
+            <div class="flex-1 overflow-y-auto py-8 px-10 space-y-6">
+                <a href="#home" class="mobile-nav-link text-lg">Home</a>
+                <a href="#about" class="mobile-nav-link text-lg">About Us</a>
+                <a href="#vision" class="mobile-nav-link text-lg">Our Vision</a>
+                <a href="#products" class="mobile-nav-link text-lg">Loan Products</a>
+                <a href="#governance" class="mobile-nav-link text-lg">Governance</a>
+                <a href="#careers" class="mobile-nav-link text-lg">Careers</a>
+                <a href="#contact" class="mobile-nav-link text-lg">Contact Us</a>
+            </div>
+            
+            <div class="p-8 border-t border-white/10">
+                <a href="screens/login.html" class="flex items-center justify-center w-full py-4 bg-primary text-white text-[10px] font-black uppercase tracking-[0.2em] rounded-xl shadow-lg">Officer Portal Access</a>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .mobile-nav-link {
+            display: block;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: rgba(255,255,255,0.7);
+            transition: all 0.2s;
+        }
+        .mobile-nav-link:active {
+            color: var(--primary);
+            transform: translateX(10px);
+        }
+    </style>
+
+    <!-- Hero Section -->
+    <section id="home" class="relative pt-36 lg:pt-48 pb-20 overflow-hidden scroll-mt-header">
+        <div class="absolute inset-0 bg-pattern"></div>
+        <div class="max-w-7xl mx-auto px-6 relative flex flex-col lg:flex-row items-center gap-16">
+            <div class="flex-1 space-y-8 text-center lg:text-left">
+                <div class="inline-flex items-center gap-2 px-4 py-2 bg-primary/5 border border-primary/10 rounded-full">
+                    <span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+                    <span class="text-[10px] font-black text-primary uppercase tracking-[0.2em]">Fintech-Driven Inclusion</span>
+                </div>
+                <h1 class="text-5xl lg:text-7xl font-headline leading-[1.1] tracking-tight gradient-text">
+                    Empowering <br> <span class="text-navy">Rural India</span>
+                </h1>
+                <p class="text-lg text-slate-500 font-medium max-w-xl leading-relaxed">
+                    GaonGrow Microfinance is a technology-enabled institution committed to empowering low-income households through responsible financial inclusion and digital empowerment.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+                    <a href="#about" class="px-8 py-4 bg-primary text-white font-black uppercase text-xs tracking-widest rounded-2xl shadow-xl shadow-primary/20 hover:scale-105 transition-transform">Learn More</a>
+                    <a href="#contact" class="px-8 py-4 bg-white border border-slate-200 text-navy font-black uppercase text-xs tracking-widest rounded-2xl hover:bg-slate-50 transition-all">Get in Touch</a>
+                </div>
+            </div>
+            <div class="flex-1 relative">
+                <div class="absolute -inset-4 bg-secondary/10 rounded-[3rem] blur-3xl"></div>
+                <img src="https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?q=80&w=2013&auto=format&fit=crop" class="relative w-full rounded-[2.5rem] shadow-2xl border-4 border-white object-cover aspect-[4/3]" alt="Rural Empowerment">
+            </div>
+        </div>
+    </section>
+
+    <!-- Impact Cards -->
+    <section class="py-12 border-y border-slate-50 bg-slate-50/30">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm flex items-start gap-5">
+                    <div class="w-12 h-12 bg-primary/10 rounded-2xl flex items-center justify-center text-primary shrink-0">
+                        <span class="material-symbols-outlined text-2xl">account_balance</span>
+                    </div>
+                    <div>
+                        <h3 class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Objective</h3>
+                        <p class="text-sm font-bold text-navy leading-relaxed">Financial Access + Digital Empowerment</p>
+                    </div>
+                </div>
+                <div class="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm flex items-start gap-5">
+                    <div class="w-12 h-12 bg-secondary/10 rounded-2xl flex items-center justify-center text-secondary shrink-0">
+                        <span class="material-symbols-outlined text-2xl">groups</span>
+                    </div>
+                    <div>
+                        <h3 class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Focus</h3>
+                        <p class="text-sm font-bold text-navy leading-relaxed">Supporting Women Entrepreneurs & Small Households</p>
+                    </div>
+                </div>
+                <div class="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm flex items-start gap-5">
+                    <div class="w-12 h-12 bg-navy/5 rounded-2xl flex items-center justify-center text-navy shrink-0">
+                        <span class="material-symbols-outlined text-2xl">shield_with_heart</span>
+                    </div>
+                    <div>
+                        <h3 class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Commitment</h3>
+                        <p class="text-sm font-bold text-navy leading-relaxed">Responsible Lending & Highest Transparency</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Us -->
+    <section id="about" class="py-24 scroll-mt-header">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="flex flex-col lg:flex-row gap-20 items-center">
+                <div class="flex-1 space-y-6">
+                    <h2 class="text-[12px] font-black text-primary uppercase tracking-[0.3em]">📘 About Us</h2>
+                    <h3 class="text-4xl font-headline leading-tight text-navy">Strengthening Grassroots Economies</h3>
+                    <p class="text-slate-500 leading-relaxed font-medium">
+                        GaonGrow Microfinance Private Limited is a next-generation fintech-driven microfinance organization dedicated to supporting women entrepreneurs and small households lacking access to formal banking channels.
+                    </p>
+                    <p class="text-slate-500 leading-relaxed font-medium">
+                        Established with the vision of strengthening grassroots economies, GaonGrow delivers collateral-free microcredit solutions backed by robust technology platforms, disciplined processes, and ethical lending practices.
+                    </p>
+                    <div class="grid grid-cols-2 gap-6 pt-4">
+                        <div class="space-y-2">
+                            <span class="material-symbols-outlined text-primary">verified</span>
+                            <p class="text-[10px] font-black text-navy uppercase tracking-widest">Tech-Driven Platform</p>
+                        </div>
+                        <div class="space-y-2">
+                            <span class="material-symbols-outlined text-primary">verified</span>
+                            <p class="text-[10px] font-black text-navy uppercase tracking-widest">Rural Focus</p>
+                        </div>
+                        <div class="space-y-2">
+                            <span class="material-symbols-outlined text-primary">verified</span>
+                            <p class="text-[10px] font-black text-navy uppercase tracking-widest">Women-Centric Model</p>
+                        </div>
+                        <div class="space-y-2">
+                            <span class="material-symbols-outlined text-primary">verified</span>
+                            <p class="text-[10px] font-black text-navy uppercase tracking-widest">Digital Ecosystem</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex-1">
+                    <div class="relative rounded-[3rem] overflow-hidden shadow-2xl border-8 border-slate-50">
+                        <img src="https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?q=80&w=2070&auto=format&fit=crop" class="w-full aspect-square object-cover" alt="Impact">
+                        <div class="absolute inset-0 bg-gradient-to-t from-primary/40 to-transparent"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Mission & Vision -->
+    <section id="vision" class="py-24 bg-navy text-white relative overflow-hidden scroll-mt-header">
+        <div class="absolute top-0 right-0 w-96 h-96 bg-primary/10 rounded-full blur-[120px]"></div>
+        <div class="absolute bottom-0 left-0 w-96 h-96 bg-secondary/5 rounded-full blur-[120px]"></div>
+        
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-20">
+                <!-- Mission Card -->
+                <div class="bg-white/5 p-10 rounded-[3rem] border border-white/10 backdrop-blur-md relative group hover:bg-white/10 transition-all duration-500">
+                    <div class="w-16 h-16 bg-primary/20 rounded-2xl flex items-center justify-center text-primary mb-8 group-hover:scale-110 transition-transform">
+                        <span class="material-symbols-outlined text-3xl">target</span>
+                    </div>
+                    <h3 class="text-secondary text-[12px] font-black uppercase tracking-[0.3em] mb-4">Our Mission</h3>
+                    <p class="text-lg font-medium leading-relaxed text-slate-300">
+                        To deliver responsible, transparent, and technology-enabled financial services to underserved households by promoting financial inclusion, supporting women entrepreneurship, and enabling sustainable livelihood opportunities through ethical lending practices.
+                    </p>
+                </div>
+                
+                <!-- Vision Card -->
+                <div class="bg-white/5 p-10 rounded-[3rem] border border-white/10 backdrop-blur-md relative group hover:bg-white/10 transition-all duration-500">
+                    <div class="w-16 h-16 bg-secondary/20 rounded-2xl flex items-center justify-center text-secondary mb-8 group-hover:scale-110 transition-transform">
+                        <span class="material-symbols-outlined text-3xl">public</span>
+                    </div>
+                    <h3 class="text-secondary text-[12px] font-black uppercase tracking-[0.3em] mb-4">Our Vision</h3>
+                    <p class="text-lg font-medium leading-relaxed text-slate-300">
+                        To become a trusted microfinance institution empowering millions of rural and semi-urban families across India with accessible financial solutions and long-term economic growth opportunities.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Products -->
+    <section id="products" class="py-24 scroll-mt-header">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center max-w-2xl mx-auto mb-20 space-y-4">
+                <h2 class="text-[12px] font-black text-primary uppercase tracking-[0.3em]">🏦 Products</h2>
+                <h3 class="text-4xl font-headline text-navy">Financial Solutions with Purpose</h3>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <!-- Product 1 -->
+                <div class="bg-white p-8 rounded-[2rem] border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all group">
+                    <div class="w-14 h-14 bg-primary/10 rounded-2xl flex items-center justify-center text-primary mb-6 group-hover:bg-primary group-hover:text-white transition-colors">
+                        <span class="material-symbols-outlined text-3xl">payments</span>
+                    </div>
+                    <h4 class="text-lg font-black text-navy mb-3">Microfinance Loans</h4>
+                    <p class="text-sm text-slate-500 font-medium leading-relaxed">Collateral-free loans designed for income generation activities.</p>
+                </div>
+                <!-- Product 2 -->
+                <div class="bg-white p-8 rounded-[2rem] border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all group">
+                    <div class="w-14 h-14 bg-secondary/10 rounded-2xl flex items-center justify-center text-secondary mb-6 group-hover:bg-secondary group-hover:text-white transition-colors">
+                        <span class="material-symbols-outlined text-3xl">groups_2</span>
+                    </div>
+                    <h4 class="text-lg font-black text-navy mb-3">Group Lending</h4>
+                    <p class="text-sm text-slate-500 font-medium leading-relaxed">Center-based model supporting women self-help groups.</p>
+                </div>
+                <!-- Product 3 -->
+                <div class="bg-white p-8 rounded-[2rem] border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all group">
+                    <div class="w-14 h-14 bg-primary/10 rounded-2xl flex items-center justify-center text-primary mb-6 group-hover:bg-primary group-hover:text-white transition-colors">
+                        <span class="material-symbols-outlined text-3xl">agriculture</span>
+                    </div>
+                    <h4 class="text-lg font-black text-navy mb-3">Agriculture Loans</h4>
+                    <p class="text-sm text-slate-500 font-medium leading-relaxed">Assistance for farming and allied rural activities.</p>
+                </div>
+                <!-- Product 4 -->
+                <div class="bg-white p-8 rounded-[2rem] border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all group">
+                    <div class="w-14 h-14 bg-navy/5 rounded-2xl flex items-center justify-center text-navy mb-6 group-hover:bg-navy group-hover:text-white transition-colors">
+                        <span class="material-symbols-outlined text-3xl">storefront</span>
+                    </div>
+                    <h4 class="text-lg font-black text-navy mb-3">Livelihood Loans</h4>
+                    <p class="text-sm text-slate-500 font-medium leading-relaxed">Funding for small businesses, livestock, and services.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Governance -->
+    <section id="governance" class="py-24 bg-slate-50 scroll-mt-header">
+        <div class="max-w-7xl mx-auto px-6 text-center">
+            <div class="mb-20 space-y-4">
+                <h2 class="text-[12px] font-black text-primary uppercase tracking-[0.3em]">🏛 Governance</h2>
+                <h3 class="text-4xl font-headline text-navy">Leadership & Accountability</h3>
+                <p class="text-slate-500 font-medium">Aligned with regulatory standards and responsible finance principles.</p>
+            </div>
+            
+            <div class="max-w-md mx-auto">
+                <div class="bg-white p-8 rounded-[3rem] shadow-[0_20px_50px_rgba(0,0,0,0.05)] border border-slate-100 group">
+                    <div class="relative w-48 h-48 mx-auto mb-8">
+                        <div class="absolute inset-0 bg-primary/5 rounded-full scale-110 group-hover:scale-125 transition-transform duration-700"></div>
+                        <div class="relative w-full h-full rounded-full overflow-hidden border-4 border-white shadow-xl bg-slate-100">
+                            <img src="assets/director.jpg" onerror="this.src='https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=1974&auto=format&fit=crop'" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="Mr. Raushan Rajan">
+                        </div>
+                    </div>
+                    <h4 class="text-2xl font-headline text-navy">Mr. Raushan Rajan</h4>
+                    <p class="text-[11px] font-black text-primary uppercase tracking-[0.2em] mt-2">Director</p>
+                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">GaonGrow Microfinance Pvt Ltd</p>
+                    
+                    <div class="mt-8 pt-8 border-t border-slate-50 flex justify-center gap-4">
+                        <div class="w-10 h-10 rounded-full bg-slate-50 flex items-center justify-center text-slate-400 hover:bg-primary hover:text-white transition-all cursor-pointer">
+                            <span class="material-symbols-outlined text-base">mail</span>
+                        </div>
+                        <div class="w-10 h-10 rounded-full bg-slate-50 flex items-center justify-center text-slate-400 hover:bg-primary hover:text-white transition-all cursor-pointer">
+                            <span class="material-symbols-outlined text-base">link</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Careers -->
+    <section id="careers" class="py-24 scroll-mt-header bg-slate-50">
+        <div class="max-w-7xl mx-auto px-6 text-center">
+            <div class="max-w-3xl mx-auto mb-16 space-y-4">
+                <h2 class="text-secondary text-[12px] font-black uppercase tracking-[0.3em]">💼 Careers</h2>
+                <h3 class="text-4xl font-headline text-navy">Join Our Mission Towards Financial Inclusion</h3>
+                <p class="text-slate-500 font-medium">We empower communities by empowering our people. Join a team dedicated to making a real impact at the grassroots level.</p>
+                <div class="inline-flex items-center gap-4 text-primary bg-primary/5 px-6 py-3 rounded-2xl border border-primary/10">
+                    <span class="material-symbols-outlined text-sm">mail</span>
+                    <a href="mailto:careers@gaongrowmicrofinance.com" class="text-xs font-black uppercase tracking-widest">Apply at: careers@gaongrowmicrofinance.com</a>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <!-- Operations -->
+                <div class="bg-white rounded-[2.5rem] overflow-hidden shadow-lg border border-slate-100 group hover:-translate-y-2 transition-all duration-500">
+                    <div class="h-48 overflow-hidden relative">
+                        <img src="https://images.unsplash.com/photo-1521737711867-e3b97375f902?q=80&w=1974&auto=format&fit=crop" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="Operations">
+                        <div class="absolute inset-0 bg-gradient-to-t from-navy/60 to-transparent"></div>
+                        <div class="absolute bottom-6 left-6 text-white">
+                            <p class="text-[10px] font-black uppercase tracking-widest opacity-80">Department</p>
+                            <h4 class="text-lg font-bold">Operations</h4>
+                        </div>
+                    </div>
+                    <div class="p-8 text-left space-y-4">
+                        <p class="text-sm text-slate-500 font-medium leading-relaxed">Driving ground-level impact through efficient field management and community outreach.</p>
+                        <div class="flex items-center gap-2 text-primary">
+                            <span class="text-[10px] font-black uppercase tracking-widest">Field Officer Role</span>
+                            <span class="material-symbols-outlined text-sm">arrow_forward</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Technology -->
+                <div class="bg-white rounded-[2.5rem] overflow-hidden shadow-lg border border-slate-100 group hover:-translate-y-2 transition-all duration-500">
+                    <div class="h-48 overflow-hidden relative">
+                        <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2072&auto=format&fit=crop" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="Technology">
+                        <div class="absolute inset-0 bg-gradient-to-t from-navy/60 to-transparent"></div>
+                        <div class="absolute bottom-6 left-6 text-white">
+                            <p class="text-[10px] font-black uppercase tracking-widest opacity-80">Department</p>
+                            <h4 class="text-lg font-bold">Technology</h4>
+                        </div>
+                    </div>
+                    <div class="p-8 text-left space-y-4">
+                        <p class="text-sm text-slate-500 font-medium leading-relaxed">Building robust fintech solutions to digitize microfinance and ensure secure operations.</p>
+                        <div class="flex items-center gap-2 text-primary">
+                            <span class="text-[10px] font-black uppercase tracking-widest">Platform Mgmt</span>
+                            <span class="material-symbols-outlined text-sm">arrow_forward</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Credit -->
+                <div class="bg-white rounded-[2.5rem] overflow-hidden shadow-lg border border-slate-100 group hover:-translate-y-2 transition-all duration-500">
+                    <div class="h-48 overflow-hidden relative">
+                        <img src="https://images.unsplash.com/photo-1554224155-1696413565d3?q=80&w=2014&auto=format&fit=crop" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="Credit">
+                        <div class="absolute inset-0 bg-gradient-to-t from-navy/60 to-transparent"></div>
+                        <div class="absolute bottom-6 left-6 text-white">
+                            <p class="text-[10px] font-black uppercase tracking-widest opacity-80">Department</p>
+                            <h4 class="text-lg font-bold">Credit & Risk</h4>
+                        </div>
+                    </div>
+                    <div class="p-8 text-left space-y-4">
+                        <p class="text-sm text-slate-500 font-medium leading-relaxed">Ensuring financial discipline through data-driven risk assessment and credit modeling.</p>
+                        <div class="flex items-center gap-2 text-primary">
+                            <span class="text-[10px] font-black uppercase tracking-widest">Risk Assessment</span>
+                            <span class="material-symbols-outlined text-sm">arrow_forward</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Growth -->
+                <div class="bg-white rounded-[2.5rem] overflow-hidden shadow-lg border border-slate-100 group hover:-translate-y-2 transition-all duration-500">
+                    <div class="h-48 overflow-hidden relative">
+                        <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=2015&auto=format&fit=crop" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="Growth">
+                        <div class="absolute inset-0 bg-gradient-to-t from-navy/60 to-transparent"></div>
+                        <div class="absolute bottom-6 left-6 text-white">
+                            <p class="text-[10px] font-black uppercase tracking-widest opacity-80">Department</p>
+                            <h4 class="text-lg font-bold">Strategy</h4>
+                        </div>
+                    </div>
+                    <div class="p-8 text-left space-y-4">
+                        <p class="text-sm text-slate-500 font-medium leading-relaxed">Designing sustainable growth models for rural markets and livelihood development.</p>
+                        <div class="flex items-center gap-2 text-primary">
+                            <span class="text-[10px] font-black uppercase tracking-widest">Growth Strategy</span>
+                            <span class="material-symbols-outlined text-sm">arrow_forward</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact & Redressal -->
+    <section id="contact" class="py-24 bg-white scroll-mt-header">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-20">
+                <div class="space-y-12">
+                    <div class="space-y-4">
+                        <h2 class="text-[12px] font-black text-primary uppercase tracking-[0.3em]">📞 Contact Us</h2>
+                        <h3 class="text-4xl font-headline text-navy">Get in Touch</h3>
+                    </div>
+                    <div class="space-y-8">
+                        <div class="flex gap-6">
+                            <div class="w-12 h-12 bg-slate-50 rounded-2xl flex items-center justify-center text-primary shrink-0">
+                                <span class="material-symbols-outlined">location_on</span>
+                            </div>
+                            <div>
+                                <h4 class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Registered & Corporate Office</h4>
+                                <p class="text-sm font-bold text-navy leading-relaxed">
+                                    <span class="block text-primary">GaonGrow Microfinance Private Limited</span>
+                                    Maranchi Kalan,<br>
+                                    Dist. Begusarai,<br>
+                                    Bihar-851111, India
+                                </p>
+                            </div>
+                        </div>
+                        <div class="flex gap-6">
+                            <div class="w-12 h-12 bg-slate-50 rounded-2xl flex items-center justify-center text-primary shrink-0">
+                                <span class="material-symbols-outlined">mail</span>
+                            </div>
+                            <div>
+                                <h4 class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Email Support</h4>
+                                <p class="text-sm font-bold text-navy">info@gaongrowmicrofinance.com</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-6">
+                            <div class="w-12 h-12 bg-slate-50 rounded-2xl flex items-center justify-center text-primary shrink-0">
+                                <span class="material-symbols-outlined">call</span>
+                            </div>
+                            <div>
+                                <h4 class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Toll Free</h4>
+                                <p class="text-sm font-bold text-navy">1800-XXX-XXXX</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-slate-50 p-12 rounded-[3rem] border border-slate-100">
+                    <h4 class="text-[12px] font-black text-primary uppercase tracking-[0.3em] mb-6">🧾 Grievance Redressal</h4>
+                    <p class="text-sm text-slate-500 font-medium leading-relaxed mb-8">
+                        GaonGrow Microfinance maintains a structured grievance redressal mechanism to ensure timely resolution of customer concerns. Customers may escalate issues through multi-level support channels to ensure fair and transparent resolution.
+                    </p>
+                    <button class="w-full h-14 bg-white border border-slate-200 text-navy font-black uppercase text-[10px] tracking-widest rounded-2xl shadow-sm hover:bg-slate-100 transition-all flex items-center justify-center gap-3">
+                        <span class="material-symbols-outlined text-sm">description</span> View Redressal Policy
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-navy text-white pt-24 pb-12 border-t border-white/5">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-20">
+                <div class="space-y-6">
+                    <div class="flex items-center gap-3">
+                        <div class="w-12 h-12 flex items-center justify-center overflow-hidden">
+                            <img src="assets/gaongrow_tractor_logo.png" alt="Logo" class="w-full h-full object-contain mix-blend-multiply brightness-[1.1] contrast-[1.2]">
+                        </div>
+                        <span class="text-lg font-headline tracking-tighter uppercase">GaonGrow Microfinance</span>
+                    </div>
+                    <p class="text-[11px] font-medium text-slate-400 leading-relaxed mt-4">
+                        Maranchi Kalan, Dist. Begusarai, Bihar-851111<br>
+                        info@gaongrowmicrofinance.com
+                    </p>
+                </div>
+                <div class="space-y-6">
+                    <h5 class="text-[10px] font-black uppercase tracking-widest text-secondary">Quick Links</h5>
+                    <ul class="space-y-4 text-xs font-black uppercase tracking-widest text-slate-500">
+                        <li><a href="#home" class="hover:text-white transition-colors">Home</a></li>
+                        <li><a href="#about" class="hover:text-white transition-colors">About Us</a></li>
+                        <li><a href="#products" class="hover:text-white transition-colors">Products</a></li>
+                        <li><a href="#governance" class="hover:text-white transition-colors">Governance</a></li>
+                    </ul>
+                </div>
+                <div class="space-y-6">
+                    <h5 class="text-[10px] font-black uppercase tracking-widest text-secondary">Legal</h5>
+                    <ul class="space-y-4 text-xs font-black uppercase tracking-widest text-slate-500">
+                        <li><a href="#" class="hover:text-white transition-colors">Privacy Policy</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Terms of Service</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Disclaimer</a></li>
+                    </ul>
+                </div>
+                <div class="space-y-6 text-center lg:text-left">
+                    <div class="p-6 bg-white/5 rounded-2xl border border-white/5">
+                        <p class="text-[9px] font-black text-slate-500 uppercase tracking-widest mb-3">Officer Access</p>
+                        <a href="screens/login.html" class="inline-block px-6 py-3 bg-secondary text-white text-[9px] font-black uppercase tracking-widest rounded-xl shadow-lg shadow-secondary/10">Officer Login</a>
+                    </div>
+                </div>
+            </div>
+            <div class="pt-8 border-t border-white/5 text-center">
+                <p class="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em]">© Copyright 2026 GaonGrow Microfinance Private Limited. All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile Menu Logic
+        const menuToggle = document.getElementById('menu_toggle');
+        const mobileDrawer = document.getElementById('mobile_drawer');
+        const drawerBackdrop = document.getElementById('drawer_backdrop');
+        const drawerContent = document.getElementById('drawer_content');
+        const closeDrawer = document.getElementById('close_drawer');
+        const navLinks = document.querySelectorAll('.mobile-nav-link');
+
+        function openMenu() {
+            mobileDrawer.classList.remove('invisible');
+            mobileDrawer.classList.add('opacity-100');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeMenu() {
+            mobileDrawer.classList.remove('opacity-100');
+            setTimeout(() => {
+                mobileDrawer.classList.add('invisible');
+            }, 300);
+            document.body.style.overflow = '';
+        }
+
+        menuToggle.addEventListener('click', openMenu);
+        closeDrawer.addEventListener('click', closeMenu);
+        drawerBackdrop.addEventListener('click', closeMenu);
+        
+        navLinks.forEach(link => {
+            link.addEventListener('click', closeMenu);
+        });
+    </script>
+</body>
+</html>

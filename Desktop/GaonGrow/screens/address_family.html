@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GaonGrow - Address & Family</title>
+  <script src="../config/tailwind-setup.js"></script>
+  <script src="../components/layout.js"></script>
+</head>
+<body class="bg-surface font-body-md text-on-surface">
+<main class="mt-20 px-4 max-w-lg mx-auto pb-32">
+  <div class="mb-lg flex items-center gap-sm py-xs">
+    <div class="w-8 h-8 rounded-full bg-primary text-on-primary flex items-center justify-center font-label-sm">1</div>
+    <div class="flex-grow border-t-2 border-primary"></div>
+    <div class="w-8 h-8 rounded-full bg-surface-container-high text-on-surface-variant flex items-center justify-center font-label-sm border border-outline-variant">2</div>
+    <div class="flex-grow border-t border-outline-variant"></div>
+    <div class="w-8 h-8 rounded-full bg-surface-container-high text-on-surface-variant flex items-center justify-center font-label-sm border border-outline-variant">3</div>
+  </div>
+
+  <h2 class="font-headline-md text-primary mb-md">Address & Family</h2>
+  
+  <form class="space-y-lg">
+    <div class="space-y-md">
+      <h3 class="font-title-lg text-[16px] text-on-surface border-b border-outline-variant pb-2">Current Address</h3>
+      <label class="flex items-center gap-2 cursor-pointer mb-2">
+        <input type="checkbox" class="rounded text-primary focus:ring-primary w-5 h-5 border-outline-variant" checked>
+        <span class="font-body-md text-on-surface">Same as Aadhaar Permanent Address</span>
+      </label>
+      
+      <div class="space-y-sm opacity-50 pointer-events-none" id="current-address-fields">
+        <div>
+          <label class="font-label-lg text-on-surface-variant block mb-1">House/Street/Village</label>
+          <input type="text" class="w-full h-[56px] px-4 border border-outline-variant rounded-lg focus:border-primary focus:ring-1 focus:ring-primary" value="House No. 42, Ward 3, Village Pithora">
+        </div>
+        <div class="flex gap-4">
+          <div class="flex-1">
+            <label class="font-label-lg text-on-surface-variant block mb-1">District</label>
+            <input type="text" class="w-full h-[56px] px-4 border border-outline-variant rounded-lg focus:border-primary focus:ring-1 focus:ring-primary" value="Mahasamund">
+          </div>
+          <div class="w-[120px]">
+            <label class="font-label-lg text-on-surface-variant block mb-1">PIN</label>
+            <input type="text" class="w-full h-[56px] px-4 border border-outline-variant rounded-lg focus:border-primary focus:ring-1 focus:ring-primary" value="493551">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="space-y-md">
+      <h3 class="font-title-lg text-[16px] text-on-surface border-b border-outline-variant pb-2 mt-lg">Family Details</h3>
+      
+      <div>
+        <label class="font-label-lg text-on-surface-variant block mb-1">Marital Status</label>
+        <select class="w-full h-[56px] px-4 border border-outline-variant rounded-lg focus:border-primary focus:ring-1 focus:ring-primary bg-surface-container-lowest">
+          <option>Married</option>
+          <option>Unmarried</option>
+          <option>Widowed</option>
+        </select>
+      </div>
+      
+      <div>
+        <label class="font-label-lg text-on-surface-variant block mb-1">Spouse Name</label>
+        <input type="text" class="w-full h-[56px] px-4 border border-outline-variant rounded-lg focus:border-primary focus:ring-1 focus:ring-primary" placeholder="Enter full name">
+      </div>
+
+      <div class="flex gap-4">
+        <div class="flex-1">
+          <label class="font-label-lg text-on-surface-variant block mb-1">Dependents</label>
+          <input type="number" class="w-full h-[56px] px-4 border border-outline-variant rounded-lg focus:border-primary focus:ring-1 focus:ring-primary" value="2">
+        </div>
+        <div class="flex-1">
+          <label class="font-label-lg text-on-surface-variant block mb-1">House Type</label>
+          <select class="w-full h-[56px] px-4 border border-outline-variant rounded-lg focus:border-primary focus:ring-1 focus:ring-primary bg-surface-container-lowest">
+            <option>Owned</option>
+            <option>Rented</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </form>
+
+  <div class="mt-xl">
+    <a href="financial_details.html" class="w-full h-[56px] bg-primary text-on-primary rounded-lg font-label-lg flex items-center justify-center gap-2 shadow-sm active:scale-95 transition-transform">
+      Next: Financials
+      <span class="material-symbols-outlined">arrow_forward</span>
+    </a>
+  </div>
+</main>
+</body>
+</html>

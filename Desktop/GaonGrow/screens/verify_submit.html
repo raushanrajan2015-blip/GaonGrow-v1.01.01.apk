@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GaonGrow - Verify & Submit</title>
+  <script src="../config/tailwind-setup.js"></script>
+  <script src="../components/layout.js"></script>
+</head>
+<body class="bg-surface font-body-md text-on-surface">
+<main class="mt-20 px-4 max-w-lg mx-auto pb-32">
+  <div class="mb-lg">
+    <h2 class="font-headline-md text-primary">Summary & Verification</h2>
+    <p class="font-body-md text-on-surface-variant">Review the details before final submission.</p>
+  </div>
+
+  <div class="space-y-4 mb-lg">
+    <div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-4 shadow-sm">
+      <div class="flex justify-between items-center mb-2 border-b border-outline-variant pb-2">
+        <h3 class="font-title-lg text-[16px] text-primary m-0">Applicant Profile</h3>
+        <button class="text-primary hover:underline font-label-sm">Edit</button>
+      </div>
+      <div class="space-y-1">
+        <p class="font-body-md m-0"><span class="text-on-surface-variant w-24 inline-block">Name:</span> <strong>Savitri Devi</strong></p>
+        <p class="font-body-md m-0"><span class="text-on-surface-variant w-24 inline-block">KYC:</span> <span class="text-primary font-bold">Biometric (Verified)</span></p>
+        <p class="font-body-md m-0"><span class="text-on-surface-variant w-24 inline-block">Phone:</span> <strong>+91 98765 43210</strong></p>
+      </div>
+    </div>
+
+    <div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-4 shadow-sm">
+      <div class="flex justify-between items-center mb-2 border-b border-outline-variant pb-2">
+        <h3 class="font-title-lg text-[16px] text-primary m-0">Financials</h3>
+        <button class="text-primary hover:underline font-label-sm">Edit</button>
+      </div>
+      <div class="space-y-1">
+        <p class="font-body-md m-0"><span class="text-on-surface-variant w-24 inline-block">Income:</span> <strong>₹ 15,000/mo</strong></p>
+        <p class="font-body-md m-0"><span class="text-on-surface-variant w-24 inline-block">FOIR:</span> <strong>32%</strong></p>
+        <p class="font-body-md m-0"><span class="text-on-surface-variant w-24 inline-block">Loan Req:</span> <strong>₹ 50,000</strong></p>
+      </div>
+    </div>
+
+    <div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-4 shadow-sm">
+      <div class="flex justify-between items-center mb-2 border-b border-outline-variant pb-2">
+        <h3 class="font-title-lg text-[16px] text-primary m-0">Documents</h3>
+        <button class="text-primary hover:underline font-label-sm">Edit</button>
+      </div>
+      <div class="flex gap-2">
+        <span class="bg-primary-fixed text-on-primary-fixed-variant px-2 py-1 rounded text-xs font-bold">Aadhaar ✓</span>
+        <span class="bg-primary-fixed text-on-primary-fixed-variant px-2 py-1 rounded text-xs font-bold">Passbook ✓</span>
+        <span class="bg-surface-container text-on-surface-variant px-2 py-1 rounded text-xs font-bold">Photo ✓</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="bg-surface-container p-4 rounded-xl mb-lg border border-outline-variant">
+    <label class="flex items-start gap-3 cursor-pointer">
+      <input type="checkbox" class="mt-1 rounded text-primary focus:ring-primary w-5 h-5 border-outline-variant">
+      <span class="font-body-md text-sm text-on-surface">I declare that all information collected is verified in person and copies match the originals.</span>
+    </label>
+  </div>
+
+  <div class="mt-xl">
+    <a href="dashboard.html" class="w-full h-[56px] bg-primary text-on-primary rounded-lg font-label-lg flex items-center justify-center gap-2 shadow-sm active:scale-95 transition-transform">
+      <span class="material-symbols-outlined">cloud_upload</span>
+      Submit Application
+    </a>
+  </div>
+</main>
+</body>
+</html>

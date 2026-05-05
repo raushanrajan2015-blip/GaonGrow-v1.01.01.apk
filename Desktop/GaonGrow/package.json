@@ -1,0 +1,19 @@
+{
+  "name": "gaongrow-microfinance",
+  "version": "1.0.7",
+  "description": "GaonGrow Microfinance Field Officer App",
+  "type": "module",
+  "scripts": {
+    "cap:init": "npx cap init GaonGrow com.gaongrow.microfinance --web-dir .",
+    "cap:add:android": "npx cap add android",
+    "cap:sync": "npx cap sync android",
+    "cap:open": "npx cap open android",
+    "build:apk": "npx cap sync android && cd android && gradlew assembleDebug"
+  },
+  "dependencies": {
+    "@capacitor/android": "^8.3.1",
+    "@capacitor/cli": "^8.3.1",
+    "@capacitor/core": "^8.3.1",
+    "@supabase/supabase-js": "^2.105.1"
+  }
+}

@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>GaonGrow - Secure Login</title>
+  
+  <!-- Fonts & Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700&display=swap" rel="stylesheet"/>
+  
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- PWA Support -->
+  <link rel="manifest" href="../manifest.json">
+  <meta name="theme-color" content="#012d1d">
+  <link rel="apple-touch-icon" href="/logo.png">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: "#6B8E23",
+            secondary: "#C5A028",
+            surface: "#f8fafc",
+            "on-surface": "#1e293b",
+            "on-surface-variant": "#64748b"
+          },
+          borderRadius: {
+            'xl': '1rem',
+            '2xl': '1.5rem'
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      -webkit-tap-highlight-color: transparent;
+      overscroll-behavior-y: contain;
+      padding-top: env(safe-area-inset-top);
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+    .glass-effect {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+    }
+    input::placeholder {
+        color: #94a3b8;
+    }
+  </style>
+</head>
+<body class="font-['Public_Sans'] text-on-surface bg-surface overflow-x-hidden min-h-screen">
+
+<div class="min-h-screen flex items-center justify-center p-6 bg-slate-50">
+    <!-- Login Card -->
+    <div class="w-full max-w-[420px] bg-white shadow-2xl rounded-3xl p-8 lg:p-12 space-y-10">
+        
+        <!-- Logo & Title -->
+        <div class="text-center space-y-6">
+            <div class="relative inline-block">
+                <div class="absolute -inset-1 bg-[#6B8E23] opacity-20 blur-lg rounded-full"></div>
+                <div class="relative w-24 h-24 mx-auto rounded-3xl shadow-xl border-4 border-white overflow-hidden bg-white p-2">
+                    <img src="../assets/gaongrow_tractor_logo.png" class="w-full h-full object-contain" />
+                </div>
+            </div>
+            <div class="space-y-1">
+                <h1 class="text-2xl font-black text-[#6B8E23] uppercase tracking-tighter">GaonGrow</h1>
+                <p class="text-[11px] font-bold text-[#C5A028] uppercase tracking-widest">Microfinance Private Limited</p>
+            </div>
+        </div>
+
+        <!-- Login Form -->
+        <main class="space-y-6">
+            <div id="login_form" class="space-y-5">
+                <!-- User ID -->
+                <div class="space-y-2">
+                    <label class="text-[11px] font-black text-on-surface-variant uppercase ml-1 tracking-widest">Employee User ID</label>
+                    <div class="relative">
+                        <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant text-[22px]">person</span>
+                        <input id="employee_id" type="text" class="w-full h-[60px] pl-14 pr-4 rounded-2xl border border-slate-100 bg-slate-50 focus:bg-white focus:border-secondary focus:ring-4 focus:ring-secondary/10 outline-none transition-all font-bold text-sm uppercase" placeholder="Enter GMPL ID" />
+                    </div>
+                </div>
+
+                <!-- Password -->
+                <div class="space-y-2">
+                    <label class="text-[11px] font-black text-on-surface-variant uppercase ml-1 tracking-widest">Secure Password</label>
+                    <div class="relative group">
+                        <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant text-[22px]">lock</span>
+                        <input id="login_password" type="password" class="w-full h-[60px] pl-14 pr-14 rounded-2xl border border-slate-100 bg-slate-50 focus:bg-white focus:border-secondary focus:ring-4 focus:ring-secondary/10 outline-none transition-all font-bold text-sm" placeholder="••••••••" />
+                        <button onclick="togglePassword('login_password')" class="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 flex items-center justify-center text-on-surface-variant hover:text-secondary transition-colors">
+                            <span class="material-symbols-outlined text-[20px]" id="eye_icon">visibility</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Action Button -->
+                <div class="pt-4">
+                    <button onclick="handleLogin()" id="btn_login" class="w-full h-[64px] bg-primary text-white font-black rounded-2xl shadow-xl shadow-primary/20 active:scale-[0.98] transition-all flex items-center justify-center gap-3 hover:bg-opacity-95 text-sm tracking-widest uppercase">
+                        SIGN IN
+                        <span class="material-symbols-outlined text-[20px]">login</span>
+                    </button>
+                </div>
+
+                <!-- Links -->
+                <div class="flex flex-col gap-4 pt-4">
+                    <div class="flex justify-between items-center px-1">
+                        <button onclick="alert('Contact Admin to reset password')" class="text-[11px] font-black text-on-surface-variant uppercase hover:text-primary transition-colors">Forgot Password?</button>
+                        <button onclick="switchStep('otp')" class="text-[11px] font-black text-secondary uppercase hover:underline">OTP Login</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- OTP Login View -->
+            <div id="otp_form" class="hidden animate-in fade-in slide-in-from-bottom-4 duration-300 space-y-8">
+                <button onclick="switchStep('login')" class="text-secondary text-[11px] font-black uppercase flex items-center gap-1 hover:gap-2 transition-all">
+                    <span class="material-symbols-outlined text-[18px]">arrow_back</span> Back to Login
+                </button>
+                <div class="space-y-4 text-center">
+                    <h3 class="text-lg font-black text-primary uppercase tracking-tight">OTP Verification</h3>
+                    <p class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">Enter User ID to receive a secure code</p>
+                    <input id="otp_employee_id" type="text" class="w-full h-[60px] px-6 rounded-2xl border border-slate-100 bg-slate-50 focus:bg-white focus:border-secondary focus:ring-4 focus:ring-secondary/10 outline-none text-center font-black text-xl uppercase" placeholder="GMPL0011" />
+                </div>
+                <button onclick="handleSendOTP()" id="btn_send_otp" class="w-full h-[64px] bg-secondary text-white font-black rounded-2xl shadow-xl shadow-secondary/20 active:scale-[0.98] transition-all uppercase tracking-widest text-sm">
+                    SEND CODE
+                </button>
+            </div>
+        </main>
+
+        <!-- Footer Info -->
+        <div class="pt-8 border-t border-slate-50">
+            <div class="flex justify-center items-center gap-8 text-[9px] font-black text-on-surface-variant tracking-[0.2em] uppercase">
+                <div class="flex items-center gap-2">
+                    <span class="material-symbols-outlined text-[18px] text-green-600">verified_user</span>
+                    RBI REGULATED
+                </div>
+                <div class="flex items-center gap-2">
+                    <span class="material-symbols-outlined text-[18px] text-blue-600">lock</span>
+                    SECURE
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="module">
+    import supabase from '../services/supabase.js'
+
+    function init() {
+        updateGreeting();
+        
+        // Register Service Worker for PWA
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('../sw.js').catch(err => console.log('SW failed', err));
+        }
+
+        // Check for saved ID
+        const savedId = localStorage.getItem("saved_employee_id");
+        if (savedId) {
+            document.getElementById("employee_id").value = savedId;
+        }
+    }
+
+    function updateGreeting() {
+        const hour = new Date().getHours();
+        const greetingText = document.getElementById("greeting_text");
+        const greetingIcon = document.getElementById("greeting_icon");
+        
+        if (hour < 12) {
+            greetingText.innerText = "Good Morning";
+            greetingIcon.innerHTML = '<span class="material-symbols-outlined text-[40px] lg:text-[64px] text-secondary">light_mode</span>';
+        } else if (hour < 17) {
+            greetingText.innerText = "Good Afternoon";
+            greetingIcon.innerHTML = '<span class="material-symbols-outlined text-[40px] lg:text-[64px] text-secondary">sunny</span>';
+        } else {
+            greetingText.innerText = "Good Evening";
+            greetingIcon.innerHTML = '<span class="material-symbols-outlined text-[40px] lg:text-[64px] text-secondary">dark_mode</span>';
+        }
+    }
+
+    function togglePassword(id) {
+        const input = document.getElementById(id);
+        const icon = document.getElementById('eye_icon');
+        if (input.type === "password") {
+            input.type = "text";
+            icon.innerText = "visibility_off";
+        } else {
+            input.type = "password";
+            icon.innerText = "visibility";
+        }
+    }
+
+    function switchStep(step) {
+        const loginForm = document.getElementById('login_form');
+        const otpForm = document.getElementById('otp_form');
+        if (step === 'otp') {
+            loginForm.classList.add('hidden');
+            otpForm.classList.remove('hidden');
+        } else {
+            loginForm.classList.remove('hidden');
+            otpForm.classList.add('hidden');
+        }
+    }
+
+    async function handleLogin() {
+        const userId = document.getElementById("employee_id").value.trim();
+        const password = document.getElementById("login_password").value;
+        const btn = document.getElementById("btn_login");
+
+        if (!userId || !password) return alert("Please enter User ID and Password");
+
+        btn.disabled = true;
+        btn.innerHTML = `<span class="material-symbols-outlined animate-spin">refresh</span> VERIFYING...`;
+
+        // Updated to use admin_users table and enforce GMPL format
+        const { data: user, error: lookupError } = await supabase
+            .from('admin_users')
+            .select('*, roles(role_name)')
+            .ilike('user_id', userId)
+            .eq('password', password)
+            .eq('status', 'active')
+            .maybeSingle();
+
+        if (lookupError || !user) {
+            btn.disabled = false;
+            btn.innerHTML = `SIGN IN <span class="material-symbols-outlined text-[20px]">login</span>`;
+            return alert("Invalid User ID or Password. Please ensure you are using your new GMPL ID.");
+        }
+
+        // Fetch actual Branch Names
+        const { data: branchData } = await supabase
+            .from('branches')
+            .select('branch_code, branch_name')
+            .in('branch_code', user.branch_codes || []);
+
+        const session = {
+            user: {
+                id: user.id,
+                employee_id: user.user_id,
+                name: user.name,
+                role: user.role_id,
+                branch_codes: user.branch_codes,
+                branches: branchData || [] // Store full branch objects
+            },
+            expires_at: Date.now() + (8 * 60 * 60 * 1000)
+        };
+        
+        localStorage.setItem("gaongrow_session", JSON.stringify(session));
+        localStorage.setItem("saved_employee_id", userId);
+        localStorage.setItem("saved_employee_name", user.name);
+        
+        // Determine target page based on role (admin roles 1, 2, 3, 5 go to admin dashboard, 4 (CRO) goes to mobile dashboard)
+        const adminRoles = [1, 2, 3, 5];
+        const targetPage = adminRoles.includes(user.role_id) ? 'admin_dashboard.html' : 'dashboard.html';
+        window.location.href = targetPage;
+    }
+
+    async function handleSendOTP() {
+        const userId = document.getElementById("otp_employee_id").value.trim();
+        const btn = document.getElementById("btn_send_otp");
+        if (!userId) return alert("Please enter User ID");
+
+        btn.disabled = true;
+        btn.innerText = "FINDING...";
+
+        const { data: employee, error } = await supabase
+            .from('employees')
+            .select('"Mobile Phone"')
+            .ilike('Employee Id', userId)
+            .maybeSingle();
+
+        if (error || !employee) {
+            btn.disabled = false;
+            btn.innerText = "SEND CODE";
+            return alert("User ID not found");
+        }
+
+        let phone = employee["Mobile Phone"].replace("'", "").trim();
+        if (!phone.startsWith('+')) phone = '+91' + phone;
+
+        const { error: otpError } = await supabase.auth.signInWithOtp({ phone });
+        if (otpError) {
+            btn.disabled = false;
+            btn.innerText = "SEND CODE";
+            return alert(otpError.message);
+        }
+        alert("OTP Sent!");
+    }
+
+    window.togglePassword = togglePassword;
+    window.switchStep = switchStep;
+    window.handleLogin = handleLogin;
+    window.handleSendOTP = handleSendOTP;
+
+    init();
+</script>
+</body>
+</html>
