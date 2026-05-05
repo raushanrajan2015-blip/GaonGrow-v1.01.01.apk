@@ -2,6 +2,7 @@ node_modules/
 www/
 android/app/build/
 android/.gradle/
+!android/capacitor-cordova-android-plugins/
 ios/DerivedData/
 ios/IPA/
 *.ipa

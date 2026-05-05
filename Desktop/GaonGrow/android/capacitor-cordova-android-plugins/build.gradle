@@ -1,0 +1,18 @@
+apply plugin: 'com.android.library'
+apply from: 'cordova.variables.gradle'
+
+android {
+    compileSdk project.ext.compileSdkVersion
+    defaultConfig {
+        minSdkVersion project.ext.minSdkVersion
+        targetSdkVersion project.ext.targetSdkVersion
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+        }
+    }
+}
+
+dependencies {
+}
